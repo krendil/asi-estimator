@@ -10,7 +10,7 @@
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
     
-    <property name="sdk.dir" location="../appengine-java-sdk" />
+    <property name="sdk.dir" location="../appengine-java-sdk-1.7.0" />
     <property name="gwt.dir" location="../gwt-2.4.0" />
     <import file="${sdk.dir}/config/user/ant-macros.xml" />
 
