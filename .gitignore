@@ -1,12 +1,13 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
+
+war/WEB-INF/lib
 
 .gwt
 .settings
 gwt-unitCache
 
-TEST*.xml
+junit/TEST*.xml
