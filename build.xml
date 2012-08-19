@@ -11,11 +11,13 @@
     <property name="source" value="1.6"/>
     
     <property name="sdk.dir" location="../appengine-java-sdk" />
+    <property name="gwt.dir" location="../gwt-2.4.0" />
     <import file="${sdk.dir}/config/user/ant-macros.xml" />
 
     <path id="asi-estimator.classpath">
         <pathelement location="war/WEB-INF/classes"/>
         <pathelement location="test-classes"/>
+        
         <fileset dir="lib">
             <include name="**/*.jar"/>
         </fileset>
@@ -23,6 +25,11 @@
         <fileset dir="${sdk.dir}/lib">
           <include name="shared/**/*.jar" />
         </fileset>
+        
+        <fileset dir="${gwt.dir}">
+            <include name="*.jar" />
+        </fileset>
+        
     </path>
     
     <target name="clean">

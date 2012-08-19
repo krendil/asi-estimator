@@ -10,4 +10,4 @@ war/WEB-INF/lib
 .settings
 gwt-unitCache
 
-junit/TEST*.xml
+junit
