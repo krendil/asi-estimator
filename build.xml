@@ -5,52 +5,34 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. --><project basedir="." default="build" name="asi-estimator">
     <property environment="env"/>
-    <property name="ECLIPSE_HOME" value="../../../../../usr/share/eclipse"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
-    <path id="App Engine SDK [App Engine - 1.7.0].libraryclasspath">
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/el-api.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp-api.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/appengine-local-runtime-shared.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp/repackaged-appengine-jasper-el-6.0.29.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp/repackaged-appengine-ant-1.7.1.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp/repackaged-appengine-ant-launcher-1.7.1.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp/repackaged-appengine-tomcat-juli-6.0.29.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/jsp/repackaged-appengine-jasper-6.0.29.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/shared/servlet-api.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/appengine-tools-api.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/appengine-api-labs/v1/appengine-api-labs.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/appengine-endpoints/v1/appengine-endpoints.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/jsr107/v1/appengine-jsr107cache-1.7.0.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/jsr107/v1/jsr107cache-1.1.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/user/appengine-api-1.0-sdk-1.7.0.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/datanucleus-api-jpa-3.0.9.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/datanucleus-core-3.0.10.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/jdo-api-3.1-SNAPSHOT-20110926.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/datanucleus-api-jdo-3.0.7.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/datanucleus-appengine-2.0.1.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/geronimo-jpa_2.0_spec-1.0.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/opt/user/datanucleus/v2/transaction-api-1.1.jar"/>
-    </path>
-    <path id="GWT SDK [GWT - 2.4.0].libraryclasspath">
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/gwt-user.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/gwt-dev.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
-        <pathelement location="../../../.eclipse/org.eclipse.platform_4.2.0_1543616141/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201208080121-rel-r42/gwt-2.4.0/validation-api-1.0.0.GA.jar"/>
-    </path>
-    <path id="JUnit 4.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900/junit.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-    </path>
+    
+    <property name="sdk.dir" location="../appengine-java-sdk" />
+    <import file="${sdk.dir}/config/user/ant-macros.xml" />
+
     <path id="asi-estimator.classpath">
         <pathelement location="war/WEB-INF/classes"/>
         <pathelement location="test-classes"/>
-        <path refid="App Engine SDK [App Engine - 1.7.0].libraryclasspath"/>
-        <path refid="GWT SDK [GWT - 2.4.0].libraryclasspath"/>
-        <path refid="JUnit 4.libraryclasspath"/>
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        
+        <fileset dir="${sdk.dir}/lib">
+          <include name="shared/**/*.jar" />
+        </fileset>
     </path>
+    
+    <target name="clean">
+        <delete dir="war/WEB-INF/classes"/>
+        <delete dir="test-classes"/>
+        <delete dir="war/WEB-INF/lib"/>
+    </target>
+    
+    <target name="cleanall" depends="clean"/>
+    
     <target name="init">
         <mkdir dir="war/WEB-INF/classes"/>
         <mkdir dir="test-classes"/>
@@ -67,14 +49,17 @@
             </fileset>
         </copy>
     </target>
-    <target name="clean">
-        <delete dir="war/WEB-INF/classes"/>
-        <delete dir="test-classes"/>
+    
+    <target name="copyjars"
+        description="Copies the App Engine JARs to the WAR.">
+        <copy todir="war/WEB-INF/lib" flatten="true">
+            <fileset dir="${sdk.dir}/lib/user">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
     </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
+    
+    <target name="compile" depends="init,copyjars">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="war/WEB-INF/classes" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
@@ -85,20 +70,17 @@
             <classpath refid="asi-estimator.classpath"/>
         </javac>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
+    
+    <target name="test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <!-- Change this when we have more complete test suite -->
+            <test name="asi.DummyTest" todir="${junit.output.dir}"/>
+            <classpath refid="asi-estimator.classpath"/>
+        </junit>
     </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
+    
     <target name="DummyTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
@@ -107,7 +89,8 @@
             <classpath refid="asi-estimator.classpath"/>
         </junit>
     </target>
-    <target name="junitreport">
+    
+    <target name="junitreport" depends="test">
         <junitreport todir="${junit.output.dir}">
             <fileset dir="${junit.output.dir}">
                 <include name="TEST-*.xml"/>
@@ -115,4 +98,12 @@
             <report format="frames" todir="${junit.output.dir}"/>
         </junitreport>
     </target>
+    
+    <!-- Required for Google App Engine data store -->
+    <target name="datanucleusenhance" depends="compile" description="Performs JDO enhancement on compiled data classes.">
+        <enhance_war war="war" />
+    </target>
+    
+    <target name="build" depends="compile,datanucleusenhance"/>
+    
 </project>

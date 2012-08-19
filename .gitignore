@@ -8,3 +8,5 @@
 .gwt
 .settings
 gwt-unitCache
+
+TEST*.xml
