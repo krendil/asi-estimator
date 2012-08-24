@@ -5,6 +5,7 @@
 *.ear
 
 war/WEB-INF/lib
+war/WEB-INF/classes
 
 .gwt
 .settings

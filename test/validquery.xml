@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE solarquery SYSTEM "../war/solarquery.dtd">
+<solarquery>
+	<array>
+		<bank facing="0.0" number="5" power="200" />
+	</array>
+	<location lat="-27.47815" long="153.027687" />
+</solarquery>

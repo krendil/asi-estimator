@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT solarresponse (power, revenue)>
+
+<!-- The data inside power and revenue is expected to be one or more whitespace separated decimal numbers -->
+<!ELEMENT power (#PCDATA)>
+<!ELEMENT revenue (#PCDATA)>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<!ENTITY % modifier "(location)">
+
+<!ELEMENT solarquery (array, (%modifier;)*)>
+
+<!ELEMENT array (bank+)>
+
+<!ELEMENT bank EMPTY>
+<!-- facing is expected to contain a decimal number between 0 and 360 -->
+<!ATTLIST bank facing NMTOKEN #IMPLIED>
+<!-- number is expected to contain a positive, non-zero integer -->
+<!ATTLIST bank number NMTOKEN "1">
+<!-- power is expected to contain a positive, nonzero number -->
+<!ATTLIST bank power NMTOKEN #REQUIRED>
+
+<!ELEMENT location EMPTY>
+<!-- long and lat are both expected to contain decimal numbers, 
+	long in the range -180 to 180, and lat in the range -90 to 90 -->
+<!ATTLIST location long NMTOKEN #REQUIRED>
+<!ATTLIST location lat NMTOKEN #REQUIRED>
+	
