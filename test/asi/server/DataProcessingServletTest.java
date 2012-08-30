@@ -12,7 +12,10 @@ import org.xml.sax.SAXParseException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -54,23 +57,29 @@ public class DataProcessingServletTest {
 	}
 	
 	@Test
-	public void testProcessCall_valid() throws Exception{
-		String result = servlet.processCall(readFromFile("test/validquery.xml"));
+	public void testProcessStream_valid() throws Exception{
+		FileInputStream query = new FileInputStream("test/validquery.xml");
+		PipedOutputStream output = new PipedOutputStream();
+		PipedInputStream response = new PipedInputStream(output);
+		servlet.processStream(query, output);
 		
 		DocumentBuilder db = getDocBuilder();
-		
-				//Welcome to Java
-		db.parse(new InputSource(new ByteArrayInputStream(result.getBytes("utf-8")))); //No exceptions thrown
+
+		db.parse(response); //No exceptions thrown
 	}
 	
 	@Test(expected=SAXException.class)
-	public void testProcessCall_garbage() throws FileNotFoundException {
-		String result = servlet.processCall(readFromFile("test/garbagequery.xml"));
+	public void testProcessStream_garbage() throws FileNotFoundException {
+		FileInputStream query = new FileInputStream("test/validquery.xml");
+		PipedOutputStream output = new PipedOutputStream();
+		servlet.processStream(query, output);
 	}
 	
 	@Test(expected=SAXException.class)
-	public void testProcessCall_invalid() throws FileNotFoundException {
-		String result = servlet.processCall(readFromFile("test/invalidquery.xml"));
+	public void testProcessStream_invalid() throws FileNotFoundException {
+		FileInputStream query = new FileInputStream("test/validquery.xml");
+		PipedOutputStream output = new PipedOutputStream();
+		servlet.processStream(query, output);
 	}
 	
 	private static DocumentBuilder getDocBuilder() throws ParserConfigurationException{
