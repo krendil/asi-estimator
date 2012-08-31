@@ -1,6 +1,12 @@
 package asi.beans;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Represents the entires input configuration, including solar panels,
@@ -11,20 +17,51 @@ import org.w3c.dom.Document;
  */
 public class Configuration {
 	
-	/**
-	 * Add a Modifier to the configuration
-	 * @param mod
-	 */
-	public void addModifier(Modifier mod){
-		
+	private enum TagType {
+		array, location
 	}
 	
-	/**
-	 * Sets the configuration's main SolarArray variable
-	 * 
-	 * @param array
-	 */
-	public void setSolarArray(SolarArray array){
+	SolarArray array;
+	Location location;
+	List<Modifier> modifiers;
+	
+	public Configuration() {
+		modifiers = new LinkedList<Modifier>();
+	}
+	
+	private void makeArray(Node n) throws EstimatorException {
+		Element el = (Element)n;
+		NodeList banks = el.getElementsByTagName("bank");
+		SolarArray sArray = new SolarArray();
+		
+		for(int i = 0; i < banks.getLength(); i++) {
+			Element b = (Element)banks.item(i);
+			double orientation;
+			double kW;
+			
+			String facing = b.getAttribute("facing");
+			String number = b.getAttribute("number");
+			String power = b.getAttribute("power");
+			
+			try {
+				if(facing.isEmpty()) {
+					orientation = 0.0;
+				} else {
+					orientation = Double.parseDouble(facing);
+				}
+				
+				kW = Integer.parseInt(number) * Double.parseDouble(power) / 1000.0;
+			} catch (NumberFormatException exc) {
+				throw new EstimatorException("Error parsing xml: "+exc.getMessage());
+			}
+			
+			BankOfPanels bank = new BankOfPanels(orientation, kW);
+			sArray.addPanels(bank);
+		}
+		this.array = sArray;
+	}
+	
+	private void makeLocation(Node n) {
 		
 	}
 	
@@ -32,9 +69,26 @@ public class Configuration {
 	 * Configures the configuration based on the given XML Document, (adding modifiers and so on)
 	 * 
 	 * @param doc
+	 * @throws EstimatorException 
 	 */
-	public void parseDocument(Document doc){
+	public void parseDocument(Document doc) throws EstimatorException{
+		modifiers.clear();
 		
+		for(Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
+			if(n.getNodeType() != Node.ELEMENT_NODE) {
+				continue;
+			}
+			
+			switch( TagType.valueOf(n.getNodeName()) ) {
+			case array:
+				makeArray(n);
+				break;
+			case location:
+				break;
+			default:
+					break;
+			}
+		}
 	}
 	
 	/**

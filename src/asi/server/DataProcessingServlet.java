@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import asi.beans.Configuration;
+import asi.beans.EstimatorException;
 
 /**
  * Accepts SolarRequest XML documents from clients, generates an estimate,
@@ -51,6 +52,8 @@ public class DataProcessingServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		} catch (TransformerException e) { //Probably our fault as well
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		} catch (EstimatorException e) { //Definitely our fault
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 	
@@ -67,8 +70,9 @@ public class DataProcessingServlet extends HttpServlet {
 	 * @throws ParserConfigurationException If there is an error creating the XML parser
 	 * @throws TransformerFactoryConfigurationError If there is and error creating the XML transformer
 	 * @throws TransformerException If an error occurs during XML transformation
+	 * @throws EstimatorException 
 	 */
-	public void processStream(InputStream input, OutputStream output) throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
+	public void processStream(InputStream input, OutputStream output) throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
 		//Read XML into Doc
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
