@@ -25,10 +25,26 @@ public class Configuration {
 	Location location;
 	List<Modifier> modifiers;
 	
+	
+//	Note from the internet....
+//	"In South East Queensland the average household used 11,503 kWh from 
+//	December 2005 to November 2006, which is significantly higher than both the 
+//	state and the national average consumption"
+//  http://www.vinnies.org.au/files/NAT/SocialJustice/CustomerProtectionsandSmartMetersIssuesforQld.pdf
+	double avgPowerConsumption;	//kWh average per day.
+	
+	
+	
 	public Configuration() {
 		modifiers = new LinkedList<Modifier>();
 	}
 	
+	/**
+	 * Converts xml data to SolarArray object "array"
+	 * 
+	 * @param n
+	 * @throws EstimatorException
+	 */
 	private void makeArray(Node n) throws EstimatorException {
 		Element el = (Element)n;
 		NodeList banks = el.getElementsByTagName("bank");
@@ -61,6 +77,11 @@ public class Configuration {
 		this.array = sArray;
 	}
 	
+	
+	/**
+	 * Converts xml data into Location object "location"
+	 * @param n
+	 */
 	private void makeLocation(Node n) {
 		
 	}
@@ -86,7 +107,8 @@ public class Configuration {
 			case location:
 				break;
 			default:
-					break;
+				throw new EstimatorException( "Unknown tag type: " + n.getNodeName() );
+					//break;
 			}
 		}
 	}
