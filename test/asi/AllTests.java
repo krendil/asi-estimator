@@ -5,9 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import asi.server.DataProcessingServletTest;
-import asi.beans.BankOfPanelsTest;
-import asi.beans.LocationTest;
-import asi.beans.SolarArrayTest;
+import asi.beans.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
@@ -15,7 +13,8 @@ import asi.beans.SolarArrayTest;
 	DummyTest.class,
 	LocationTest.class,
 	BankOfPanelsTest.class,
-	SolarArrayTest.class
+	SolarArrayTest.class,
+	ElectricalGridTest.class
 	
 })
 public class AllTests {
