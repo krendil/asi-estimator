@@ -90,7 +90,7 @@ public class LocationTest {
 	@Test
 	public void SetSunlight() {
 		try {
-			location.SetSunlight( GOOD_SUNLIGHT );
+			location.setSunlight( GOOD_SUNLIGHT );
 		} catch ( EstimatorException e ) {
 			fail( GOOD_SUNLIGHT + "hours of sunlight should not throw an exception.");
 		}
@@ -99,7 +99,7 @@ public class LocationTest {
 	@Test
 	public void SetLowSunlight() {
 		try {
-			location.SetSunlight( TOO_LOW_SUNLIGHT );
+			location.setSunlight( TOO_LOW_SUNLIGHT );
 			fail( TOO_LOW_SUNLIGHT + " hours of sunlight should throw an exception. ");
 		} catch ( EstimatorException e ) {}
 		
@@ -108,7 +108,7 @@ public class LocationTest {
 	@Test
 	public void SetHighSunlight() {
 		try {
-			location.SetSunlight( TOO_HIGH_SUNLIGHT );
+			location.setSunlight( TOO_HIGH_SUNLIGHT );
 			fail( TOO_HIGH_SUNLIGHT + " hours of sunlight should throw an exception. ");
 		} catch ( EstimatorException e ) {}
 	}
@@ -116,7 +116,7 @@ public class LocationTest {
 	@Test
 	public void GetSunlight() {
 		try {
-			location.SetSunlight( GOOD_SUNLIGHT );
+			location.setSunlight( GOOD_SUNLIGHT );
 		} catch ( EstimatorException e ) {}
 		
 		assertEquals("getSunlight did not return the correct value.", GOOD_SUNLIGHT, location.getSunlight(), 0.0 );

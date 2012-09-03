@@ -10,10 +10,12 @@ package asi.beans;
 public class Location {
 	
 	final private double DEFAULT_DAILY_SUNLIGHT = 4.0; //hours. Used if unable to find daylight hours
+	final private double DEFAULT_ORIENTATION = 100.0;
 	
 	private String country;
 	private String city;
 	private double sunlight;	//average hours of daily sunlight
+	private double idealOrientation;	// in degrees
 	
 	
 	
@@ -34,7 +36,10 @@ public class Location {
 		this.country = country;
 		this.city = null;
 		
+		
+		// TODO query database to get the average sunlight hours and assign them here.
 		this.sunlight = DEFAULT_DAILY_SUNLIGHT;
+		this.idealOrientation = DEFAULT_ORIENTATION;
 	}
 
 	/**
@@ -50,8 +55,12 @@ public class Location {
 		this.country = country;
 		this.city = city;
 		
+		// TODO query database to get the average sunlight hours and assign them here.
 		this.sunlight = DEFAULT_DAILY_SUNLIGHT;
+		this.idealOrientation = DEFAULT_ORIENTATION;
 	}
+	
+	
 	
 	/**
 	 * Method to validate the name of the country.
@@ -81,7 +90,7 @@ public class Location {
 	 * @param sunlight	must be between 0.0 and 24.0
 	 * @throws EstimatorException
 	 */
-	public void SetSunlight( double sunlight ) throws EstimatorException {
+	public void setSunlight( double sunlight ) throws EstimatorException {
 		
 		// Sanity checks
 		if ( sunlight > 24.0 ) {
@@ -95,8 +104,14 @@ public class Location {
 		this.sunlight = sunlight;  
 	}
 
+	
 	public double getSunlight() {
 		return sunlight;
+	}
+	
+	
+	public double getOrientation() {
+		return idealOrientation;
 	}
 	
 	
