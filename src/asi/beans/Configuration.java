@@ -37,8 +37,8 @@ public class Configuration {
 	
 	// grid xml
 	final private String GRID = "grid";
-	final private String G_CONSUMPTION = "consumption";
-	final private String G_TARIFF = "tariff";
+	final private String G_CONSUMPTION = "power";
+	final private String G_TARIFF = "rate";
 	final private String G_FEEDIN = "feedin";
 	
 	
@@ -149,12 +149,12 @@ public class Configuration {
 		//TODO: not sure if correct
 		
 		Element el = (Element)n;
-		NodeList location = el.getElementsByTagName( LOCATION );
+//		NodeList location = el.getElementsByTagName( LOCATION );
+//		
+//		Element l = (Element)location.item(0);
 		
-		Element b = (Element)location.item(0);
-		
-		String country = b.getAttribute( L_COUNTRY );
-		String city = b.getAttribute( L_CITY );
+		String country = el.getAttribute( L_COUNTRY );
+		String city = el.getAttribute( L_CITY );
 
 		
 		if ( city != "" ) {
@@ -175,13 +175,18 @@ public class Configuration {
 		//TODO: not sure if correct
 		
 		Element el = (Element)n;
-		NodeList grid = el.getElementsByTagName( GRID );
+//		NodeList grid = el.getElementsByTagName( GRID );
+//		
+//		Element g = (Element)grid.item(0);
+//		String consumption = g.getAttribute( G_CONSUMPTION );
+//		String tariff = g.getAttribute( G_TARIFF );
+//		String feedin = g.getAttribute( G_FEEDIN );
 		
-		Element g = (Element)grid.item(0);
 		
-		String consumption = g.getAttribute( G_CONSUMPTION );
-		String tariff = g.getAttribute( G_TARIFF );
-		String feedin = g.getAttribute( G_FEEDIN );
+		String consumption = el.getAttribute( G_CONSUMPTION );
+		String tariff = el.getAttribute( G_TARIFF );
+		String feedin = el.getAttribute( G_FEEDIN );
+		
 
 		double avgPowerConsumption = Double.parseDouble( consumption );
 		double tariffRate = Double.parseDouble( tariff );
