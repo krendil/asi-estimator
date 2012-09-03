@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	
-<!ENTITY % modifier "(location)">
+<!ENTITY % modifier "(location | feedin | consumption)">
 
 <!ELEMENT solarquery (array, (%modifier;)*)>
 
@@ -19,4 +19,14 @@
 	long in the range -180 to 180, and lat in the range -90 to 90 -->
 <!ATTLIST location long NMTOKEN #REQUIRED>
 <!ATTLIST location lat NMTOKEN #REQUIRED>
+
+<!ELEMENT feedin EMPTY>
+<!-- rate is expected to be a decimal number in c/kWh -->
+<!ATTLIST feedin rate NMTOKEN #REQUIRED>
+
+<!ELEMENT consumption EMPTY>
+<!-- power is expected to be a decimal number in kWh/year -->
+<!ATTLIST consumption power NMTOKEN #REQUIRED>
+<!-- rate is expected to be a decimal number in c/kWh -->
+<!ATTLIST consumption rate NMTOKEN #REQUIRED>
 	

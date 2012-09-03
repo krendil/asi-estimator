@@ -106,4 +106,5 @@ public class ElectricalGrid {
 		}
 		return tally;
 	}
+	
 }
