@@ -19,6 +19,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import asi.beans.EstimatorException;
+
 public class DataProcessingServletTest {
 	
 	DataProcessingServlet servlet;
@@ -65,14 +67,14 @@ public class DataProcessingServletTest {
 	}
 	
 	@Test(expected=SAXException.class)
-	public void testProcessStream_garbage() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
+	public void testProcessStream_garbage() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
 		FileInputStream query = new FileInputStream("test/validquery.xml");
 		PipedOutputStream output = new PipedOutputStream();
 		servlet.processStream(query, output);
 	}
 	
 	@Test(expected=SAXException.class)
-	public void testProcessStream_invalid() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
+	public void testProcessStream_invalid() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
 		FileInputStream query = new FileInputStream("test/validquery.xml");
 		PipedOutputStream output = new PipedOutputStream();
 		servlet.processStream(query, output);
