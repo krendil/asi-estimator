@@ -13,6 +13,8 @@
 <!ATTLIST bank number NMTOKEN "1">
 <!-- power is expected to contain a positive, nonzero number -->
 <!ATTLIST bank power NMTOKEN #REQUIRED>
+<!-- tilt is expected to be contain a nonzero decimal number between 0 and 90-->
+<!ATTLIST bank tilt NMTOKEN "32">
 
 <!ELEMENT location EMPTY>
 <!-- long and lat are both expected to contain decimal numbers, 
