@@ -9,13 +9,18 @@ import asi.beans.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	DataProcessingServletTest.class,
+	//System and sanity
 	DummyTest.class,
-	LocationTest.class,
-	BankOfPanelsTest.class,
-	SolarArrayTest.class,
-	ElectricalGridTest.class
 	
+	//Modifiers and beans
+	BankOfPanelsTest.class,
+	ElectricalGridTest.class,
+	HoursOfSunlightTest.class,
+	LocationTest.class,
+	SolarArrayTest.class,
+	
+	//Servlets
+	DataProcessingServletTest.class
 })
 public class AllTests {
 

@@ -319,10 +319,15 @@ public class Configuration {
 		}
 	}
 	
-	private void makeSunlight(Node n) {
+	private void makeSunlight(Node n) throws EstimatorException {
 		Element el = (Element) n;
 		String hours = el.getAttribute( S_HOURS );
-		HoursOfSunlight mod = new HoursOfSunlight(Double.parseDouble(hours));
+		HoursOfSunlight mod;
+		try {
+			mod = new HoursOfSunlight(Double.parseDouble(hours));
+		} catch (NumberFormatException e) {
+			throw new EstimatorException("Sunlight hours cannot be converted to a number");
+		}
 		this.modifiers.add(mod);
 	}
 

@@ -69,7 +69,7 @@ public class Asi_estimator implements EntryPoint {
 				
 				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
 						/*   //<-- Comment toggler, add leading / to enable first section
-						"http://asi-estimator.appspot.com/asi_estimator/estimate");
+						"http://asi-estimator.appspot.com/asi_estimator/estimate"
 						/*/
 						"http://127.0.0.1:8888/asi_estimator/estimate"
 						//*/
@@ -93,7 +93,7 @@ public class Asi_estimator implements EntryPoint {
 						String powerString = powerTag.getFirstChild().getNodeValue();
 						String revenueString = revenueTag.getFirstChild().getNodeValue();
 						
-						String resultString = "Power = " + powerString + "kW</br> Revenue = $" + revenueString;
+						String resultString = "Power = " + powerString + " kWh</br> Revenue = $" + revenueString;
 						
 						resultsHTML.setHTML(resultString);
 						
@@ -130,11 +130,12 @@ public class Asi_estimator implements EntryPoint {
 			"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
 			"<solarquery>"+
 			"	<array>"+
-			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" />"+
+			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\"/>"+
 			"	</array>"+
 			"	<location lat=\"-27.47815\" long=\"153.027687\" />"+
 			"	<feedin rate=\"0.08\" />"+
-			"	<consumption power=\"11500\" rate=\"25.378\"/>"+
+			"	<consumption power=\"11500\" rate=\"25.378\"/>" +
+			"	<sunlight hours=\"4.5\" />" +
 			"</solarquery>";
 	}
 	
