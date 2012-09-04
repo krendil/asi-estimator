@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.jasper.compiler.Node.DoBodyAction;
+//import org.apache.jasper.compiler.Node.DoBodyAction;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -43,7 +43,7 @@ public class Configuration {
 	
 	
 	private enum TagType {
-		array, location, grid
+		array, location, feedin, consumption
 		//array, location, feedin, consumption
 	}
 	
@@ -55,17 +55,10 @@ public class Configuration {
 //	Location location;
 //	
 //	//TODO refactor these away
-//	double currentCost;
-//	double feedinRate;
+	double currentCost;
+	double feedinRate;
 //	
 //	List<Modifier> modifiers;
-	
-	
-	/**
-	 * That's great, but we don't need to know this here - this should be in the client side
-	 * Also, that figure is per year, not per day.
-	 * ~David
-	 */
 	
 	public Configuration() {
 		modifiers = new LinkedList<Modifier>();
@@ -126,18 +119,18 @@ public class Configuration {
 		this.array = sArray;
 	}
 	
-//	private void makeFeedin(Node n) {
-//		String rate = ((Element) n).getAttribute("rate");
-//		this.feedinRate = Double.parseDouble(rate);
-//	}
-//	
-//	private void makeConsumption(Node n) {
-//		Element el = (Element) n;
-//		String power = el.getAttribute("power");
-//		String rate = el.getAttribute("rate");
-//		
-//		this.currentCost = Double.parseDouble(power) * Double.parseDouble(rate);
-//	}
+	private void makeFeedin(Node n) {
+		String rate = ((Element) n).getAttribute("rate");
+		this.feedinRate = Double.parseDouble(rate);
+	}
+	
+	private void makeConsumption(Node n) {
+		Element el = (Element) n;
+		String power = el.getAttribute("power");
+		String rate = el.getAttribute("rate");
+		
+		this.currentCost = Double.parseDouble(power) * Double.parseDouble(rate);
+	}
 	
 	
 	/**
@@ -238,8 +231,8 @@ public class Configuration {
 	 */
 	public void parseDocument(Document doc) throws EstimatorException{
 		modifiers.clear();
-		
-		for(Node n = doc.getFirstChild(); n != null; n = n.getNextSibling()) {
+		Node solarQuery = doc.getElementsByTagName("solarquery").item(0);
+		for(Node n = solarQuery.getFirstChild(); n != null; n = n.getNextSibling()) {
 			if(n.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
 			}
@@ -251,15 +244,15 @@ public class Configuration {
 			case location:
 				makeLocation(n);
 				break;
-			case grid:
-				makeGrid(n);
+//			case grid:
+//				makeGrid(n);
+//				break;
+			case feedin:
+				makeFeedin(n);
 				break;
-//			case feedin:
-//				makeFeedin(n);
-//				break;
-//			case consumption:
-//				makeConsumption(n);
-//				break;
+			case consumption:
+				makeConsumption(n);
+				break;
 			default:
 				throw new EstimatorException( "Unimplemented tag: " + n.getNodeName() );
 					//break;
@@ -282,7 +275,7 @@ public class Configuration {
 			totalPower += power;
 		}
 		
-		double totalRevenue = grid.getDailyCredit();// = totalPower * this.feedinRate;
+		double totalRevenue= totalPower * this.feedinRate;
 		Document doc;
 		
 		try {
@@ -301,9 +294,14 @@ public class Configuration {
 		
 		DocumentType doctype = di.createDocumentType("solarresponse", "", "http://asi-estimator.appspot.com/solarquery.dtd");
 		Document doc = di.createDocument(null, "solarresponse", doctype);
+		Element root = doc.getDocumentElement();
 		
-		doc.createElement("power").setTextContent(Double.toString(totalPower));
-		doc.createElement("revenue").setTextContent(Double.toString(totalRevenue));
+		Element power = doc.createElement("power");
+		power.setTextContent(Double.toString(totalPower));
+		Element revenue = doc.createElement("revenue");
+		revenue.setTextContent(Double.toString(totalRevenue));
+		root.appendChild(power);
+		root.appendChild(revenue);
 		
 		return doc;
 	}

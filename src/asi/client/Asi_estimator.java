@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.http.client.*;
 import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 
@@ -58,13 +60,20 @@ public class Asi_estimator implements EntryPoint {
 			private void sendNameToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
-				String textToServer = powerGenerationField.getText(); //Generate XML using this input
+				String textToServer = generateXML();//powerGenerationField.getText(); //Generate XML using this input
+				
 				//would be nice to have verification here
 
 				// Then, we send the input to the server.
 				submitButton.setEnabled(false);
 				
-				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, "www.google.com");//To be made a constant, yes google.com
+				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
+						/*   //<-- Comment toggler, add leading / to enable first section
+						"http://asi-estimator.appspot.com/asi_estimator/estimate");
+						/*/
+						"http://127.0.0.1:8888/asi_estimator/estimate"
+						//*/
+				);
 				
 				request.setRequestData(textToServer);//Change to xml string
 				
@@ -81,10 +90,10 @@ public class Asi_estimator implements EntryPoint {
 						Node powerTag = doc.getElementsByTagName("power").item(0);
 						Node revenueTag = doc.getElementsByTagName("revenue").item(0);
 						
-						String powerString = powerTag.getNodeValue();
-						String revenueString = revenueTag.getNodeValue();
+						String powerString = powerTag.getFirstChild().getNodeValue();
+						String revenueString = revenueTag.getFirstChild().getNodeValue();
 						
-						String resultString = "Power = " + powerString + "</br> Revenue: " + revenueString;
+						String resultString = "Power = " + powerString + "kW</br> Revenue = $" + revenueString;
 						
 						resultsHTML.setHTML(resultString);
 						
@@ -98,14 +107,35 @@ public class Asi_estimator implements EntryPoint {
 					
 				} );
 				
+				try {
+					request.send();
+				} catch (RequestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		//create handlers for widgets
 			//Submit
 		//add handlers to widgets
+		submitButton.addClickHandler(new MyHandler());
 		
 		
 		
+	}
+	
+	private String generateXML() {
+		//FIXME Obviously, this is bogus
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
+			"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
+			"<solarquery>"+
+			"	<array>"+
+			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" />"+
+			"	</array>"+
+			"	<location lat=\"-27.47815\" long=\"153.027687\" />"+
+			"	<feedin rate=\"0.08\" />"+
+			"	<consumption power=\"11500\" rate=\"25.378\"/>"+
+			"</solarquery>";
 	}
 	
 	

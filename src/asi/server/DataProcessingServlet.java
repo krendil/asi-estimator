@@ -88,6 +88,6 @@ public class DataProcessingServlet extends HttpServlet {
 		Source source = new DOMSource(estimate);
 		Result result = new StreamResult(output);
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
-		tf.transform(source, result);		
+		tf.transform(source, result);
 	}
 }

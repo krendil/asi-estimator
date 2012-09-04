@@ -63,6 +63,9 @@
             <fileset dir="${sdk.dir}/lib/user">
                 <include name="**/*.jar" />
             </fileset>
+        	<fileset dir="${gwt.dir}" >
+        		<include name="*.jar" />
+			</fileset>
         </copy>
     </target>
     
