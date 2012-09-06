@@ -301,6 +301,27 @@ public class Configuration {
 	 * @throws EstimatorException
 	 */
 	private void makeLocation(Node n) throws EstimatorException {
+		/**
+		 * TODO: the direction, tilt and latitude all combine to 
+		 *
+		 * affect the amount of sunlight captured according to
+		 * this equation, averaged over a year:
+		 * R = sin(l)cos(t) - cos(l)cos(d) + cos(l)sin(t)cos(d)
+		 *		+ (cos(l)^2/sin(l))
+		 * where
+		 * l = latitude
+		 * t = tilt from horizontal
+		 * d = direction from ideal (0 in southern hem., 180 in north)
+		 * 
+		 * Equations modified from
+		 * http://www.sciencedirect.com/science/article/pii/S0960148104000060
+		 * In particular, the formulas for R_b, THETA_I and THETA_Z, with
+		 * delta = latitude (averaged over year)
+		 * and
+		 * omega = 0 (averaged over each day)
+		 */ 
+		
+		
 		//TODO: not sure if correct
 		
 		Element el = (Element)n;
