@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	
-<!ENTITY % modifier "(location | feedin | consumption)">
+<!ENTITY % modifier "(feedin | consumption | sunlight)">
 
 <!ELEMENT solarquery (array, (%modifier;)*)>
 
@@ -15,12 +15,9 @@
 <!ATTLIST bank power NMTOKEN #REQUIRED>
 <!-- tilt is expected to be contain a nonzero decimal number between 0 and 90-->
 <!ATTLIST bank tilt NMTOKEN "32">
+<!-- price is expected to be a decimal value in the local currency -->
+<!ATTLIST bank price NMTOKEN #REQUIRED>
 
-<!ELEMENT location EMPTY>
-<!-- long and lat are both expected to contain decimal numbers, 
-	long in the range -180 to 180, and lat in the range -90 to 90 -->
-<!ATTLIST location long NMTOKEN #REQUIRED>
-<!ATTLIST location lat NMTOKEN #REQUIRED>
 
 <!ELEMENT feedin EMPTY>
 <!-- rate is expected to be a decimal number in c/kWh -->
@@ -31,4 +28,8 @@
 <!ATTLIST consumption power NMTOKEN #REQUIRED>
 <!-- rate is expected to be a decimal number in c/kWh -->
 <!ATTLIST consumption rate NMTOKEN #REQUIRED>
+
+<!ELEMENT sunlight EMPTY>
+<!-- hours is expected to be a decimal number in the range (0, 24] -->
+<!ATTLIST sunlight hours NMTOKEN #REQUIRED>
 	

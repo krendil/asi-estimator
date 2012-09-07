@@ -75,7 +75,7 @@ public class HoursOfSunlightTest {
 	public void testGetMultiplier() throws EstimatorException {
 		double expected = GOOD_HOURS * DAYS_IN_YEAR;
 		HoursOfSunlight hours = new HoursOfSunlight(GOOD_HOURS);
-		double mult = hours.getMultiplier();
+		double mult = hours.getMultiplier(0);
 		Assert.assertEquals(expected, mult, EPSILON);
 	}
 

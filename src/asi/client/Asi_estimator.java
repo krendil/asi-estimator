@@ -5,9 +5,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.http.client.*;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
@@ -21,27 +25,150 @@ import com.google.gwt.xml.client.XMLParser;
  */
 public class Asi_estimator implements EntryPoint {
 
+	Button calculateButton;
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		//add widgets
-		final Button submitButton = new Button("Submit");
-		final TextBox powerGenerationField = new TextBox();
-		powerGenerationField.setText("500");
-		final Label errorLabel = new Label();
-		final HTML resultsHTML = new HTML();
-		
-		//add widgets to html
-		RootPanel.get("powerGenerationFieldContainer").add(powerGenerationField);
-		RootPanel.get("submitButtonContainer").add(submitButton);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
-		RootPanel.get("resultsHTMLContainer").add(resultsHTML);
-		
-		powerGenerationField.setFocus(true);
-		powerGenerationField.selectAll();
-		
-		
+		 // Create a tab panel
+	    TabPanel tabPanel = new TabPanel();
+
+	    // Set the width to 600 pixels
+	    
+	    tabPanel.setWidth("100%");
+
+	    // Add a home tab
+	    HTML homeText = new HTML("Hi and welcome to the Solar Calulcator" +
+	    		"developer by Agilis Sol Industria to help benefit" +
+	    		"this filler text we are filler text" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>" +
+	    		"filler text </br></br>");
+	    
+	    tabPanel.add(homeText, "Home");
+
+	    // Add a tab for calulating
+	    
+	    //Housing Panel
+	    VerticalPanel housingPanel = new VerticalPanel();
+	    // For vPANEL
+	    final VerticalPanel vPanel = new VerticalPanel();
+
+	       
+	    //Labels
+	    InlineLabel powerConsumptionLabel = new InlineLabel("Enter Power Consumption:");
+	    InlineLabel tariffRatesLabel = new InlineLabel("Enter Tariff Rates:");
+	    InlineLabel feedInTariffLabel = new InlineLabel("Enter Feed-In Tariff Rates:");
+	    InlineLabel hoursOfSunLabel = new InlineLabel("Enter the average hours of sunlight per day");
+	    
+	    	    
+	    //TextBoxes
+	    TextBox powerConsumption = new TextBox();
+	    TextBox tariffRates = new TextBox();
+	    TextBox feedInTariff = new TextBox();
+	    TextBox hoursOfSun = new TextBox();
+	    
+
+	    //Buttons
+	    calculateButton = new Button("Calculate");
+	    
+	    //Space
+	    InlineHTML space = new InlineHTML("<br/>");
+	    
+	    
+	    //Add to panel
+	    vPanel.add(powerConsumptionLabel);
+	    vPanel.add(powerConsumption);
+	    vPanel.add(space);
+	    
+	    vPanel.add(tariffRatesLabel);
+	    vPanel.add(tariffRates);
+	    vPanel.add(space);
+	    
+	    vPanel.add(feedInTariffLabel);
+	    vPanel.add(feedInTariff);
+	    vPanel.add(space);
+	    
+	    vPanel.add(hoursOfSunLabel);
+	    vPanel.add(hoursOfSun);
+	    vPanel.add(space);
+	    
+	    vPanel.add(calculateButton);
+	    
+	    //For Results Panel in Calculate tab
+	    
+	    final VerticalPanel resultsPanel = new VerticalPanel();
+	    resultsPanel.setVisible(false);
+	    
+	    //Add back button
+	    
+	    Button backButton = new Button("Back");
+	    
+	    //Add to panel
+	    resultsPanel.add(new InlineHTML("RESULTS DISPLAYED HERE <br/>"));
+	    resultsPanel.add(backButton);
+	    
+	    
+	    housingPanel.add(vPanel);
+	    housingPanel.add(resultsPanel);
+	    tabPanel.add(housingPanel, "Calculate ");
+	    
+	    
+	    
+	    
+	    
+	    
+
+	    // Previous results tab
+	    HTML prevResults = new HTML("Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>" +
+	    		"Previous results Here <br/>");
+	    
+	    tabPanel.add(prevResults, "Previous Results");
+	    
+	    //Add tab panel to the interface
+	    
+	    RootPanel.get("interface").add(tabPanel);
+	    
+	    
+	    // Listen for mouse events on the Add button.
+	    calculateButton.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        vPanel.setVisible(false);
+	        resultsPanel.setVisible(true);
+	        
+	      }
+	    });
+	    
+	    backButton.addClickHandler(new ClickHandler() {
+	    	public void onClick(ClickEvent event2) {
+	    		resultsPanel.setVisible(false);
+	    		vPanel.setVisible(true);
+
+	    	}
+	    });
+	    
+	    
 		
 		
 		// Create a handler for the sendButton and nameField
@@ -59,13 +186,13 @@ public class Asi_estimator implements EntryPoint {
 			 */
 			private void sendNameToServer() {
 				// First, we validate the input.
-				errorLabel.setText("");
+				//errorLabel.setText("");
 				String textToServer = generateXML();//powerGenerationField.getText(); //Generate XML using this input
 				
 				//would be nice to have verification here
 
 				// Then, we send the input to the server.
-				submitButton.setEnabled(false);
+				calculateButton.setEnabled(false);
 				
 				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
 						/*   //<-- Comment toggler, add leading / to enable first section
@@ -95,14 +222,14 @@ public class Asi_estimator implements EntryPoint {
 						
 						String resultString = "Power = " + powerString + " kWh</br> Revenue = $" + revenueString;
 						
-						resultsHTML.setHTML(resultString);
-						
+						//resultsHTML.setHTML(resultString);
+						calculateButton.setEnabled(true);	
 					}
 
 					@Override
 					public void onError(Request request, Throwable exception) {
 						// TODO Auto-generated method stub
-						
+						calculateButton.setEnabled(true);		
 					}
 					
 				} );
@@ -118,10 +245,7 @@ public class Asi_estimator implements EntryPoint {
 		//create handlers for widgets
 			//Submit
 		//add handlers to widgets
-		submitButton.addClickHandler(new MyHandler());
-		
-		
-		
+		calculateButton.addClickHandler(new MyHandler());
 	}
 	
 	private String generateXML() {
@@ -130,9 +254,8 @@ public class Asi_estimator implements EntryPoint {
 			"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
 			"<solarquery>"+
 			"	<array>"+
-			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\"/>"+
+			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\" price=\"1000.0\"/>"+
 			"	</array>"+
-			"	<location lat=\"-27.47815\" long=\"153.027687\" />"+
 			"	<feedin rate=\"0.08\" />"+
 			"	<consumption power=\"11500\" rate=\"25.378\"/>" +
 			"	<sunlight hours=\"4.5\" />" +

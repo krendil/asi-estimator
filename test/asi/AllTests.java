@@ -14,7 +14,9 @@ import asi.beans.*;
 	
 	//Modifiers and beans
 	BankOfPanelsTest.class,
+	ConsumptionTest.class,
 	ElectricalGridTest.class,
+	FeedInRateTest.class,
 	HoursOfSunlightTest.class,
 	LocationTest.class,
 	SolarArrayTest.class,

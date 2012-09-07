@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -88,6 +89,7 @@ public class DataProcessingServlet extends HttpServlet {
 		Source source = new DOMSource(estimate);
 		Result result = new StreamResult(output);
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
+		tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://asi-estimator.appspot.com/solarresponse.dtd");
 		tf.transform(source, result);
 	}
 }

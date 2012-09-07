@@ -62,22 +62,32 @@ public class DataProcessingServletTest {
 		servlet.processStream(query, output);
 		
 		DocumentBuilder db = getDocBuilder();
-
+		     
 		db.parse(response); //No exceptions thrown
 	}
 	
 	@Test(expected=SAXException.class)
 	public void testProcessStream_garbage() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
-		FileInputStream query = new FileInputStream("test/validquery.xml");
+		FileInputStream query = new FileInputStream("test/invalidquery.xml");
 		PipedOutputStream output = new PipedOutputStream();
+		PipedInputStream response = new PipedInputStream(output);
 		servlet.processStream(query, output);
+		
+		DocumentBuilder db = getDocBuilder();
+
+		db.parse(response);
 	}
 	
 	@Test(expected=SAXException.class)
 	public void testProcessStream_invalid() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
-		FileInputStream query = new FileInputStream("test/validquery.xml");
+		FileInputStream query = new FileInputStream("test/garbagequery.xml");
 		PipedOutputStream output = new PipedOutputStream();
+		PipedInputStream response = new PipedInputStream(output);
 		servlet.processStream(query, output);
+		
+		DocumentBuilder db = getDocBuilder();
+
+		db.parse(response);
 	}
 	
 	private static DocumentBuilder getDocBuilder() throws ParserConfigurationException{

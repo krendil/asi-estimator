@@ -1,6 +1,9 @@
 package asi.beans;
 
-public class HoursOfSunlight implements Modifier {
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+public class HoursOfSunlight extends Modifier {
 
 	private static final double DAYS_IN_YEAR = 365.25;
 	private static final double MAX_HOURS = 24.0;
@@ -10,6 +13,10 @@ public class HoursOfSunlight implements Modifier {
 	
 	public HoursOfSunlight(double hoursPerDay) throws EstimatorException {
 		setHours(hoursPerDay);
+	}
+	
+	public HoursOfSunlight(Node n) throws EstimatorException {
+		setHours( Double.parseDouble(((Element) n).getAttribute("hours")) );
 	}
 	
 	private void setHours(double hours) throws EstimatorException {
@@ -24,7 +31,7 @@ public class HoursOfSunlight implements Modifier {
 	}
 	
 	@Override
-	public double getMultiplier() {
+	public double getMultiplier(int years) {
 		return this.hours * DAYS_IN_YEAR;
 	}
 

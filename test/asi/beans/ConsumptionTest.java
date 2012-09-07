@@ -2,6 +2,8 @@ package asi.beans;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,8 +14,8 @@ public class ConsumptionTest {
 	private final double GOOD_POWER = 22.9;
 	private final double BAD_POWER = -12.8;
 	
-	private final double GOOD_RATE = 0.25;
-	private final double BAD_RATE = -0.58;
+	private final BigDecimal GOOD_RATE = new BigDecimal(0.25);
+	private final BigDecimal BAD_RATE = new BigDecimal(-0.58);
 	
 	private Consumption consumption; 
 	
@@ -72,7 +74,7 @@ public class ConsumptionTest {
 	@Test
 	public void zeroRate() {
 		try {
-			consumption = new Consumption ( GOOD_POWER, 0 );
+			consumption = new Consumption ( GOOD_POWER, BigDecimal.ZERO );
 			fail ("Good power and 0 rate should cause exception to be thrown. ");
 		} catch ( EstimatorException e ) { }
 	}
@@ -89,7 +91,7 @@ public class ConsumptionTest {
 	@Test
 	public void zeroPowerZeroRate() {
 		try {
-			consumption = new Consumption ( 0, 0 );
+			consumption = new Consumption ( 0, BigDecimal.ZERO );
 			fail ("0 power and 0 rate should cause exception to be thrown. ");
 		} catch ( EstimatorException e ) { }
 	}
@@ -97,9 +99,8 @@ public class ConsumptionTest {
 	@Test
 	public void cost() {
 		assertEquals("Current cost is not calculated properly.",
-				consumption.getCurrentCost(),
-				GOOD_POWER * GOOD_RATE,
-				0.0 ) ;
+				consumption.getCurrentCost(0),
+				GOOD_RATE.multiply(new BigDecimal(GOOD_POWER)));
 	}
 
 }

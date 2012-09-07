@@ -1,5 +1,10 @@
 package asi.beans;
 
+import java.math.BigDecimal;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 
 /**
  * This class checks and stores information about the customer's electricity consumption and the rate
@@ -7,36 +12,53 @@ package asi.beans;
  * @author Steven Turner
  *
  */
-public class Consumption {
+public class Consumption extends Modifier{
 	double power;	// kWh
-	double rate;	// $ per kWh
+	BigDecimal rate;	// $ per kWh
 	
-	public Consumption ( double power, double rate ) throws EstimatorException {
-		// sanity checks
+	public Consumption(Node n) throws EstimatorException {
+		Element el = (Element) n;
+		double power = Double.parseDouble(el.getAttribute("power"));
+		BigDecimal rate = new BigDecimal(el.getAttribute("rate"));
+
+		setPower(power);
+		setRate(rate);
+	}
+	
+	public Consumption ( double power, BigDecimal rate ) throws EstimatorException {
+		setPower(power);
+		setRate(rate);
+	}
+	
+	private void setPower(double power) throws EstimatorException {
 		if ( power < 0 ) {
 			throw new EstimatorException ( "Power consumption output cannot be less than zero." );
 		}
-		
-		if ( rate <= 0 ) {
+		this.power = power;
+	}
+	
+	private void setRate(BigDecimal rate) throws EstimatorException {
+
+		if ( rate.signum() <= 0 ) {
 			throw new EstimatorException ( "Consumption $ rate cannot be equal to, or under, $0.00" );
 		}
 		
-		this.power = power;
 		this.rate = rate;
 	}
 	
 	/**
-	 * @return the current cost given an amount of power consumed, and the going electricty rate.
+	 * @return the current cost given an amount of power consumed, and the going electricity rate.
 	 */
-	public double getCurrentCost() {
-		return this.power * this.rate;
+	@Override
+	public BigDecimal getCurrentCost(int year) {
+		return this.rate.multiply(new BigDecimal(this.power));
 	}
 	
 	public double getPower() {
 		return this.power;
 	}
 	
-	public double getRate() {
+	public BigDecimal getRate() {
 		return this.rate;
 	}
 	

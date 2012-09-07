@@ -2,6 +2,8 @@ package asi.beans;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,8 +13,8 @@ import org.junit.Test;
 public class FeedInRateTest {
 	FeedInRate feedInRate;
 	
-	final double GOOD_VALUE = 0.25;
-	final double BAD_VALUE = -0.67;
+	final BigDecimal GOOD_VALUE = new BigDecimal(0.25);
+	final BigDecimal BAD_VALUE = new BigDecimal(-0.67);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -23,10 +25,10 @@ public class FeedInRateTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
-		feedInRate = new FeedInRate( GOOD_VALUE );
+	public void setup() throws Exception {
+		feedInRate = new FeedInRate(GOOD_VALUE);
 	}
-
+	
 	@After
 	public void tearDown() throws Exception {
 	}
@@ -51,14 +53,14 @@ public class FeedInRateTest {
 	@Test
 	public void zeroValue() {
 		try {
-			feedInRate = new FeedInRate( 0 );
+			feedInRate = new FeedInRate( BigDecimal.ZERO );
 			fail ( "A zero value should throw an exception." );
 		} catch ( EstimatorException e ) { }
 	}
 
 	@Test
 	public void getter() {
-		assertEquals ( "getter does not return the correct value.", GOOD_VALUE, feedInRate.getFeedInRate(), 0.0);
+		assertEquals ( "getter does not return the correct value.", GOOD_VALUE, feedInRate.getFeedInRate());
 	}
 
 	

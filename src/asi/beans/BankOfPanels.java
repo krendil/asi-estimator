@@ -1,5 +1,7 @@
 package asi.beans;
 
+import java.math.BigDecimal;
+
 /**
  * Bank of panels class
  * @author Steven Turner
@@ -14,16 +16,18 @@ public class BankOfPanels {
 	private double orientation;	// degrees from North
 	private double kW; // kilowatt
 	private double tilt; //degrees from horizontal
+	private BigDecimal price; //How much the panel cost
 	
 	/**
 	 * Constructor
 	 * @param orientation in degrees
 	 * @param kW rated kilowatt output
 	 */
-	public BankOfPanels( double orientation, double kW, double tilt ) throws EstimatorException {
+	public BankOfPanels( double orientation, double kW, double tilt, BigDecimal price ) throws EstimatorException {
 		this.setOrientation(orientation);
 		this.setKW(kW);
 		this.setTilt(tilt);
+		this.setPrice(price);
 	}
 
 	/**
@@ -64,14 +68,23 @@ public class BankOfPanels {
 		if (tilt < MIN_TILT) {
 			throw new EstimatorException( "Panel tilt cannot be set below 0 degrees" );
 		}
-		if (tilt >= MAX_TILT ) {
+		if (tilt > MAX_TILT ) {
 			throw new EstimatorException( "Panel tilt cannot be set above 90 degrees" );
 		}
 		
 		this.tilt = tilt;
 	}
 	
-	
+	private void setPrice(BigDecimal price) throws EstimatorException {
+		
+		if(price == null) {
+			throw new EstimatorException( "Price must not be null" );
+		}
+		if(price.signum() < 0) {
+			throw new EstimatorException( "Price must not be negative" );
+		}
+		this.price = price;
+	}
 
 	public double getOrientation() {
 		return orientation;
@@ -82,6 +95,9 @@ public class BankOfPanels {
 	}
 	public double getTilt() {
 		return tilt;
+	}
+	public BigDecimal getPrice() {
+		return price;
 	}
 
 }
