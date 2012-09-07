@@ -18,7 +18,7 @@ import asi.beans.*;
 	ElectricalGridTest.class,
 	FeedInRateTest.class,
 	HoursOfSunlightTest.class,
-	LocationTest.class,
+	ModifierFactoryTest.class,
 	SolarArrayTest.class,
 	
 	//Servlets

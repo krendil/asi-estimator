@@ -25,6 +25,7 @@ public class BankOfPanelsTest {
 	final double NEG_KW = -1.0;
 	
 	final BigDecimal GOOD_PRICE = new BigDecimal(1000);
+	final BigDecimal BAD_PRICE = new BigDecimal(-34);
 	
 	BankOfPanels bankOfPanels;
 
@@ -44,8 +45,6 @@ public class BankOfPanelsTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	
 	
 	@Test
 	public void constructorTest() {
@@ -55,7 +54,6 @@ public class BankOfPanelsTest {
 			fail( "Should not throw exception when constructing with good parameters" );
 		}
 	}
-	
 	
 	@Test
 	public void lowOrientation() {
@@ -87,6 +85,33 @@ public class BankOfPanelsTest {
 		try {
 			bankOfPanels = new BankOfPanels( MAX_ORIENTATION, GOOD_KW, GOOD_TILT, GOOD_PRICE);
 			fail( "Must not be able to assign " + MAX_ORIENTATION + " as the maximum orientation." );
+		} catch ( EstimatorException e ) {	
+		}
+	}
+	
+	@Test
+	public void lowPrice() {
+		try {
+			bankOfPanels = new BankOfPanels( GOOD_ORIENTATION, GOOD_KW, GOOD_TILT, BAD_PRICE);
+			fail( "Must not be able to assign negative price." );
+		} catch ( EstimatorException e ) {	
+		}
+	}
+	
+	@Test
+	public void zeroPrice() {
+		try {
+			bankOfPanels = new BankOfPanels( GOOD_ORIENTATION, GOOD_KW, GOOD_TILT, BigDecimal.ZERO);
+			fail( "Must not be able to assign zero price." );
+		} catch ( EstimatorException e ) {	
+		}
+	}
+	
+	@Test
+	public void nullPrice() {
+		try {
+			bankOfPanels = new BankOfPanels( GOOD_ORIENTATION, GOOD_KW, GOOD_TILT, null);
+			fail( "Must not be able to assign null price." );
 		} catch ( EstimatorException e ) {	
 		}
 	}

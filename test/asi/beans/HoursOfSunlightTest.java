@@ -3,7 +3,6 @@
  */
 package asi.beans;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class HoursOfSunlightTest {
 	 */
 	@Test
 	public void testConstructorGood() throws EstimatorException {
-		HoursOfSunlight hours = new HoursOfSunlight(GOOD_HOURS);
+		new HoursOfSunlight(GOOD_HOURS);
 	}
 	
 	/**
@@ -37,7 +36,7 @@ public class HoursOfSunlightTest {
 	 */
 	@Test(expected=EstimatorException.class)
 	public void testConstructorNegative() throws EstimatorException {
-		HoursOfSunlight hours = new HoursOfSunlight(NEG_HOURS);
+		new HoursOfSunlight(NEG_HOURS);
 	}
 	
 	/**
@@ -46,7 +45,7 @@ public class HoursOfSunlightTest {
 	 */
 	@Test(expected=EstimatorException.class)
 	public void testConstructorHigh() throws EstimatorException {
-		HoursOfSunlight hours = new HoursOfSunlight(HIGH_HOURS);
+		new HoursOfSunlight(HIGH_HOURS);
 	}
 	
 	/**
@@ -55,7 +54,7 @@ public class HoursOfSunlightTest {
 	 */
 	@Test
 	public void testConstructorZero() throws EstimatorException {
-		HoursOfSunlight hours = new HoursOfSunlight(0);
+		new HoursOfSunlight(0);
 	}
 	
 	/**
@@ -64,7 +63,7 @@ public class HoursOfSunlightTest {
 	 */
 	@Test
 	public void testConstructorMax() throws EstimatorException {
-		HoursOfSunlight hours = new HoursOfSunlight(MAX_HOURS);
+		new HoursOfSunlight(MAX_HOURS);
 	}
 
 	/**

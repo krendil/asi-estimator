@@ -1,17 +1,11 @@
 package asi.beans;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.internal.ArrayComparisonFailure;
 
 public class SolarArrayTest {
 	
