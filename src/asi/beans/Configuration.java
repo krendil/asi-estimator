@@ -12,6 +12,7 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Represents the entire input configuration, including solar panels,
@@ -76,6 +77,12 @@ public class Configuration {
 	public void parseDocument(Document doc) throws EstimatorException{
 		modifiers.clear();
 		
+		for(Node child = doc.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
+			if(child.getNodeType() != Node.ELEMENT_NODE) {
+				continue;
+			}
+			modifiers.add(ModifierFactory.createModifier(child));
+		}
 	}
 	
 	private Document makeDocument(double[] totalPower, BigDecimal[] totalRevenue, BigDecimal[] newCosts) 
@@ -94,7 +101,7 @@ public class Configuration {
 		Element revenue = doc.createElement("revenue");
 		revenue.setTextContent(printArray(totalRevenue));
 		Element cost = doc.createElement("cost");
-		revenue.setTextContent(printArray(newCosts));
+		cost.setTextContent(printArray(newCosts));
 		root.appendChild(power);
 		root.appendChild(revenue);
 		root.appendChild(cost);

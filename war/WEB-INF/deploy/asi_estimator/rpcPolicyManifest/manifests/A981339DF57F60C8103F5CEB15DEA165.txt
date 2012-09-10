@@ -1,2 +1,0 @@
-serviceClass: asi.client.GreetingService
-path: E2E311CB344795CB913B5F43C18B4562.gwt.rpc

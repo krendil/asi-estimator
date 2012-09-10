@@ -27,6 +27,14 @@ import com.google.gwt.xml.client.XMLParser;
 public class Asi_estimator implements EntryPoint {
 
 	Button calculateButton;
+	TextBox powerConsumption;
+	TextBox feedInTariff;
+	TextBox tariffRates;
+	TextBox hoursOfSun;
+	TextBox panelPower;
+	TextBox nPanels;
+	TextBox panelCost;
+	
 	
 	/**
 	 * This is the entry point method.
@@ -69,13 +77,19 @@ public class Asi_estimator implements EntryPoint {
 	    InlineLabel tariffRatesLabel = new InlineLabel("Enter Tariff Rates:");
 	    InlineLabel feedInTariffLabel = new InlineLabel("Enter Feed-In Tariff Rates:");
 	    InlineLabel hoursOfSunLabel = new InlineLabel("Enter the average hours of sunlight per day");
+	    InlineLabel panelPowerLabel = new InlineLabel("Enter the power rating of each panel");
+	    InlineLabel nPanelsLabel = new InlineLabel("Enter the number of panels");
+	    InlineLabel panelCostLabel = new InlineLabel("Enter the cost of each panel");
 	    
 	    	    
 	    //TextBoxes
-	    TextBox powerConsumption = new TextBox();
-	    TextBox tariffRates = new TextBox();
-	    TextBox feedInTariff = new TextBox();
-	    TextBox hoursOfSun = new TextBox();
+	     powerConsumption = new TextBox();
+	     tariffRates = new TextBox();
+	     feedInTariff = new TextBox();
+	     hoursOfSun = new TextBox();
+	 	panelPower = new TextBox();
+		 nPanels= new TextBox();
+		 panelCost= new TextBox();
 	    
 
 	    //Buttons
@@ -90,6 +104,7 @@ public class Asi_estimator implements EntryPoint {
 	    vPanel.add(powerConsumption);
 	    vPanel.add(space);
 	    
+	    
 	    vPanel.add(tariffRatesLabel);
 	    vPanel.add(tariffRates);
 	    vPanel.add(space);
@@ -100,6 +115,18 @@ public class Asi_estimator implements EntryPoint {
 	    
 	    vPanel.add(hoursOfSunLabel);
 	    vPanel.add(hoursOfSun);
+	    vPanel.add(space);
+	    
+	    vPanel.add(panelPowerLabel);
+	    vPanel.add(panelPower);
+	    vPanel.add(space);
+	    
+	    vPanel.add(nPanelsLabel);
+	    vPanel.add(nPanels);
+	    vPanel.add(space);
+	    
+	    vPanel.add(panelCostLabel);
+	    vPanel.add(panelCost);
 	    vPanel.add(space);
 	    
 	    vPanel.add(calculateButton);
@@ -188,7 +215,9 @@ public class Asi_estimator implements EntryPoint {
 			private void sendNameToServer() {
 				// First, we validate the input.
 				//errorLabel.setText("");
-				String textToServer = generateXML();//powerGenerationField.getText(); //Generate XML using this input
+				String textToServer = generateXML(powerConsumption.getText(), tariffRates.getText(), 
+						feedInTariff.getText(), hoursOfSun.getText(), nPanels.getText(), panelPower.getText(),
+						panelCost.getText()); //Generate XML using this input
 				
 				//would be nice to have verification here
 
@@ -196,7 +225,7 @@ public class Asi_estimator implements EntryPoint {
 				calculateButton.setEnabled(false);
 				
 				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
-						/*   //<-- Comment toggler, add leading / to enable first section
+						//*   //<-- Comment toggler, add leading / to enable first section
 						"http://asi-estimator.appspot.com/asi_estimator/estimate"
 						/*/
 						"http://127.0.0.1:8888/asi_estimator/estimate"
@@ -211,7 +240,10 @@ public class Asi_estimator implements EntryPoint {
 					@Override
 					public void onResponseReceived(Request request,
 							Response response) {
+						
+						//FOr debugging purposes
 						String responseText = response.getText();
+						String statusText = response.getStatusText();
 						
 						Document doc = XMLParser.parse(responseText);
 						
@@ -221,7 +253,9 @@ public class Asi_estimator implements EntryPoint {
 						String powerString = powerTag.getFirstChild().getNodeValue();
 						String revenueString = revenueTag.getFirstChild().getNodeValue();
 						
-						String resultString = "Power = " + powerString + " kWh</br> Revenue = $" + revenueString;
+						String resultString = "Power = " + powerString.split(" ")[0] + " kWh</br> Revenue = $" + revenueString.split(" ")[0];
+						
+					    resultsPanel.add(new InlineHTML(resultString));
 						
 						//resultsHTML.setHTML(resultString);
 						calculateButton.setEnabled(true);	
@@ -229,7 +263,7 @@ public class Asi_estimator implements EntryPoint {
 
 					@Override
 					public void onError(Request request, Throwable exception) {
-						// TODO Auto-generated method stub
+						resultsPanel.add(new InlineHTML(exception.getMessage()));
 						calculateButton.setEnabled(true);		
 					}
 					
@@ -249,17 +283,18 @@ public class Asi_estimator implements EntryPoint {
 		calculateButton.addClickHandler(new MyHandler());
 	}
 	
-	private String generateXML() {
+	private String generateXML(String powerConsumption, String tariffRates, String feedInTariff,
+			String hoursOfSun, String nPanels, String panelPower, String panelCost) {
 		//FIXME Obviously, this is bogus
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 			"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
 			"<solarquery>"+
 			"	<array>"+
-			"		<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\" price=\"1000.0\"/>"+
+			"		<bank facing=\"0.0\" number=\""+nPanels+"\" power=\""+panelPower+"\" tilt=\"32.0\" price=\""+panelCost+"\"/>"+
 			"	</array>"+
-			"	<feedin rate=\"0.08\" />"+
-			"	<consumption power=\"11500\" rate=\"25.378\"/>" +
-			"	<sunlight hours=\"4.5\" />" +
+			"	<feedin rate=\""+feedInTariff+"\" />"+
+			"	<consumption power=\""+powerConsumption+"\" rate=\""+tariffRates+"\"/>" +
+			"	<sunlight hours=\""+hoursOfSun+"\" />" +
 			"</solarquery>";
 	}
 	

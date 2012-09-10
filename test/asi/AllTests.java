@@ -19,10 +19,10 @@ import asi.beans.*;
 	FeedInRateTest.class,
 	HoursOfSunlightTest.class,
 	ModifierFactoryTest.class,
-	SolarArrayTest.class,
+	SolarArrayTest.class
 	
 	//Servlets
-	DataProcessingServletTest.class
+	//DataProcessingServletTest.class
 })
 public class AllTests {
 

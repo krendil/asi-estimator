@@ -42,4 +42,9 @@ public class FeedInRate extends Modifier {
 		return feedInRate;
 	}
 	
+	@Override
+	public BigDecimal getRevenueMultiplier(int year) {
+		return feedInRate;
+	}
+	
 }
