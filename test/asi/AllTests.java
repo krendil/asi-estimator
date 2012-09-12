@@ -18,6 +18,7 @@ import asi.beans.*;
 	ElectricalGridTest.class,
 	FeedInRateTest.class,
 	HoursOfSunlightTest.class,
+	InverterTest.class,
 	ModifierFactoryTest.class,
 	SolarArrayTest.class,
 	
