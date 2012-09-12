@@ -2,19 +2,28 @@ package asi.beans;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xml.sax.SAXException;
+
+import asi.TestUtils;
 
 public class FeedInRateTest {
 	FeedInRate feedInRate;
 	
 	final BigDecimal GOOD_VALUE = new BigDecimal(0.25);
 	final BigDecimal BAD_VALUE = new BigDecimal(-0.67);
+	
+
+	private final String XML_TAG = "<feedin rate=\"0.08\" />";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -61,6 +70,14 @@ public class FeedInRateTest {
 	@Test
 	public void getter() {
 		assertEquals ( "getter does not return the correct value.", GOOD_VALUE, feedInRate.getFeedInRate());
+	}
+	
+	@Test
+	public void constructFromNode() throws EstimatorException, ParserConfigurationException, SAXException, IOException {
+		feedInRate = new FeedInRate(TestUtils.getNodeFromString(XML_TAG));
+
+		//Check if the difference is less than the epsilon, i.e. they are roughly equal
+		assertTrue( TestUtils.compareBigDecs(feedInRate.getFeedInRate(), new BigDecimal(0.08)) );
 	}
 
 	

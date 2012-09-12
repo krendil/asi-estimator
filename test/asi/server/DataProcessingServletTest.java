@@ -1,7 +1,5 @@
 package asi.server;
 
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -9,11 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -21,10 +16,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
+import asi.TestUtils;
 import asi.beans.EstimatorException;
 
 public class DataProcessingServletTest {
@@ -36,7 +30,7 @@ public class DataProcessingServletTest {
 
 		//Test that the example queries do what they claim
 		
-		DocumentBuilder db = getDocBuilder();
+		DocumentBuilder db = TestUtils.getDocBuilder();
 		
 		db.parse(new File("test/validquery.xml")); //No exceptions thrown
 
@@ -68,7 +62,7 @@ public class DataProcessingServletTest {
 		servlet.processStream(query, output);
 		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
 		
-		DocumentBuilder db = getDocBuilder();     
+		DocumentBuilder db = TestUtils.getDocBuilder();     
 		db.parse(response); //No exceptions thrown
 	}
 	
@@ -80,7 +74,7 @@ public class DataProcessingServletTest {
 		servlet.processStream(query, output);	
 		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
 		
-		DocumentBuilder db = getDocBuilder();
+		DocumentBuilder db = TestUtils.getDocBuilder();
 		db.parse(response);
 	}
 	
@@ -92,29 +86,10 @@ public class DataProcessingServletTest {
 		servlet.processStream(query, output);
 		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
 		
-		DocumentBuilder db = getDocBuilder();
+		DocumentBuilder db = TestUtils.getDocBuilder();
 		db.parse(response);
 	}
 	
-	private static DocumentBuilder getDocBuilder() throws ParserConfigurationException{
-		DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-		df.setValidating(true);
-		DocumentBuilder db = df.newDocumentBuilder();
-		db.setErrorHandler(new ErrorHandler(){
-			@Override
-			public void error(SAXParseException arg0) throws SAXException {
-				throw new SAXException(arg0);
-			}
-			@Override
-			public void fatalError(SAXParseException arg0) throws SAXException {
-				throw new SAXException(arg0);
-			}
-			@Override
-			public void warning(SAXParseException arg0) throws SAXException {
-				throw new SAXException(arg0);
-			}		
-		});
-		return db;
-	}
+
 
 }

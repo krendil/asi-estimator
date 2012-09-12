@@ -13,8 +13,8 @@ import org.w3c.dom.Node;
  *
  */
 public class Consumption extends Modifier{
-	double power;	// kWh
-	BigDecimal rate;	// $ per kWh
+	private double power;	// kWh
+	private BigDecimal rate;	// $ per kWh
 	
 	public Consumption(Node n) throws EstimatorException {
 		Element el = (Element) n;
