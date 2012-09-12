@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import asi.server.DataProcessingServletTest;
+import asi.server.*;
 import asi.beans.*;
 
 @RunWith(Suite.class)
@@ -19,10 +19,11 @@ import asi.beans.*;
 	FeedInRateTest.class,
 	HoursOfSunlightTest.class,
 	ModifierFactoryTest.class,
-	SolarArrayTest.class
+	SolarArrayTest.class,
 	
 	//Servlets
-	//DataProcessingServletTest.class
+	DataProcessingServletTest.class,
+	DbHistoryTest.class
 })
 public class AllTests {
 

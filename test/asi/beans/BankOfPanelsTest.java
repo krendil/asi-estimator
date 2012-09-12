@@ -99,12 +99,8 @@ public class BankOfPanelsTest {
 	}
 	
 	@Test
-	public void zeroPrice() {
-		try {
-			bankOfPanels = new BankOfPanels( GOOD_ORIENTATION, GOOD_KW, GOOD_TILT, BigDecimal.ZERO);
-			fail( "Must not be able to assign zero price." );
-		} catch ( EstimatorException e ) {	
-		}
+	public void zeroPrice() throws EstimatorException {
+		bankOfPanels = new BankOfPanels( GOOD_ORIENTATION, GOOD_KW, GOOD_TILT, BigDecimal.ZERO);
 	}
 	
 	@Test

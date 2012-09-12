@@ -1,8 +1,14 @@
 package asi.server;
 
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
@@ -56,37 +62,37 @@ public class DataProcessingServletTest {
 	
 	@Test
 	public void testProcessStream_valid() throws Exception{
-		FileInputStream query = new FileInputStream("test/validquery.xml");
-		PipedOutputStream output = new PipedOutputStream();
-		PipedInputStream response = new PipedInputStream(output);
-		servlet.processStream(query, output);
 		
-		DocumentBuilder db = getDocBuilder();
-		     
+		FileInputStream query = new FileInputStream("test/validquery.xml");
+		OutputStream output = new ByteArrayOutputStream();
+		servlet.processStream(query, output);
+		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
+		
+		DocumentBuilder db = getDocBuilder();     
 		db.parse(response); //No exceptions thrown
 	}
 	
 	@Test(expected=SAXException.class)
 	public void testProcessStream_garbage() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
-		FileInputStream query = new FileInputStream("test/invalidquery.xml");
-		PipedOutputStream output = new PipedOutputStream();
-		PipedInputStream response = new PipedInputStream(output);
-		servlet.processStream(query, output);
+		
+		FileInputStream query = new FileInputStream("test/garbagequery.xml");
+		OutputStream output = new ByteArrayOutputStream();
+		servlet.processStream(query, output);	
+		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
 		
 		DocumentBuilder db = getDocBuilder();
-
 		db.parse(response);
 	}
 	
-	@Test(expected=SAXException.class)
+	@Test(expected=EstimatorException.class)
 	public void testProcessStream_invalid() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
-		FileInputStream query = new FileInputStream("test/garbagequery.xml");
-		PipedOutputStream output = new PipedOutputStream();
-		PipedInputStream response = new PipedInputStream(output);
+		
+		FileInputStream query = new FileInputStream("test/invalidquery.xml");	
+		OutputStream output = new ByteArrayOutputStream();
 		servlet.processStream(query, output);
+		InputStream response = new ByteArrayInputStream(((ByteArrayOutputStream) output).toByteArray());
 		
 		DocumentBuilder db = getDocBuilder();
-
 		db.parse(response);
 	}
 	
