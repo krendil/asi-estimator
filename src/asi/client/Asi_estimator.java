@@ -225,7 +225,7 @@ public class Asi_estimator implements EntryPoint {
 				calculateButton.setEnabled(false);
 				
 				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
-						//*   //<-- Comment toggler, add leading / to enable first section
+						/*   //<-- Comment toggler, add leading / to enable first section
 						"http://asi-estimator.appspot.com/asi_estimator/estimate"
 						/*/
 						"http://127.0.0.1:8888/asi_estimator/estimate"
