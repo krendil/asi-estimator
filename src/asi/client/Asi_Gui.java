@@ -63,6 +63,7 @@ public class Asi_Gui {
 	public InlineLabel panelWattageLabel;
 	public InlineLabel panelDegradationLabel;
 	public InlineLabel elecCostLabel;
+	public InlineLabel resultsLabel;
     
     //HTML
 	public InlineHTML space; 
@@ -85,6 +86,7 @@ public class Asi_Gui {
 	    costPanel = new VerticalPanel();
 	    panelPanel = new VerticalPanel();
 	    powerPanel = new VerticalPanel();
+	    resultsPanel = new VerticalPanel();
 	    
 
        
@@ -103,6 +105,7 @@ public class Asi_Gui {
 	    panelWattageLabel = new InlineLabel("Enter your panel wattage");
 	    panelDegradationLabel = new InlineLabel("Enter your panel degradation(%/year)");
 	    elecCostLabel = new InlineLabel("Enter the cost of your electricity ($ per kw/h)");
+	    resultsLabel = new InlineLabel("Results here");
 	    
 	    	    
 	    //TextBoxes

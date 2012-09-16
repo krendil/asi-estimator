@@ -57,6 +57,9 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.addToPanel(webGui.powerPanel, webGui.elecCost,webGui. elecCostLabel);
 	    webGui.powerPanel.add(webGui.calculateButton);
 	    
+	    //Add to resultsPanel
+	    
+	    webGui.resultsPanel.add(webGui.resultsLabel);
 	   	    
 		//Add to tabPanel
 	    
@@ -64,6 +67,7 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.tabPanel.add(webGui.costPanel, "Cost");
 	    webGui.tabPanel.add(webGui.panelPanel, "Panels");
 	    webGui.tabPanel.add(webGui.powerPanel, "Power");
+	    webGui.tabPanel.add(webGui.resultsPanel, "Results");
 		
 		
 		
