@@ -46,6 +46,7 @@ public class Asi_Gui {
 	public VerticalPanel costPanel;
 	public VerticalPanel panelPanel;
 	public VerticalPanel powerPanel;
+	public VerticalPanel resultsPanel;
 	
     //Labels
     
