@@ -1,5 +1,6 @@
 package asi.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,8 +24,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import asi.beans.ChatToDatastore;
 import asi.beans.Configuration;
 import asi.beans.EstimatorException;
+import asi.beans.SplitOutputStream;
 
 /**
  * Accepts SolarRequest XML documents from clients, generates an estimate,
@@ -44,7 +47,16 @@ public class DataProcessingServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		try {
-			processStream(req.getInputStream(), resp.getOutputStream());
+			
+			ByteArrayOutputStream savedData = new ByteArrayOutputStream();
+			OutputStream output = new SplitOutputStream(resp.getOutputStream(), savedData);	
+			processStream(req.getInputStream(), output);
+			
+			String resultId = saveResults(new String(savedData.toByteArray()));
+			resp.addHeader("ResultId", resultId);
+			
+			output.close();
+			
 		} catch (SAXException e) { //Malformed request XML
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		} catch (ParserConfigurationException e) { //Probably our fault
@@ -91,5 +103,10 @@ public class DataProcessingServlet extends HttpServlet {
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://asi-estimator.appspot.com/solarresponse.dtd");
 		tf.transform(source, result);
+	}
+	
+	public String saveResults(String results){
+		ChatToDatastore db = new ChatToDatastore();
+		return db.dsSaveHistory(results);
 	}
 }
