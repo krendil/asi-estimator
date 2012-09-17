@@ -1,5 +1,7 @@
 package asi.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,7 +20,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 import asi.TestUtils;
+import asi.beans.ChatToDatastore;
 import asi.beans.EstimatorException;
 
 public class DataProcessingServletTest {
@@ -89,6 +94,23 @@ public class DataProcessingServletTest {
 		DocumentBuilder db = TestUtils.getDocBuilder();
 		db.parse(response);
 	}
+	
+//	Can only test this in a real appengine environment
+//	@Test
+//	public void testSaveResults() throws EntityNotFoundException, SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
+//		
+//		FileInputStream query = new FileInputStream("test/validquery.xml");
+//		ByteArrayOutputStream output = new ByteArrayOutputStream();
+//		servlet.processStream(query, output);
+//		
+//		String result = new String(output.toByteArray());
+//		String id = servlet.saveResults(result);
+//		
+//		ChatToDatastore db = new ChatToDatastore();
+//		String stored = db.dsLoadHistory(id);
+//		
+//		assertEquals(result, stored);
+//	}
 	
 
 

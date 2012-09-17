@@ -89,7 +89,6 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
-            <!-- Change this when we have more complete test suite -->
             <test name="asi.AllTests" todir="${junit.output.dir}"/>
             <classpath refid="asi-estimator.classpath"/>
         </junit>
