@@ -148,8 +148,21 @@ public class Asi_Gui {
 	    //Buttons
 		 
 	    calculateButton = new Button("Calculate");
-	    costNextButton = new Button("Next");
-	    panelsNextButton = new Button("Next");
+	    
+	    costNextButton = new Button("Next", new ClickHandler() 
+	    {
+	    	public void onClick(ClickEvent event)
+	    	{
+	    		tabPanel.selectTab(2);
+	    	}
+	    });
+	    panelsNextButton = new Button("Next",new ClickHandler() 
+	    {
+	    	public void onClick(ClickEvent event)
+	    	{
+	    		tabPanel.selectTab(3);
+	    	}
+	    });
 	    
 	    //HTML ELEMENTS
 	    
