@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE solarquery SYSTEM "http://asi-estimator.appspot.com/solarquery.dtd">
 <solarquery>
+	<location lat="-27.47815" long="153.027687" />
 	<thisisabadtag />
 	<array>
 		<bank badattr="wrong" number="5" power="200" />
 	</array>
-	<location lat="-27.47815" long="153.027687" />
 </solarquery>

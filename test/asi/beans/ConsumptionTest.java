@@ -2,29 +2,20 @@ package asi.beans;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import asi.TestUtils;
 
 public class ConsumptionTest {
-	
 	private final double GOOD_POWER = 22.9;
 	private final double BAD_POWER = -12.8;
 	
 	private final BigDecimal GOOD_RATE = new BigDecimal(0.25);
 	private final BigDecimal BAD_RATE = new BigDecimal(-0.58);
-	
-	private String XML_TAG = "<consumption power=\"11500\" rate=\"25.378\"/>";
 	
 	private Consumption consumption; 
 	
@@ -110,14 +101,6 @@ public class ConsumptionTest {
 		assertEquals("Current cost is not calculated properly.",
 				consumption.getCurrentCost(0),
 				GOOD_RATE.multiply(new BigDecimal(GOOD_POWER)));
-	}
-	
-	@Test
-	public void constructFromNode() throws EstimatorException, ParserConfigurationException, SAXException, IOException {
-		consumption = new Consumption(TestUtils.getNodeFromString(XML_TAG));
-		assertEquals(11500, consumption.getPower(), TestUtils.EPSILON);
-		
-		assertTrue(TestUtils.compareBigDecs(consumption.getRate(), new BigDecimal(25.378)) );
 	}
 
 }

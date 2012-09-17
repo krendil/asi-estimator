@@ -78,7 +78,7 @@ public class DataProcessingServlet extends HttpServlet {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.parse(input);
-
+		
 		//Create Configuration from Doc
 		Configuration conf = new Configuration();
 		conf.parseDocument(doc);

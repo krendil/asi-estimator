@@ -10,12 +10,7 @@ import org.w3c.dom.NodeList;
 
 public class SolarArray extends Modifier{
 
-	//THe proportion the panel's power production degrades by per year
-	private static final double DEGRADATION_RATE = 0.01;
-	
-	private List<BankOfPanels> solarArray;
-	private double latitude;
-	
+	List<BankOfPanels> solarArray;
 	
 	public SolarArray() {
 		this.solarArray = new ArrayList<BankOfPanels>();
@@ -39,7 +34,6 @@ public class SolarArray extends Modifier{
 			String power = b.getAttribute( "power" );
 			String tilt = b.getAttribute( "tilt" );
 			String price = b.getAttribute( "price" );
-			String lat = b.getAttribute("latitude");
 			
 			try {
 				
@@ -47,11 +41,6 @@ public class SolarArray extends Modifier{
 				kW = Integer.parseInt(number) * Double.parseDouble(power) / 1000.0;
 				dTilt = Double.parseDouble(tilt);
 				cost = new BigDecimal(price).multiply(new BigDecimal(number));
-				if(lat.isEmpty()) {
-					this.latitude = -27.0;
-				} else {
-					latitude = Double.parseDouble(lat);
-				}
 			} catch (NumberFormatException exc) {
 				throw new EstimatorException("Error parsing xml: "+exc.getMessage());
 			}
@@ -98,18 +87,16 @@ public class SolarArray extends Modifier{
 	
 	@Override
 	public double getMultiplier(int year) {
-		double total = getTotalPower();
-		total -= year * DEGRADATION_RATE * total;
-		return total;
+		return getTotalPower();
 	}
 	
 	private double getTotalPower() {
 		/**
-		 * The direction, tilt and latitude all combine to 
+		 * TODO: the direction, tilt and latitude all combine to 
 		 * affect the amount of sunlight captured according to
 		 * this equation, averaged over a year:
-		 * R = sin(l)^2*cos(t) - sin(l)*cos(l)*cos(d) + cos(l)^2*cos(t) + cos(l)*sin(l)*cos(t)
-		 *   = cos(t) + sin(l)*cos(l)*(sin(t) - cos(d))
+		 * R = sin(l)cos(t) - cos(l)cos(d) + cos(l)sin(t)cos(d)
+		 *		+ (cos(l)^2/sin(l))
 		 * where
 		 * l = latitude
 		 * t = tilt from horizontal
@@ -123,18 +110,9 @@ public class SolarArray extends Modifier{
 		 * omega = 0 (averaged over each day)
 		 */ 
 		double power = 0.0;
-		
-		double sL = Math.sin(Math.toRadians(Math.abs(latitude)));
-		double cL = Math.cos(Math.toRadians(Math.abs(latitude)));
-		
 		for( BankOfPanels b : solarArray )  {
-			double cD = Math.cos(Math.toRadians(b.getOrientation()));
-			double cT = Math.cos(Math.toRadians(b.getTilt()));
-			double sT = Math.sin(Math.toRadians(b.getTilt()));
-			double ratio = cT + sL*cL*(sT - cD);
-			power += b.getKW() * ratio;
+			power += b.getKW();
 		}
-		
 		return power;
 	}
 } 

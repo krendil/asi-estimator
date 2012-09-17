@@ -6,11 +6,21 @@
 	<servlet-name>dpServlet</servlet-name>
 	<servlet-class>asi.server.DataProcessingServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+  	<servlet-name>getHistoryServlet</servlet-name>
+  	<servlet-class>asi.server.GetHistoryServlet</servlet-class>
+  </servlet>
  
   
   <servlet-mapping>
 	<servlet-name>dpServlet</servlet-name>
 	<url-pattern>/asi_estimator/estimate</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>getHistoryServlet</servlet-name>
+  	<url-pattern>/asi_estimator/history</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

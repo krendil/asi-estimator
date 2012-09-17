@@ -7,5 +7,4 @@
 	<feedin rate="0.08" />
 	<consumption power="11500" rate="25.378"/>
 	<sunlight hours="4.5" />
-	<inverter efficiency="0.93" price="2500.0" />
 </solarquery>

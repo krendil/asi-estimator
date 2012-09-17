@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	
-<!ENTITY % modifier "(feedin | consumption | sunlight | inverter)">
+<!ENTITY % modifier "(feedin | consumption | sunlight)">
 
 <!ELEMENT solarquery (array, (%modifier;)*)>
 
@@ -32,9 +32,4 @@
 <!ELEMENT sunlight EMPTY>
 <!-- hours is expected to be a decimal number in the range (0, 24] -->
 <!ATTLIST sunlight hours NMTOKEN #REQUIRED>
-
-<!ELEMENT inverter EMPTY>
-<!-- efficiency is expected to be a decimal number between 0 and 1 -->
-<!ATTLIST inverter efficiency NMTOKEN #REQUIRED>
-<!-- price is expected to be a decimal value in the local currency -->
-<!ATTLIST inverter price NMTOKEN #REQUIRED>
+	

@@ -10,8 +10,7 @@ public class ModifierFactory {
 		array (SolarArray.class),
 		sunlight (HoursOfSunlight.class),
 		feedin (FeedInRate.class),
-		consumption (Consumption.class),
-		inverter (Inverter.class);
+		consumption (Consumption.class);
 		
 		Class<? extends Modifier> modifierClass;
 		

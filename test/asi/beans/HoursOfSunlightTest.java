@@ -3,16 +3,9 @@
  */
 package asi.beans;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
+import junit.framework.Assert;
 
 import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import asi.TestUtils;
 
 /**
  * @author David Osborne
@@ -26,9 +19,7 @@ public class HoursOfSunlightTest {
 	private final double MAX_HOURS = 24.0;
 	private final double DAYS_IN_YEAR = 365.25;
 	
-	private final double EPSILON = 1E-6;
-	
-	private String XML_TAG = "<sunlight hours=\"4.8\" />";
+	private final double EPSILON = 0.1;
 	
 	/**
 	 * Test method for {@link asi.beans.HoursOfSunlight#HoursOfSunlight(double)}.
@@ -83,20 +74,8 @@ public class HoursOfSunlightTest {
 	public void testGetMultiplier() throws EstimatorException {
 		double expected = GOOD_HOURS * DAYS_IN_YEAR;
 		HoursOfSunlight hours = new HoursOfSunlight(GOOD_HOURS);
-
-		for(int i = 0; i < 20; i++) {
-			assertEquals(expected, hours.getMultiplier(0), EPSILON);
-		}
-	}
-	
-	@Test
-	public void constructFromNode() throws EstimatorException, ParserConfigurationException, SAXException, IOException {
-		HoursOfSunlight hours = new HoursOfSunlight(TestUtils.getNodeFromString(XML_TAG));
-		double expected = 4.8 * DAYS_IN_YEAR;
-		
-		for(int i = 0; i < 20; i++) {
-			assertEquals(expected, hours.getMultiplier(0), EPSILON);
-		}
+		double mult = hours.getMultiplier(0);
+		Assert.assertEquals(expected, mult, EPSILON);
 	}
 
 }
