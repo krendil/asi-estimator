@@ -180,4 +180,10 @@ public class Asi_Gui {
 		vPanel.add(space);
 	
 	}
+	
+	/**
+	 * Rest of the XML/Server connection stuff is missing here given that a lot of the interface has changed
+	 * and I wasn't sure how compatible it would be with what you have.
+	 * 
+	 **/
 }

@@ -47,7 +47,7 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.addToPanel(webGui.panelPanel, webGui.hoursOfSun, webGui.hoursOfSunLabel);
 	    webGui.panelPanel.add(webGui.panelsNextButton);
 
-	    
+
 	    //Add to powerPanel
 	    
 	    webGui.addToPanel(webGui.powerPanel, webGui.powerConsumption, webGui.powerConsumptionLabel);
