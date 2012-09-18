@@ -33,10 +33,13 @@ public class Asi_estimator implements EntryPoint {
 	{		
 		webGui = new Asi_Gui();
 		
+		//Add to cost panel
 		
 	    webGui.addToPanel(webGui.costPanel, webGui.panelCost, webGui.panelCostLabel);
-	    webGui.addToPanel(webGui.costPanel, webGui.installCost, webGui.installCostLabel);  
+	    webGui.addToPanel(webGui.costPanel, webGui.installCost, webGui.installCostLabel); 
+	    webGui.addToPanel(webGui.costPanel, webGui.inverterCost, webGui.inverterCostLabel);
 	    webGui.costPanel.add(webGui.costNextButton);
+	    
 	    //Add to panelPanel
 	    
 	    webGui.addToPanel(webGui.panelPanel, webGui.nPanels, webGui.nPanelsLabel);
@@ -45,6 +48,7 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.addToPanel(webGui.panelPanel, webGui.panelWattage, webGui.panelWattageLabel);
 	    webGui.addToPanel(webGui.panelPanel, webGui.panelDegradation,  webGui.panelDegradationLabel);
 	    webGui.addToPanel(webGui.panelPanel, webGui.hoursOfSun, webGui.hoursOfSunLabel);
+	    webGui.addToPanel(webGui.panelPanel, webGui.inverterEfficiency, webGui.inverterEfficiencyLabel);
 	    webGui.panelPanel.add(webGui.panelsNextButton);
 
 

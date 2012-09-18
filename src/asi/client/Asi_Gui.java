@@ -32,6 +32,8 @@ public class Asi_Gui {
 	public TextBox panelWattage;
 	public TextBox panelDegradation;
 	public TextBox elecCost;
+	public TextBox inverterCost;
+	public TextBox inverterEfficiency;
 	
 	//Listboxes
 	public ListBox panelAngle;
@@ -64,6 +66,8 @@ public class Asi_Gui {
 	public InlineLabel panelDegradationLabel;
 	public InlineLabel elecCostLabel;
 	public InlineLabel resultsLabel;
+	public InlineLabel inverterCostLabel;
+	public InlineLabel inverterEfficiencyLabel;
     
     //HTML
 	public InlineHTML space; 
@@ -106,6 +110,8 @@ public class Asi_Gui {
 	    panelDegradationLabel = new InlineLabel("Enter your panel degradation(%/year)");
 	    elecCostLabel = new InlineLabel("Enter the cost of your electricity ($ per kw/h)");
 	    resultsLabel = new InlineLabel("Results here");
+	    inverterCostLabel = new InlineLabel("Enter the cost of your inverter");
+	    inverterEfficiencyLabel = new InlineLabel("Enter the efficiency of your inverter (%)");
 	    
 	    	    
 	    //TextBoxes
@@ -121,6 +127,8 @@ public class Asi_Gui {
 		 panelWattage = new TextBox();
 		 panelDegradation = new TextBox();
 		 elecCost = new TextBox();
+		 inverterCost = new TextBox();
+		 inverterEfficiency = new TextBox();
 		 
 		 //Listboxes
 		 
