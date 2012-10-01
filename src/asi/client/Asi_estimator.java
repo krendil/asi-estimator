@@ -26,6 +26,8 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 import asi.client.Asi_Gui;
 
+import com.google.gwt.geolocation.client.*;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -38,8 +40,11 @@ public class Asi_estimator implements EntryPoint {
 	{		
 		webGui = new Asi_Gui();
 		
-		//Add to cost panel
+		// Add to loation panel
+		webGui.addToPanel(webGui.locationPanel, webGui.longitude, webGui.longitudeLabel);
+		webGui.addToPanel(webGui.locationPanel, webGui.latitude, webGui.latitudeLabel);
 		
+		//Add to cost panel
 	    webGui.addToPanel(webGui.costPanel, webGui.panelCost, webGui.panelCostLabel);
 	    webGui.addToPanel(webGui.costPanel, webGui.installCost, webGui.installCostLabel); 
 	    webGui.addToPanel(webGui.costPanel, webGui.inverterCost, webGui.inverterCostLabel);
@@ -73,12 +78,18 @@ public class Asi_estimator implements EntryPoint {
 		//Add to tabPanel
 	    
 	    webGui.tabPanel.add(webGui.homeText, "Home");
+	    webGui.tabPanel.add(webGui.locationPanel, "Location");
 	    webGui.tabPanel.add(webGui.costPanel, "Cost");
 	    webGui.tabPanel.add(webGui.panelPanel, "Panels");
 	    webGui.tabPanel.add(webGui.powerPanel, "Power");
 	    webGui.tabPanel.add(webGui.resultsPanel, "Results");
+	    
 		
 		
+//	    Geolocation location = Geolocation.getIfSupported();
+//	    location.getCurrentPosition(callback)
+//	    String locationString = location.toString();
+//	    webGui.longitude.setText(locationString);
 		
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);

@@ -35,6 +35,11 @@ public class Asi_Gui {
 	public TextBox inverterCost;
 	public TextBox inverterEfficiency;
 	
+	//location text boxes
+	public TextBox longitude;
+	public TextBox latitude;
+	
+	
 	//Listboxes
 	public ListBox panelAngle;
 	public ListBox panelDirection;
@@ -49,6 +54,7 @@ public class Asi_Gui {
 	public VerticalPanel panelPanel;
 	public VerticalPanel powerPanel;
 	public VerticalPanel resultsPanel;
+	public VerticalPanel locationPanel;
 	
     //Labels
     
@@ -69,6 +75,10 @@ public class Asi_Gui {
 	public InlineLabel inverterCostLabel;
 	public InlineLabel inverterEfficiencyLabel;
     
+	//location text boxes
+	public InlineLabel longitudeLabel;
+	public InlineLabel latitudeLabel;
+	
     //HTML
 	public InlineHTML space; 
 	public HTML homeText;
@@ -91,6 +101,7 @@ public class Asi_Gui {
 	    panelPanel = new VerticalPanel();
 	    powerPanel = new VerticalPanel();
 	    resultsPanel = new VerticalPanel();
+	    locationPanel = new VerticalPanel();
 	    
 
        
@@ -113,6 +124,9 @@ public class Asi_Gui {
 	    inverterCostLabel = new InlineLabel("Enter the cost of your inverter");
 	    inverterEfficiencyLabel = new InlineLabel("Enter the efficiency of your inverter (%)");
 	    
+		longitudeLabel = new InlineLabel("Estimated longitude");
+		latitudeLabel = new InlineLabel("Estimated latitude");
+	    
 	    	    
 	    //TextBoxes
 	    
@@ -129,6 +143,9 @@ public class Asi_Gui {
 		 elecCost = new TextBox();
 		 inverterCost = new TextBox();
 		 inverterEfficiency = new TextBox();
+		 
+		 longitude = new TextBox();
+		 latitude = new TextBox();
 		 
 		 //Listboxes
 		 
