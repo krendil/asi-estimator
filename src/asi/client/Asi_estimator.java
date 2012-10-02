@@ -85,7 +85,8 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.tabPanel.add(webGui.resultsPanel, "Results");
 	    
 		
-		
+//		use google maps api
+	    
 //	    Geolocation location = Geolocation.getIfSupported();
 //	    location.getCurrentPosition(callback)
 //	    String locationString = location.toString();
