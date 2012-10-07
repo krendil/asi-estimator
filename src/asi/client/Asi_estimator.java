@@ -43,6 +43,7 @@ public class Asi_estimator implements EntryPoint {
 		// Add to loation panel
 		webGui.addToPanel(webGui.locationPanel, webGui.longitude, webGui.longitudeLabel);
 		webGui.addToPanel(webGui.locationPanel, webGui.latitude, webGui.latitudeLabel);
+		webGui.locationPanel.add(webGui.locationNextButton);
 		
 		//Add to cost panel
 	    webGui.addToPanel(webGui.costPanel, webGui.panelCost, webGui.panelCostLabel);
@@ -51,7 +52,6 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.costPanel.add(webGui.costNextButton);
 	    
 	    //Add to panelPanel
-	    
 	    webGui.addToPanel(webGui.panelPanel, webGui.nPanels, webGui.nPanelsLabel);
 	    webGui.addToPanel(webGui.panelPanel, webGui.panelAngle, webGui.panelAngleLabel);
 	    webGui.addToPanel(webGui.panelPanel, webGui.panelDirection, webGui.panelDirectionLabel);
@@ -63,7 +63,6 @@ public class Asi_estimator implements EntryPoint {
 
 
 	    //Add to powerPanel
-	    
 	    webGui.addToPanel(webGui.powerPanel, webGui.powerConsumption, webGui.powerConsumptionLabel);
 	    webGui.addToPanel(webGui.powerPanel, webGui.panelPower, webGui.panelPowerLabel);
 	    webGui.addToPanel(webGui.powerPanel, webGui.tariffRates, webGui.tariffRatesLabel);
@@ -72,11 +71,9 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.powerPanel.add(webGui.calculateButton);
 	    
 	    //Add to resultsPanel
-	    
 	    webGui.resultsPanel.add(webGui.resultsLabel);
 	   	    
 		//Add to tabPanel
-	    
 	    webGui.tabPanel.add(webGui.homeText, "Home");
 	    webGui.tabPanel.add(webGui.locationPanel, "Location");
 	    webGui.tabPanel.add(webGui.costPanel, "Cost");
@@ -84,6 +81,9 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.tabPanel.add(webGui.powerPanel, "Power");
 	    webGui.tabPanel.add(webGui.resultsPanel, "Results");
 	    
+	    
+	    // Debugging...
+	    webGui.tabPanel.ensureDebugId("tabPanel");
 		
 //		use google maps api
 	    

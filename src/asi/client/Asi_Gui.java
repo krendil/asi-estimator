@@ -14,9 +14,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class Asi_Gui {
+	
+	public enum Panel {
+	    HOME, LOCATION, COST, PANELS,
+	    POWER, RESULTS 
+	}
 
 	//Buttons
 	public Button calculateButton;
+	public Button locationNextButton;
 	public Button costNextButton;
 	public Button panelsNextButton;
 	
@@ -93,15 +99,25 @@ public class Asi_Gui {
 		 // Create a tab panel
 	    tabPanel = new TabPanel();
 	    tabPanel.setWidth("100%");
+
 	    
 	    
 	    // Panels for tabPanel
 	    
 	    costPanel = new VerticalPanel();
+	    costPanel.ensureDebugId("costPanel");
+	    
 	    panelPanel = new VerticalPanel();
+	    panelPanel.ensureDebugId("panelPanel");
+	    
 	    powerPanel = new VerticalPanel();
+	    powerPanel.ensureDebugId("powerPanel");
+	    
 	    resultsPanel = new VerticalPanel();
+	    resultsPanel.ensureDebugId("resultsPanel");
+	    
 	    locationPanel = new VerticalPanel();
+	    locationPanel.ensureDebugId("locationPanel");
 	    
 
        
@@ -127,22 +143,47 @@ public class Asi_Gui {
 		longitudeLabel = new InlineLabel("Estimated longitude");
 		latitudeLabel = new InlineLabel("Estimated latitude");
 	    
-	    	    
-	    //TextBoxes
 	    
+		
+	    //TextBoxes
 	     powerConsumption = new TextBox();
+	     powerConsumption.ensureDebugId("powerConsumption");
+	     
 	     tariffRates = new TextBox();
+	     tariffRates.ensureDebugId("tariffRates");
+	     
 	     feedInTariff = new TextBox();
+	     feedInTariff.ensureDebugId("feedInTariff");
+	     
 	     hoursOfSun = new TextBox();
+	     hoursOfSun.ensureDebugId("hoursOfSun");
+	     
 	 	 panelPower = new TextBox();
+	 	 panelPower.ensureDebugId("panelPower");
+	 	
 		 nPanels= new TextBox();
+		 nPanels.ensureDebugId("nPanels");
+		 
 		 panelCost= new TextBox();
+		 panelCost.ensureDebugId("panelCost");
+		 
 		 installCost = new TextBox();
+		 installCost.ensureDebugId("installCost");
+		 
 		 panelWattage = new TextBox();
+		 panelWattage.ensureDebugId("panelWattage");
+		 
 		 panelDegradation = new TextBox();
+		 panelDegradation.ensureDebugId("panelDegradation");
+		 
 		 elecCost = new TextBox();
+		 elecCost.ensureDebugId("elecCost");
+		 
 		 inverterCost = new TextBox();
+		 inverterCost.ensureDebugId("inverterCost");
+		 
 		 inverterEfficiency = new TextBox();
+		 inverterEfficiency.ensureDebugId("inverterEfficiency");
 		 
 		 longitude = new TextBox();
 		 latitude = new TextBox();
@@ -173,26 +214,40 @@ public class Asi_Gui {
 	    //Buttons
 		 
 	    calculateButton = new Button("Calculate");
+	    calculateButton.ensureDebugId("calculateButton");
+	    
+	    locationNextButton = new Button("Next", new ClickHandler() 
+	    {
+	    	public void onClick(ClickEvent event)
+	    	{
+	    		tabPanel.selectTab(Panel.COST.ordinal());
+	    	}
+	    });
+	    locationNextButton.ensureDebugId("locationNextButton");
 	    
 	    costNextButton = new Button("Next", new ClickHandler() 
 	    {
 	    	public void onClick(ClickEvent event)
 	    	{
-	    		tabPanel.selectTab(2);
+	    		tabPanel.selectTab(Panel.PANELS.ordinal());
 	    	}
 	    });
+	    costNextButton.ensureDebugId("costNextButton");
+	    
 	    panelsNextButton = new Button("Next",new ClickHandler() 
 	    {
 	    	public void onClick(ClickEvent event)
 	    	{
-	    		tabPanel.selectTab(3);
+	    		tabPanel.selectTab(Panel.POWER.ordinal());
 	    	}
 	    });
+	    panelsNextButton.ensureDebugId("panelsNextButton");
 	    
 	    //HTML ELEMENTS
 	    
 	    homeText = new HTML("Hi and welcome to the Solar Calulcator" +
 	    		"developer by Agilis Sol Industria to help you choose the right solar panel for you!");
+	    homeText.ensureDebugId("homePanel");
  
 	    space = new InlineHTML("<br/>");
 	    

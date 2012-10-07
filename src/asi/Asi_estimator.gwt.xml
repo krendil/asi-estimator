@@ -13,6 +13,8 @@
   <inherits name="com.google.gwt.xml.XML"/> 
 
   <!-- Other module inherits                                      -->
+  <!--  debugging via selenium needs this -->
+  <inherits name='com.google.gwt.user.Debug' />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='asi.client.Asi_estimator'/>
