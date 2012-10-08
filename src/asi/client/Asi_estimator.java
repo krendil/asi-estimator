@@ -151,22 +151,22 @@ public class Asi_estimator implements EntryPoint {
 								table.setText(0, i+1, Integer.toString(i));
 							}
 							//power row
-							table.setText(0, 1, "power");
+							table.setText(1, 0, "power");
 							for(int i =0; i<powerTag.getLength(); i++){
 								String powerString = powerTag.item(i).toString();
 								table.setText(1, i+1, powerString);								
 							}
 							//revenue row
-							table.setText(0, 2, "revenue");
+							table.setText(2, 0, "revenue");
 							for(int i =0; i<revenueTag.getLength(); i++){
 								String revenueString = revenueTag.item(i).toString();
-								table.setText(1, i+1, revenueString);								
+								table.setText(2, i+1, revenueString);								
 							}
 							//cost row
-							table.setText(0, 3, "cost");
+							table.setText(3, 0, "cost");
 							for(int i =0; i<costTag.getLength(); i++){
 								String revenueString = costTag.item(i).toString();
-								table.setText(1, i+1, revenueString);								
+								table.setText(3, i+1, revenueString);								
 							}														
 							
 							webGui.resultsPanel.add(table);						
