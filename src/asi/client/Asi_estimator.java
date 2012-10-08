@@ -43,49 +43,7 @@ public class Asi_estimator implements EntryPoint {
 	public void onModuleLoad() 
 	{		
 		webGui = new Asi_Gui();
-		
-		// Add to location panel
-		webGui.addToPanel(webGui.locationPanel, webGui.longitude, webGui.longitudeLabel);
-		webGui.addToPanel(webGui.locationPanel, webGui.latitude, webGui.latitudeLabel);
-		webGui.locationPanel.add(webGui.locationNextButton);
-		
-		//Add to cost panel
-	    webGui.addToPanel(webGui.costPanel, webGui.panelCost, webGui.panelCostLabel);
-	    webGui.addToPanel(webGui.costPanel, webGui.installCost, webGui.installCostLabel); 
-	    webGui.addToPanel(webGui.costPanel, webGui.inverterCost, webGui.inverterCostLabel);
-	    webGui.costPanel.add(webGui.costNextButton);
-	    
-	    //Add to panelPanel
-	    webGui.addToPanel(webGui.panelPanel, webGui.nPanels, webGui.nPanelsLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.panelAngle, webGui.panelAngleLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.panelDirection, webGui.panelDirectionLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.panelWattage, webGui.panelWattageLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.panelDegradation,  webGui.panelDegradationLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.hoursOfSun, webGui.hoursOfSunLabel);
-	    webGui.addToPanel(webGui.panelPanel, webGui.inverterEfficiency, webGui.inverterEfficiencyLabel);
-	    webGui.panelPanel.add(webGui.panelsNextButton);
 
-
-	    //Add to powerPanel
-	    webGui.addToPanel(webGui.powerPanel, webGui.powerConsumption, webGui.powerConsumptionLabel);
-	    webGui.addToPanel(webGui.powerPanel, webGui.panelPower, webGui.panelPowerLabel);
-	    webGui.addToPanel(webGui.powerPanel, webGui.tariffRates, webGui.tariffRatesLabel);
-	    webGui.addToPanel(webGui.powerPanel, webGui.feedInTariff, webGui.feedInTariffLabel);
-	    webGui.addToPanel(webGui.powerPanel, webGui.elecCost,webGui. elecCostLabel);
-	    webGui.powerPanel.add(webGui.calculateButton);
-	    
-	    //Add to resultsPanel
-	    webGui.resultsPanel.add(webGui.resultsLabel);
-	   	    
-		//Add to tabPanel
-	    webGui.tabPanel.add(webGui.homeText, "Home");
-	    webGui.tabPanel.add(webGui.locationPanel, "Location");
-	    webGui.tabPanel.add(webGui.costPanel, "Cost");
-	    webGui.tabPanel.add(webGui.panelPanel, "Panels");
-	    webGui.tabPanel.add(webGui.powerPanel, "Power");
-	    webGui.tabPanel.add(webGui.resultsPanel, "Results");
-	    
-	    
 	    // Debugging...
 	    webGui.tabPanel.ensureDebugId("tabPanel");
 		
@@ -93,10 +51,9 @@ public class Asi_estimator implements EntryPoint {
 	    
 	    detectLocation();
 	    
-		
+	    RootPanel.get("interface").add(webGui.tabPanel);  
 	    
-	    RootPanel.get("interface").add(webGui.tabPanel);
-	 // Create a handler for the sendButton and nameField
+	    // Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
@@ -104,7 +61,6 @@ public class Asi_estimator implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				sendNameToServer();
 			}
-
 
 			/**
 			 * Send the name from the nameField to the server and wait for a response.
@@ -154,14 +110,18 @@ public class Asi_estimator implements EntryPoint {
 							int nYears = powers.length;
 							//Years row
 							table.setText(0, 0, "Years");
+							table.setText(1, 0, "Power produced");
+							table.setText(2,  0,  "Revenue");
+							table.setText(3, 0, "Cost");
 							for(int i = 0; i<nYears; i++){
 								table.setText(0, i+1, Integer.toString(i));
 								table.setText(1, i+1, String.format("%.2f kWh", Double.parseDouble(powers[i])));
 								table.setText(2, i+1, String.format("$%.2f", Double.parseDouble(revenues[i])));
 								table.setText(3, i+1, String.format("$%.2f", Double.parseDouble(costs[i])));	
 							}													
-							
+							webGui.resultsPanel.clear();
 							webGui.resultsPanel.add(table);
+							webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 							
 						}
 
@@ -185,7 +145,6 @@ public class Asi_estimator implements EntryPoint {
 				//Submit
 			//add handlers to widgets
 			webGui.calculateButton.addClickHandler(new MyHandler());
-			
 
 	}
 	
@@ -213,12 +172,12 @@ public class Asi_estimator implements EntryPoint {
 			"<solarquery>"+
 			"	<array>"+
 			"		<bank facing=\""+getFacing(webGui.panelDirection.getItemText(webGui.panelDirection.getSelectedIndex())) +
-				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelPower.getText()+
+				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelWattage.getText()+
 				"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+"\"" +
 						" price=\""+webGui.panelCost.getText()+"\"/>"+
 			"	</array>"+
 			"	<feedin rate=\""+webGui.feedInTariff.getText()+"\" />"+
-			"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.tariffRates.getText()+"\"/>" +
+			"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.elecCost.getText()+"\"/>" +
 			"	<sunlight hours=\""+webGui.hoursOfSun.getText()+"\" />" +
 			"	<inverter efficiency=\""+webGui.inverterEfficiency.getText()+"\" price=\""+webGui.inverterCost.getText()+"\" />"+
 			"</solarquery>";

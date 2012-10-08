@@ -48,8 +48,6 @@ public class Asi_Gui {
 	
 	// Power Tab
 	public TextBox powerConsumption;
-	public TextBox panelPower;
-	public TextBox tariffRates;
 	public TextBox feedInTariff;
 	public TextBox elecCost;
 	
@@ -65,10 +63,8 @@ public class Asi_Gui {
 	
     //Labels
 	public InlineLabel powerConsumptionLabel;
-	public InlineLabel tariffRatesLabel;
 	public InlineLabel feedInTariffLabel;
 	public InlineLabel hoursOfSunLabel;
-	public InlineLabel panelPowerLabel;
 	public InlineLabel nPanelsLabel;
 	public InlineLabel panelCostLabel;
 	public InlineLabel installCostLabel;
@@ -123,19 +119,17 @@ public class Asi_Gui {
        
 	    //Labels
 	    
-	    powerConsumptionLabel = new InlineLabel("Enter Power Consumption:");
-	    tariffRatesLabel = new InlineLabel("Enter Tariff Rates:");
-	    feedInTariffLabel = new InlineLabel("Enter Feed-In Tariff Rates:");
-	    hoursOfSunLabel = new InlineLabel("Enter the average hours of sunlight per day");
-	    panelPowerLabel = new InlineLabel("Enter the power rating of each panel");
-	    nPanelsLabel = new InlineLabel("Enter the number of panels");
-	    panelCostLabel = new InlineLabel("Enter the cost of each panel");
-	    installCostLabel = new InlineLabel("Enter the cost of installation");
+	    powerConsumptionLabel = new InlineLabel("Enter Annual Power Consumption (kWh):");
+	    feedInTariffLabel = new InlineLabel("Enter Feed-In Tariff Rates ($/kWh):");
+	    hoursOfSunLabel = new InlineLabel("Enter the average hours of sunlight per day:");
+	    nPanelsLabel = new InlineLabel("Enter the number of panels:");
+	    panelCostLabel = new InlineLabel("Enter the cost of each panel:");
+	    installCostLabel = new InlineLabel("Enter the cost of installation:");
 	    panelAngleLabel = new InlineLabel("Select angle of solar panels");
 	    panelDirectionLabel = new InlineLabel("Select direction of solar panels");
-	    panelWattageLabel = new InlineLabel("Enter your panel wattage");
+	    panelWattageLabel = new InlineLabel("Enter your panel wattage (W):");
 	    panelDegradationLabel = new InlineLabel("Enter your panel degradation(%/year)");
-	    elecCostLabel = new InlineLabel("Enter the cost of your electricity ($ per kw/h)");
+	    elecCostLabel = new InlineLabel("Enter the cost of your electricity ($/kWh)");
 	    resultsLabel = new InlineLabel("Results here");
 	    inverterCostLabel = new InlineLabel("Enter the cost of your inverter");
 	    inverterEfficiencyLabel = new InlineLabel("Enter the efficiency of your inverter (%)");
@@ -149,17 +143,11 @@ public class Asi_Gui {
 	     powerConsumption = new TextBox();
 	     powerConsumption.ensureDebugId("powerConsumption");
 	     
-	     tariffRates = new TextBox();
-	     tariffRates.ensureDebugId("tariffRates");
-	     
 	     feedInTariff = new TextBox();
 	     feedInTariff.ensureDebugId("feedInTariff");
 	     
 	     hoursOfSun = new TextBox();
 	     hoursOfSun.ensureDebugId("hoursOfSun");
-	     
-	 	 panelPower = new TextBox();
-	 	 panelPower.ensureDebugId("panelPower");
 	 	
 		 nPanels= new TextBox();
 		 nPanels.ensureDebugId("nPanels");
@@ -250,6 +238,45 @@ public class Asi_Gui {
 	    homeText.ensureDebugId("homePanel");
  
 	    space = new InlineHTML("<br/>");
+	    
+		// Add to location panel
+		addToPanel(locationPanel, longitude, longitudeLabel);
+		addToPanel(locationPanel, latitude, latitudeLabel);
+		locationPanel.add(locationNextButton);
+		
+		//Add to cost panel
+	    addToPanel(costPanel, panelCost, panelCostLabel);
+	    addToPanel(costPanel, installCost, installCostLabel); 
+	    addToPanel(costPanel, inverterCost, inverterCostLabel);
+	    costPanel.add(costNextButton);
+	    
+	    //Add to panelPanel
+	    addToPanel(panelPanel, nPanels, nPanelsLabel);
+	    addToPanel(panelPanel, panelAngle, panelAngleLabel);
+	    addToPanel(panelPanel, panelDirection, panelDirectionLabel);
+	    addToPanel(panelPanel, panelWattage, panelWattageLabel);
+	    addToPanel(panelPanel, panelDegradation,  panelDegradationLabel);
+	    addToPanel(panelPanel, hoursOfSun, hoursOfSunLabel);
+	    addToPanel(panelPanel, inverterEfficiency, inverterEfficiencyLabel);
+	    panelPanel.add(panelsNextButton);
+
+
+	    //Add to powerPanel
+	    addToPanel(powerPanel, powerConsumption, powerConsumptionLabel);
+	    addToPanel(powerPanel, feedInTariff, feedInTariffLabel);
+	    addToPanel(powerPanel, elecCost, elecCostLabel);
+	    powerPanel.add(calculateButton);
+	    
+	    //Add to resultsPanel
+	    resultsPanel.add(resultsLabel);
+	   	    
+		//Add to tabPanel
+	    tabPanel.add(homeText, "Home");
+	    tabPanel.add(locationPanel, "Location");
+	    tabPanel.add(costPanel, "Cost");
+	    tabPanel.add(panelPanel, "Panels");
+	    tabPanel.add(powerPanel, "Power");
+	    tabPanel.add(resultsPanel, "Results");
 	    
 	}
 	
