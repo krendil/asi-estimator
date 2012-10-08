@@ -2,6 +2,7 @@ package asi.client;
 
 //import com.example.myproject.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -43,7 +44,7 @@ public class Asi_estimator implements EntryPoint {
 	{		
 		webGui = new Asi_Gui();
 		
-		// Add to loation panel
+		// Add to location panel
 		webGui.addToPanel(webGui.locationPanel, webGui.longitude, webGui.longitudeLabel);
 		webGui.addToPanel(webGui.locationPanel, webGui.latitude, webGui.latitudeLabel);
 		webGui.locationPanel.add(webGui.locationNextButton);
@@ -90,10 +91,8 @@ public class Asi_estimator implements EntryPoint {
 		
 //		use google maps api
 	    
-//	    Geolocation location = Geolocation.getIfSupported();
-//	    location.getCurrentPosition(callback)
-//	    String locationString = location.toString();
-//	    webGui.longitude.setText(locationString);
+	    detectLocation();
+	    
 		
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);
@@ -112,7 +111,7 @@ public class Asi_estimator implements EntryPoint {
 			 */			private void sendNameToServer() {
 					// First, we validate the input.
 					
-					String textToServer = generateXML();//powerGenerationField.getText(); //Generate XML using this input
+					String textToServer = generateXML(); //Generate XML using this input
 					
 					//would be nice to have verification here
 
@@ -135,6 +134,10 @@ public class Asi_estimator implements EntryPoint {
 						@Override
 						public void onResponseReceived(Request request,
 								Response response) {
+
+							webGui.calculateButton.setEnabled(true);
+							
+							
 							String responseText = response.getText();
 							
 							Document doc = XMLParser.parse(responseText);
@@ -142,40 +145,29 @@ public class Asi_estimator implements EntryPoint {
 							NodeList powerTag = doc.getElementsByTagName("power");
 							NodeList revenueTag = doc.getElementsByTagName("revenue");
 							NodeList costTag = doc.getElementsByTagName("cost");
+							
+							String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
+							String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
+							String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
 							//The follow code creates the HTML table
 							FlexTable table = new FlexTable();
-							int nYears = 25;
+							int nYears = powers.length;
 							//Years row
 							table.setText(0, 0, "Years");
 							for(int i = 0; i<nYears; i++){
 								table.setText(0, i+1, Integer.toString(i));
-							}
-							//power row
-							table.setText(1, 0, "power");
-							for(int i =0; i<powerTag.getLength(); i++){
-								String powerString = powerTag.item(i).toString();
-								table.setText(1, i+1, powerString);								
-							}
-							//revenue row
-							table.setText(2, 0, "revenue");
-							for(int i =0; i<revenueTag.getLength(); i++){
-								String revenueString = revenueTag.item(i).toString();
-								table.setText(2, i+1, revenueString);								
-							}
-							//cost row
-							table.setText(3, 0, "cost");
-							for(int i =0; i<costTag.getLength(); i++){
-								String revenueString = costTag.item(i).toString();
-								table.setText(3, i+1, revenueString);								
-							}														
+								table.setText(1, i+1, String.format("%.2f kWh", Double.parseDouble(powers[i])));
+								table.setText(2, i+1, String.format("$%.2f", Double.parseDouble(revenues[i])));
+								table.setText(3, i+1, String.format("$%.2f", Double.parseDouble(costs[i])));	
+							}													
 							
-							webGui.resultsPanel.add(table);						
+							webGui.resultsPanel.add(table);
 							
 						}
 
 						@Override
 						public void onError(Request request, Throwable exception) {
-							// TODO Auto-generated method stub
+							webGui.calculateButton.setEnabled(true);
 							
 						}
 						
@@ -196,23 +188,42 @@ public class Asi_estimator implements EntryPoint {
 			
 
 	}
+	
+	private void detectLocation() {
+		Geolocation location = Geolocation.getIfSupported();
+	    if(location != null) {
+	    	location.getCurrentPosition(new Callback<Position, PositionError>() {
+				@Override
+				public void onFailure(PositionError reason) {
+					// Do nothing, the user will have to fill it in themselves	
+				}
+				@Override
+				public void onSuccess(Position result) {
+					webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
+					webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));
+				}		
+	    	});
+	    }
+	}
+	
 	private String generateXML() {
-		//FIXME Obviously, this is bogus
+		
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 			"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
 			"<solarquery>"+
 			"	<array>"+
 			"		<bank facing=\""+getFacing(webGui.panelDirection.getItemText(webGui.panelDirection.getSelectedIndex())) +
-				"\" number=\""+webGui.nPanels+"\" power=\""+webGui.panelPower+
-				"\" tilt=\""+(String)webGui.panelAngle.getItemText(webGui.panelAngle.getSelectedIndex())+"\"" +
-						" price=\""+webGui.panelCost+"\"/>"+
+				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelPower.getText()+
+				"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+"\"" +
+						" price=\""+webGui.panelCost.getText()+"\"/>"+
 			"	</array>"+
-			"	<feedin rate=\""+webGui.feedInTariff+"\" />"+
-			"	<consumption power=\""+webGui.powerConsumption+"\" rate=\""+webGui.tariffRates+"\"/>" +
-			"	<sunlight hours=\""+webGui.hoursOfSun+"\" />" +
-			"	<inverter efficiency=\""+webGui.inverterEfficiency+"\" price=\""+webGui.inverterCost+"\" />"+
+			"	<feedin rate=\""+webGui.feedInTariff.getText()+"\" />"+
+			"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.tariffRates.getText()+"\"/>" +
+			"	<sunlight hours=\""+webGui.hoursOfSun.getText()+"\" />" +
+			"	<inverter efficiency=\""+webGui.inverterEfficiency.getText()+"\" price=\""+webGui.inverterCost.getText()+"\" />"+
 			"</solarquery>";
 	}
+	
 	private String getFacing(String cardin) {
 		if(cardin== "N"){
 			return "0";

@@ -197,7 +197,7 @@ public class Asi_Gui {
 		 
 		 for (int degrees = 5; degrees <= 180; degrees += 5)
 		 {
-			 panelAngle.addItem(Integer.toString(degrees) + " degrees");
+			 panelAngle.addItem(Integer.toString(degrees) + " degrees", Integer.toString(degrees));
 		 }
 		 
 		 //Add values to panel direction
