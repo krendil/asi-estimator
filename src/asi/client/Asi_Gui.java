@@ -26,36 +26,37 @@ public class Asi_Gui {
 	public Button costNextButton;
 	public Button panelsNextButton;
 	
-	//Textboxes
-	public TextBox powerConsumption;
-	public TextBox feedInTariff;
-	public TextBox tariffRates;
-	public TextBox hoursOfSun;
-	public TextBox panelPower;
-	public TextBox nPanels;
-	public TextBox panelCost;
-	public TextBox installCost;
-	public TextBox panelWattage;
-	public TextBox panelDegradation;
-	public TextBox elecCost;
-	public TextBox inverterCost;
-	public TextBox inverterEfficiency;
+	//Elements
 	
 	//location text boxes
 	public TextBox longitude;
 	public TextBox latitude;
 	
+	// Cost Tab
+	public TextBox panelCost;
+	public TextBox installCost;
+	public TextBox inverterCost;
 	
-	//Listboxes
+	// Panels Tab
+	public TextBox nPanels;
 	public ListBox panelAngle;
 	public ListBox panelDirection;
+	public TextBox panelWattage;
+	public TextBox panelDegradation;
+	public TextBox hoursOfSun;
+	public TextBox inverterEfficiency;
+	
+	// Power Tab
+	public TextBox powerConsumption;
+	public TextBox panelPower;
+	public TextBox tariffRates;
+	public TextBox feedInTariff;
+	public TextBox elecCost;
 	
 	//TabPanel
-	
 	public TabPanel tabPanel;
 	
 	//VerticalPanels
-	
 	public VerticalPanel costPanel;
 	public VerticalPanel panelPanel;
 	public VerticalPanel powerPanel;
@@ -63,7 +64,6 @@ public class Asi_Gui {
 	public VerticalPanel locationPanel;
 	
     //Labels
-    
 	public InlineLabel powerConsumptionLabel;
 	public InlineLabel tariffRatesLabel;
 	public InlineLabel feedInTariffLabel;
