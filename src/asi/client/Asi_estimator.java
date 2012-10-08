@@ -14,7 +14,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 import asi.client.Asi_Gui;
 
@@ -136,15 +139,37 @@ public class Asi_estimator implements EntryPoint {
 							
 							Document doc = XMLParser.parse(responseText);
 							
-							Node powerTag = doc.getElementsByTagName("power").item(0);
-							Node revenueTag = doc.getElementsByTagName("revenue").item(0);
+							NodeList powerTag = doc.getElementsByTagName("power");
+							NodeList revenueTag = doc.getElementsByTagName("revenue");
+							NodeList costTag = doc.getElementsByTagName("cost");
+							//The follow code creates the HTML table
+							FlexTable table = new FlexTable();
+							int nYears = 25;
+							//Years row
+							table.setText(0, 0, "Years");
+							for(int i = 0; i<nYears; i++){
+								table.setText(0, i+1, Integer.toString(i));
+							}
+							//power row
+							table.setText(0, 1, "power");
+							for(int i =0; i<powerTag.getLength(); i++){
+								String powerString = powerTag.item(i).toString();
+								table.setText(1, i+1, powerString);								
+							}
+							//revenue row
+							table.setText(0, 2, "revenue");
+							for(int i =0; i<revenueTag.getLength(); i++){
+								String revenueString = revenueTag.item(i).toString();
+								table.setText(1, i+1, revenueString);								
+							}
+							//cost row
+							table.setText(0, 3, "cost");
+							for(int i =0; i<costTag.getLength(); i++){
+								String revenueString = costTag.item(i).toString();
+								table.setText(1, i+1, revenueString);								
+							}														
 							
-							String powerString = powerTag.getFirstChild().getNodeValue();
-							String revenueString = revenueTag.getFirstChild().getNodeValue();
-							
-							String resultString = "Power = " + powerString + " kWh</br> Revenue = $" + revenueString;
-							InlineLabel resultsLabel = new InlineLabel(resultString);
-							webGui.resultsPanel.add(resultsLabel);						
+							webGui.resultsPanel.add(table);						
 							
 						}
 
