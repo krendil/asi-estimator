@@ -46,17 +46,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class Asi_GuiTest extends TestCase {
 	
-	// Change this to your local chromedriver file
-	//		download from: http://code.google.com/p/chromium/downloads/list
-	private static String chromedriverLocation = "M:\\chromedriver\\chromedriver.exe";
-	
-	// Change this to your local gwt chrome plugin location
-	//		get plugin here in chrome url type > "chrome://plugins/" > hit top right details + > find gwt dev mode pluging location:
-	private static String gwtPluginLocation = "C:\\Users\\Shkibr.ASUS-PC\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\jpjpnpmbddbjkfaccnmhnkdgjideieim\\1.0.9738_0\\WINNT_x86-msvc/npGwtDevPlugin.dll";
-	
 	// Change this to the web page you want to test 
-	private static String URL = "http://127.0.0.1:8888/Asi_estimator.html?gwt.codesvr=127.0.0.1:9997";
-	
+	private static String URL =
+			//*   //<-- Comment toggler, add leading / to enable first section
+			"http://asi-estimator.appspot.com/"
+			/*/
+			"http://127.0.0.1:8888/Asi_estimator.html?gwt.codesvr=127.0.0.1:9997"
+			//*/
+	;
 
 	private static WebDriver driver;
 	
@@ -71,12 +68,13 @@ public class Asi_GuiTest extends TestCase {
 
 	@BeforeClass
 	public static void initWebDriver() throws IOException {
+		
 		// set the path to the chrome driver
-		System.setProperty("webdriver.chrome.driver", chromedriverLocation );
+		System.setProperty("webdriver.chrome.driver", Asi_GuiTestLocals.chromedriverLocation );
 		
 		// chrome driver will load with no extras, so lets tell it to load with gwtdev plugin
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-		String gwtDevPluginPath = "--load-plugin=" + gwtPluginLocation;
+		String gwtDevPluginPath = "--load-plugin=" + Asi_GuiTestLocals.chromeGwtPluginLocation;
 		capabilities.setCapability("chrome.switches", Arrays.asList(gwtDevPluginPath));
 		
 		// init driver with GWT Dev Plugin
@@ -153,18 +151,28 @@ public class Asi_GuiTest extends TestCase {
 	}
   
 	@Test
+	public void displaysHomePanel() {
+		assertEquals("Not displaying home panel at startup.", findE("homePanel").isDisplayed(), true );
+	}
+	
+	@Test
 	public void checkPanels() {
 		clickOn(homePanel);
+		assertEquals( findE("homePanel").isDisplayed(), true );
 		clickOn(locationPanel);
+		assertEquals( findE("locationPanel").isDisplayed(), true );
 		clickOn(costPanel);
+		assertEquals( findE("costPanel").isDisplayed(), true );
 		clickOn(panelPanel);
+		assertEquals( findE("panelPanel").isDisplayed(), true );
 		clickOn(powerPanel);
+		assertEquals( findE("powerPanel").isDisplayed(), true );
 		clickOn(resultsPanel);
+		assertEquals( findE("resultsPanel").isDisplayed(), true );
 	}
  
 	@Test
 	public void checkButtons() {
-		clickOn(homePanel);
 		clickOn(locationPanel);
 		clickOn("locationNextButton");
 		assertEquals( findE("costPanel").isDisplayed(), true );
@@ -199,8 +207,6 @@ public class Asi_GuiTest extends TestCase {
 		clickOn("panelsNextButton");
 		
 		clickOn("powerConsumption").sendKeys("30");
-		clickOn("panelPower").sendKeys("3");
-		clickOn("tariffRates").sendKeys(".65");
 		clickOn("feedInTariff").sendKeys(".11");
 		clickOn("elecCost").sendKeys(".60");
 		
