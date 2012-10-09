@@ -13,6 +13,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -75,7 +76,7 @@ public class Asi_estimator implements EntryPoint {
 					webGui.calculateButton.setEnabled(false);
 					
 					RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
-							/*   //<-- Comment toggler, add leading / to enable first section
+							//*   //<-- Comment toggler, add leading / to enable first section
 							"http://asi-estimator.appspot.com/asi_estimator/estimate"
 							/*/
 							"http://127.0.0.1:8888/asi_estimator/estimate"
@@ -111,13 +112,17 @@ public class Asi_estimator implements EntryPoint {
 							//Years row
 							table.setText(0, 0, "Years");
 							table.setText(1, 0, "Power produced");
-							table.setText(2,  0,  "Revenue");
+							table.setText(2, 0, "Revenue");
 							table.setText(3, 0, "Cost");
+							
+							NumberFormat pfmt = NumberFormat.getFormat("#,##0.0#");
+							NumberFormat cfmt = NumberFormat.getFormat("$#,##0.00");
+							
 							for(int i = 0; i<nYears; i++){
 								table.setText(0, i+1, Integer.toString(i));
-								table.setText(1, i+1, String.format("%.2f kWh", Double.parseDouble(powers[i])));
-								table.setText(2, i+1, String.format("$%.2f", Double.parseDouble(revenues[i])));
-								table.setText(3, i+1, String.format("$%.2f", Double.parseDouble(costs[i])));	
+								table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
+								table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
+								table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
 							}													
 							webGui.resultsPanel.clear();
 							webGui.resultsPanel.add(table);
