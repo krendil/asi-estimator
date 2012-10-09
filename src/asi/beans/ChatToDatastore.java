@@ -39,6 +39,11 @@ public class ChatToDatastore {
 		
 		Entity entity = datastore.get( key );
 
+		
+		System.out.println("\nLoadHistory");
+		System.out.println("Supplied Index: " + index);
+		System.out.println("Content: " + entity.getProperty( HISTORY_CONTENT ).toString());
+		
 		return entity.getProperty( HISTORY_CONTENT ).toString();
 		
 //		return "dbLoad called with \""+index+"\".";
@@ -74,6 +79,10 @@ public class ChatToDatastore {
 		  }
 	    }
 		
+	    System.out.println("\nSaveHistory");
+		System.out.println("Index: " + results.getKey().toString() );
+		System.out.println("Content: " + content);
+	    
 		return results.getKey().toString();
 		
 //		return "dbLoad called with \""+content+"\".";
