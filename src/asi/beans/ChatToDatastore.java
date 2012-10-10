@@ -13,6 +13,9 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+// text object for large strings
+import com.google.appengine.api.datastore.Text;
+
 public class ChatToDatastore {
 	
 	
@@ -29,7 +32,7 @@ public class ChatToDatastore {
 	 * gets content from the database, returning to calling method.
 	 * @param content
 	 * @return
-	 * @throws EntityNotFoundException 
+	 * @throws EntityNotFoundException
 	 */
 	public static String dsLoadHistory( String index ) throws EntityNotFoundException {
 		
@@ -58,9 +61,11 @@ public class ChatToDatastore {
 	 */
 	public static String dsSaveHistory(String content) {
 		
+		Text bigContent = new Text(content);;
+		
 		Entity results = new Entity( HISTORY );
 		
-		results.setProperty( HISTORY_CONTENT , content);
+		results.setProperty( HISTORY_CONTENT , bigContent);
 		
 		datastore.put( results );
 		
