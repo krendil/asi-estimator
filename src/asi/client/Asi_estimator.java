@@ -1,7 +1,7 @@
 package asi.client;
 
 //import com.example.myproject.shared.FieldVerifier;
-import com.google.appengine.api.datastore.EntityNotFoundException;
+//import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -55,12 +55,13 @@ public class Asi_estimator implements EntryPoint {
 	    
 	    detectLocation();
 	    
-	    String key = ChatToDatastore.dsSaveHistory("Test 1");
-	    try {
-	    	ChatToDatastore.dsLoadHistory(key);
-	    } catch (EntityNotFoundException e) {
-	    	System.out.println(e.toString());
-	    }
+	    // test database stuff
+//	    String key = ChatToDatastore.dsSaveHistory("Test 1");
+//	    try {
+//	    	ChatToDatastore.dsLoadHistory(key);
+//	    } catch (Exception e) {
+//	    	System.out.println(e.toString());
+//	    }
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
 	    
