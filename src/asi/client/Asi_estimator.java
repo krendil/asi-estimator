@@ -2,6 +2,7 @@ package asi.client;
 
 //import com.example.myproject.shared.FieldVerifier;
 //import com.google.appengine.api.datastore.EntityNotFoundException;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,6 +34,7 @@ import com.google.gwt.xml.client.XMLParser;
 
 import asi.beans.ChatToDatastore;
 import asi.client.Asi_Gui;
+import asi.client.Asi_Gui.Panel;
 
 import com.google.gwt.geolocation.client.*;
 
@@ -55,15 +57,9 @@ public class Asi_estimator implements EntryPoint {
 	    
 	    detectLocation();
 	    
-	    // test database stuff
-//	    String key = ChatToDatastore.dsSaveHistory("Test 1");
-//	    try {
-//	    	ChatToDatastore.dsLoadHistory(key);
-//	    } catch (Exception e) {
-//	    	System.out.println(e.toString());
-//	    }
-	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
+	    
+	    webGui.tabPanel.selectTab(Panel.HOME.ordinal());
 	    
 	    // Create a handler for the sendButton and nameField
 		class MyHandler implements ClickHandler {
@@ -87,7 +83,7 @@ public class Asi_estimator implements EntryPoint {
 					webGui.calculateButton.setEnabled(false);
 					
 					RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
-							//*   //<-- Comment toggler, add leading / to enable first section
+							/*   //<-- Comment toggler, add leading / to enable first section
 							"http://asi-estimator.appspot.com/asi_estimator/estimate"
 							/*/
 							"http://127.0.0.1:8888/asi_estimator/estimate"
@@ -161,6 +157,16 @@ public class Asi_estimator implements EntryPoint {
 				//Submit
 			//add handlers to widgets
 			webGui.calculateButton.addClickHandler(new MyHandler());
+
+			
+		    // Datastore test code.
+//		    String key = ChatToDatastore.dsSaveHistory("Test 1");
+//		    try {
+//		    	ChatToDatastore.dsLoadHistory(key);
+//		    } catch (Exception e) {
+////		      catch (EntityNotFoundException e) {
+//		    	System.out.println(e.toString());
+//		    }
 
 	}
 	
