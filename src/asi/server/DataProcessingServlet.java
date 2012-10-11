@@ -106,7 +106,6 @@ public class DataProcessingServlet extends HttpServlet {
 	}
 	
 	public String saveResults(String results){
-		ChatToDatastore db = new ChatToDatastore();
-		return db.dsSaveHistory(results);
+		return ChatToDatastore.dsSaveHistory(results);
 	}
 }
