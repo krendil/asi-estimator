@@ -276,7 +276,7 @@ public class Asi_Gui {
 	    tabPanel.add(costPanel, "Cost");
 	    tabPanel.add(panelPanel, "Panels");
 	    tabPanel.add(powerPanel, "Power");
-	    tabPanel.add(resultsPanel, "Results");
+//	    tabPanel.add(resultsPanel, "Results");
 	    
 	}
 	

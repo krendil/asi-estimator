@@ -44,20 +44,29 @@ import com.google.gwt.geolocation.client.*;
  */
 public class Asi_estimator implements EntryPoint {
 
+	private static final String URL = 
+			/*   //<-- Comment toggler, add leading / to enable first section
+			"http://asi-estimator.appspot.com/asi_estimator"
+			/*/
+			"http://127.0.0.1:8888/asi_estimator"
+			//*/
+			;
+	
 	public Asi_Gui webGui;
 	
 	public void onModuleLoad() 
-	{		
+	{
+		
 		webGui = new Asi_Gui();
-
+		
 	    // Debugging...
 	    webGui.tabPanel.ensureDebugId("tabPanel");
-		
-//		use google maps api
 	    
 	    detectLocation();
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
+	    
+	    
 	    
 	    webGui.tabPanel.selectTab(Panel.HOME.ordinal());
 	    
@@ -72,77 +81,79 @@ public class Asi_estimator implements EntryPoint {
 
 			/**
 			 * Send the name from the nameField to the server and wait for a response.
-			 */			private void sendNameToServer() {
-					// First, we validate the input.
+			 */
+			private void sendNameToServer() {
+				// First, we validate the input.
+				
+				String textToServer = generateXML(); //Generate XML using this input
+				
+				//would be nice to have verification here
+				
+				// Then, we send the input to the server.
+				webGui.calculateButton.setEnabled(false);
+				
+				RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/estimate");
 					
-					String textToServer = generateXML(); //Generate XML using this input
-					
-					//would be nice to have verification here
-
-					// Then, we send the input to the server.
-					webGui.calculateButton.setEnabled(false);
-					
-					RequestBuilder request = new RequestBuilder(RequestBuilder.POST, 
-							/*   //<-- Comment toggler, add leading / to enable first section
-							"http://asi-estimator.appspot.com/asi_estimator/estimate"
-							/*/
-							"http://127.0.0.1:8888/asi_estimator/estimate"
-							//*/
-					);
-					
-					request.setRequestData(textToServer);//Change to xml string
-					
-					
-					request.setCallback(new RequestCallback(){
+				request.setRequestData(textToServer);//Change to xml string
+				
+				
+				request.setCallback(
+					new RequestCallback(){
 
 						@Override
-						public void onResponseReceived(Request request,
-								Response response) {
-
-							webGui.calculateButton.setEnabled(true);
+						public void onResponseReceived (
+							Request request,
+							Response response) {
+		
+								webGui.calculateButton.setEnabled(true);
+								
+								String responseText = response.getText();
+								
+								Document doc = XMLParser.parse(responseText);
+								
+								NodeList powerTag = doc.getElementsByTagName("power");
+								NodeList revenueTag = doc.getElementsByTagName("revenue");
+								NodeList costTag = doc.getElementsByTagName("cost");
+								
+								String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
+								String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
+								String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
+								//The follow code creates the HTML table
+								FlexTable table = new FlexTable();
+								int nYears = powers.length;
+								//Years row
+								table.setText(0, 0, "Years");
+								table.setText(1, 0, "Power produced");
+								table.setText(2, 0, "Revenue");
+								table.setText(3, 0, "Cost");
+								
+								NumberFormat pfmt = NumberFormat.getFormat("#,##0.0#");
+								NumberFormat cfmt = NumberFormat.getFormat("$#,##0.00");
+								
+								for(int i = 0; i<nYears; i++){
+									table.setText(0, i+1, Integer.toString(i));
+									table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
+									table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
+									table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
+								}
+								
+								// attach the results panel on first run.
+								if (!webGui.resultsPanel.isAttached()) {
+									webGui.tabPanel.add(webGui.resultsPanel, "Results");
+								}
+								
+								webGui.resultsPanel.clear();
+								webGui.resultsPanel.add(table);
+								webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 							
-							
-							String responseText = response.getText();
-							
-							Document doc = XMLParser.parse(responseText);
-							
-							NodeList powerTag = doc.getElementsByTagName("power");
-							NodeList revenueTag = doc.getElementsByTagName("revenue");
-							NodeList costTag = doc.getElementsByTagName("cost");
-							
-							String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
-							String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
-							String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
-							//The follow code creates the HTML table
-							FlexTable table = new FlexTable();
-							int nYears = powers.length;
-							//Years row
-							table.setText(0, 0, "Years");
-							table.setText(1, 0, "Power produced");
-							table.setText(2, 0, "Revenue");
-							table.setText(3, 0, "Cost");
-							
-							NumberFormat pfmt = NumberFormat.getFormat("#,##0.0#");
-							NumberFormat cfmt = NumberFormat.getFormat("$#,##0.00");
-							
-							for(int i = 0; i<nYears; i++){
-								table.setText(0, i+1, Integer.toString(i));
-								table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
-								table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
-								table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
-							}													
-							webGui.resultsPanel.clear();
-							webGui.resultsPanel.add(table);
-							webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
-							
-						}
-
+							}
+		
 						@Override
 						public void onError(Request request, Throwable exception) {
 							webGui.calculateButton.setEnabled(true);
 							
 						}
-						
+							
 					} );
 					
 					try {
@@ -158,30 +169,38 @@ public class Asi_estimator implements EntryPoint {
 			//add handlers to widgets
 			webGui.calculateButton.addClickHandler(new MyHandler());
 
-			
-		    // Datastore test code.
-//		    String key = ChatToDatastore.dsSaveHistory("Test 1");
-//		    try {
-//		    	ChatToDatastore.dsLoadHistory(key);
-//		    } catch (Exception e) {
-////		      catch (EntityNotFoundException e) {
-//		    	System.out.println(e.toString());
-//		    }
-
 	}
 	
+	/**
+	 * Query beans for pre-filling of fields, given a location
+	 */
+	private void prefillFields() {
+		//TODO: send requests to beans for pre-filling
+		//RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
+		String lon = webGui.longitude.getText();
+		String lat = webGui.latitude.getText();
+		System.out.println("Location found. Sending data to PrefillServlet.");
+		System.out.println("Long:"+lon);
+		System.out.println("Lat:"+lat);
+	}
+	
+	
+	/**
+	 * Detect location using in-built client-side browser
+	 */
 	private void detectLocation() {
 		Geolocation location = Geolocation.getIfSupported();
 	    if(location != null) {
 	    	location.getCurrentPosition(new Callback<Position, PositionError>() {
 				@Override
 				public void onFailure(PositionError reason) {
-					// Do nothing, the user will have to fill it in themselves	
+					// cannot perform location-specific functionality without valid location.
 				}
 				@Override
 				public void onSuccess(Position result) {
 					webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
 					webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));
+					prefillFields();
 				}		
 	    	});
 	    }
