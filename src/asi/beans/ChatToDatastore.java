@@ -109,5 +109,26 @@ public class ChatToDatastore {
     logger.log(Level.INFO, "Adding entity to cache");
     keycache.put(key, entity);
   }
+
+
+
+	public static String getAvgCons(String location) throws EntityNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	public static String getFeedIn(String location) throws EntityNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	public static String getElecCost(String location) throws EntityNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
