@@ -26,7 +26,6 @@ public class ChatToDatastore {
 	private static final String HISTORY = "History";
 	private static final String HISTORY_CONTENT = "Content";
 	
-	
 
 	/**
 	 * gets content from the database, returning to calling method.
@@ -35,21 +34,14 @@ public class ChatToDatastore {
 	 * @throws EntityNotFoundException
 	 */
 	public static String dsLoadHistory( String index ) throws EntityNotFoundException {
-		
 		logger.log(Level.INFO, "Search the entity");
-		
-		Key key = KeyFactory.createKey( HISTORY , index );
-		
-		Entity entity = datastore.get( key );
 
+		//key must be long in this isntance.
+		long keyIndex = Long.valueOf(index);
+		Key key = KeyFactory.createKey( HISTORY , keyIndex );
+		Entity entity = datastore.get( key );
 		
-		System.out.println("\nLoadHistory");
-		System.out.println("Supplied Index: " + index);
-		System.out.println("Content: " + entity.getProperty( HISTORY_CONTENT ).toString());
-		
-		return entity.getProperty( HISTORY_CONTENT ).toString();
-		
-//		return "dbLoad called with \""+index+"\".";
+		return ((Text)entity.getProperty( HISTORY_CONTENT )).getValue();
 	}
 
 
@@ -61,10 +53,9 @@ public class ChatToDatastore {
 	 */
 	public static String dsSaveHistory(String content) {
 		
-		Text bigContent = new Text(content);;
+		Text bigContent = new Text(content);
 		
 		Entity results = new Entity( HISTORY );
-		
 		results.setProperty( HISTORY_CONTENT , bigContent);
 		
 		datastore.put( results );
@@ -72,6 +63,7 @@ public class ChatToDatastore {
 		logger.log(Level.INFO, "Saving entity");
 		    
 		Key key = results.getKey();
+		System.out.println(key.toString());
 	    Transaction txn = datastore.beginTransaction();
 	    try {
 	      datastore.put(results);
@@ -84,14 +76,9 @@ public class ChatToDatastore {
 		  }
 	    }
 		
-	    System.out.println("\nSaveHistory");
-		System.out.println("Index: " + results.getKey().toString() );
-		System.out.println("Content: " + content);
+	    String strKey = results.getKey().toString();
 	    
-		return results.getKey().toString();
-		
-//		return "dbLoad called with \""+content+"\".";
-
+	    return strKey.substring((strKey.indexOf("(")+1), strKey.indexOf(")"));
 	}
 	
 	
