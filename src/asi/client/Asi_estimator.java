@@ -52,6 +52,7 @@ public class Asi_estimator implements EntryPoint {
 			//*/
 			;
 	
+	
 	public Asi_Gui webGui;
 	
 	public void onModuleLoad() 
@@ -87,7 +88,7 @@ public class Asi_estimator implements EntryPoint {
 				
 				String textToServer = generateXML(); //Generate XML using this input
 				
-				//would be nice to have verification here
+				//TODO: would be nice to have verification here
 				
 				// Then, we send the input to the server.
 				webGui.calculateButton.setEnabled(false);
@@ -96,79 +97,77 @@ public class Asi_estimator implements EntryPoint {
 					
 				request.setRequestData(textToServer);//Change to xml string
 				
-				
-				request.setCallback(
-					new RequestCallback(){
-
-						@Override
-						public void onResponseReceived (
-							Request request,
-							Response response) {
-		
-								webGui.calculateButton.setEnabled(true);
-								
-								String responseText = response.getText();
-								
-								Document doc = XMLParser.parse(responseText);
-								
-								NodeList powerTag = doc.getElementsByTagName("power");
-								NodeList revenueTag = doc.getElementsByTagName("revenue");
-								NodeList costTag = doc.getElementsByTagName("cost");
-								
-								String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
-								String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
-								String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
-								//The follow code creates the HTML table
-								FlexTable table = new FlexTable();
-								int nYears = powers.length;
-								//Years row
-								table.setText(0, 0, "Years");
-								table.setText(1, 0, "Power produced");
-								table.setText(2, 0, "Revenue");
-								table.setText(3, 0, "Cost");
-								
-								NumberFormat pfmt = NumberFormat.getFormat("#,##0.0#");
-								NumberFormat cfmt = NumberFormat.getFormat("$#,##0.00");
-								
-								for(int i = 0; i<nYears; i++){
-									table.setText(0, i+1, Integer.toString(i));
-									table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
-									table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
-									table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
-								}
-								
-								// attach the results panel on first run.
-								if (!webGui.resultsPanel.isAttached()) {
-									webGui.tabPanel.add(webGui.resultsPanel, "Results");
-								}
-								
-								webGui.resultsPanel.clear();
-								webGui.resultsPanel.add(table);
-								webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
-							
-							}
-		
-						@Override
-						public void onError(Request request, Throwable exception) {
-							webGui.calculateButton.setEnabled(true);
-							
-						}
-							
-					} );
-					
-					try {
-						request.send();
-					} catch (RequestException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				request.setCallback( new RequestCallback() {
+					@Override
+					public void onResponseReceived ( Request request, Response response) {
+						showResults(response.getText());
 					}
+					@Override
+					public void onError(Request request, Throwable exception) {
+						webGui.calculateButton.setEnabled(true);
+					}
+				});
+				
+				
+				try {
+					request.send();
+				} catch (RequestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			//create handlers for widgets
-				//Submit
-			//add handlers to widgets
-			webGui.calculateButton.addClickHandler(new MyHandler());
+		}
+		//create handlers for widgets
+			//Submit
+		//add handlers to widgets
+		webGui.calculateButton.addClickHandler(new MyHandler());
 
+	}
+	
+	
+	/**
+	 * 
+	 * @param responseText
+	 */
+	private void showResults(String responseText) {
+		webGui.calculateButton.setEnabled(true);
+		
+		Document doc = XMLParser.parse(responseText);
+		
+		NodeList powerTag = doc.getElementsByTagName("power");
+		NodeList revenueTag = doc.getElementsByTagName("revenue");
+		NodeList costTag = doc.getElementsByTagName("cost");
+		
+		String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
+		String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
+		String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
+		//The follow code creates the HTML table
+		FlexTable table = new FlexTable();
+		int nYears = powers.length;
+		//Years row
+		table.setText(0, 0, "Years");
+		table.setText(1, 0, "Power produced");
+		table.setText(2, 0, "Revenue");
+		table.setText(3, 0, "Cost");
+		
+		NumberFormat pfmt = NumberFormat.getFormat("#,##0.0#");
+		NumberFormat cfmt = NumberFormat.getFormat("$#,##0.00");
+		
+		for(int i = 0; i<nYears; i++){
+			table.setText(0, i+1, Integer.toString(i));
+			table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
+			table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
+			table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
+		}
+		
+		// attach the results panel on first run.
+		if (!webGui.resultsPanel.isAttached()) {
+			webGui.tabPanel.add(webGui.resultsPanel, "Results");
+		}
+		
+		webGui.resultsPanel.clear();
+		webGui.resultsPanel.add(table);
+		webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 	}
 	
 	/**
@@ -177,13 +176,45 @@ public class Asi_estimator implements EntryPoint {
 	private void prefillFields() {
 		//TODO: send requests to beans for pre-filling
 		//RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
-		String lon = webGui.longitude.getText();
-		String lat = webGui.latitude.getText();
-		System.out.println("Location found. Sending data to PrefillServlet.");
-		System.out.println("Long:"+lon);
-		System.out.println("Lat:"+lat);
+		String latlng = webGui.latitude.getText()+","+webGui.longitude.getText();
+		
+		// Geocode
+		String returnType = "xml"; // "xml" or "json"
+		String geocodePath = "http://maps.googleapis.com/maps/api/geocode/"+returnType+"?latlng="+latlng+"&sensor=false";
+		
+		System.out.println("Geocode path: \""+geocodePath+"\"");
+		
+		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, geocodePath);
+		request.setRequestData("");
+		request.setCallback( new RequestCallback(){
+			@Override
+			public void onResponseReceived ( Request request, Response response ) {
+				doPrefill(response.getText());
+			}
+			@Override
+			public void onError(Request request, Throwable exception) {
+				//TODO: it broke
+				System.out.println("Asi_estimator: Excepion while trying to do prefill.");
+			}
+		} );
+		
+		try {
+			System.out.println("'Bout to send request to get reverse geocode");
+			request.send();
+			
+		} catch (RequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
+	
+	private void doPrefill(String response) {
+		//TODO: fix this
+		//i'm unable to grab the response text at this point in time. 
+		
+		System.out.println("Geocode response: \""+response+"\"");
+	}
 	
 	/**
 	 * Detect location using in-built client-side browser
