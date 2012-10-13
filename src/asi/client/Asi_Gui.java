@@ -91,6 +91,7 @@ public class Asi_Gui {
 	public InlineLabel inverterEfficiencyLabel;
     
 	//map
+	public VerticalPanel mapPanel; //Placeholding container to allow map to be loaded later
 	public MapWidget map;
 	public Marker mapMarker;
 	public double lat;
@@ -133,7 +134,8 @@ public class Asi_Gui {
 	    locationPanel = new VerticalPanel();
 	    locationPanel.ensureDebugId("locationPanel");
 	    
-
+	    mapPanel = new VerticalPanel();
+	    mapPanel.ensureDebugId("mapPanel");
        
 	    //Labels
 	    
@@ -258,6 +260,7 @@ public class Asi_Gui {
 	    space = new InlineHTML("<br/>");
 	    
 		// Add to location panel
+		locationPanel.add(mapPanel);
 		addToPanel(locationPanel, longitude, longitudeLabel);
 		addToPanel(locationPanel, latitude, latitudeLabel);
 		locationPanel.add(locationNextButton);
@@ -347,17 +350,26 @@ public class Asi_Gui {
 		    });
 	    	
 
-		    this.locationPanel.add(map);
+		    this.mapPanel.add(map);
 		    map.checkResizeAndCenter();
 		    map.setCenter(latLng);
 	  }
 	  
+	  /**
+	   * Moves the map marker and recenters the map on the given place.
+	   * @param latitude
+	   * @param longitude
+	   */
 	  public void setMapLocation(double latitude, double longitude) {
+		  this.lat = latitude;
+		  this.lng = longitude;
 		  if(map != null) {
 			  LatLng latLng = LatLng.newInstance(latitude, longitude);
 			  mapMarker.setLatLng(latLng);
 			  map.setCenter(latLng);
 			  map.checkResizeAndCenter();
 		  }
+		  //TODO: Set contents of textboxes
+		  //Possibly disable them or change them to labels? --David
 	  }
 }
