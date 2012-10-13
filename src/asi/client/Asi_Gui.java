@@ -21,6 +21,8 @@ import com.google.gwt.maps.client.MapOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.control.LargeMapControl;
+import com.google.gwt.maps.client.control.SmallMapControl;
+import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 
@@ -90,6 +92,7 @@ public class Asi_Gui {
     
 	//map
 	public MapWidget map;
+	public Marker mapMarker;
 	public double lat;
 	public double lng;
 	
@@ -320,29 +323,41 @@ public class Asi_Gui {
 	//TODO actionListener for the lat and long textboxes, relaod map each time they alter - will do soon - Liam
 	  public void buildMapUi() 
 	  {
-		  
-		  	lat = Double.parseDouble(this.latitude.getText());
-		  	lng = Double.parseDouble(this.longitude.getText());
+
+		  	//lat = Double.parseDouble(this.latitude.getText());
+		  	//lng = Double.parseDouble(this.longitude.getText());
 		  	
 		    LatLng latLng = LatLng.newInstance(lat, lng);
 
 		    map = new MapWidget(latLng, 4);
 		    map.setSize("400px", "400px");
+		    
 		    // Add some controls for the zoom level
-		    map.addControl(new LargeMapControl());
+		    map.addControl(new SmallMapControl());    		        
 		    
-		    map.setZoomLevel(4);
-	   
+		    mapMarker = new Marker(latLng);
+		    map.addOverlay(mapMarker);
 		    
-		    // Add an info window to highlight a point of interest
-
-		    map.getInfoWindow().open(map.getCenter(),
-    		new InfoWindowContent("You"));
-	   		        
-		    map.setCenter(latLng);
-		    map.addOverlay(new Marker(latLng));
+		    map.addMapClickHandler(new MapClickHandler(){
+				@Override
+				public void onClick(MapClickEvent event) {
+					LatLng latLng = event.getLatLng();
+					setMapLocation(latLng.getLatitude(), latLng.getLongitude());
+				}
+		    });
 	    	
 
 		    this.locationPanel.add(map);
+		    map.checkResizeAndCenter();
+		    map.setCenter(latLng);
+	  }
+	  
+	  public void setMapLocation(double latitude, double longitude) {
+		  if(map != null) {
+			  LatLng latLng = LatLng.newInstance(latitude, longitude);
+			  mapMarker.setLatLng(latLng);
+			  map.setCenter(latLng);
+			  map.checkResizeAndCenter();
+		  }
 	  }
 }
