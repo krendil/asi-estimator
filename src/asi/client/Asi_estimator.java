@@ -3,40 +3,28 @@ package asi.client;
 //import com.example.myproject.shared.FieldVerifier;
 //import com.google.appengine.api.datastore.EntityNotFoundException;
 
-import com.google.gwt.core.client.EntryPoint;
+import asi.client.Asi_Gui.Panel;
+
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.geolocation.client.Geolocation;
+import com.google.gwt.geolocation.client.Position;
+import com.google.gwt.geolocation.client.PositionError;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.maps.client.Maps;
+import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
-
-import asi.beans.ChatToDatastore;
-import asi.client.Asi_Gui;
-import asi.client.Asi_Gui.Panel;
-
-import com.google.gwt.geolocation.client.*;
 
 
 /**
@@ -51,8 +39,7 @@ public class Asi_estimator implements EntryPoint {
 			"http://127.0.0.1:8888/asi_estimator"
 			//*/
 			;
-	
-	
+		
 	public Asi_Gui webGui;
 	
 	public void onModuleLoad() 
@@ -64,6 +51,16 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.tabPanel.ensureDebugId("tabPanel");
 	    
 	    detectLocation();
+	   
+	    //loads maps
+	   Maps.loadMapsApi("", "2", false, new Runnable() 
+	   {
+		      public void run() 
+		      {
+		        webGui.buildMapUi();
+		      }
+   	   });
+		    
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
 	    
@@ -229,8 +226,9 @@ public class Asi_estimator implements EntryPoint {
 				}
 				@Override
 				public void onSuccess(Position result) {
-					webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
-					webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));
+					//webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
+					//webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));		
+					webGui.setMapLocation(result.getCoordinates().getLatitude(), result.getCoordinates().getLongitude());
 					prefillFields();
 				}		
 	    	});
@@ -282,8 +280,7 @@ public class Asi_estimator implements EntryPoint {
 		}
 		else{return "0";}
 	}
-
-
+	
 	
 }
 	
