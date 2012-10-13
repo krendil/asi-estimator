@@ -38,6 +38,8 @@ import asi.client.Asi_Gui.Panel;
 
 import com.google.gwt.geolocation.client.*;
 
+import com.google.gwt.maps.client.Maps;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -51,8 +53,7 @@ public class Asi_estimator implements EntryPoint {
 			"http://127.0.0.1:8888/asi_estimator"
 			//*/
 			;
-	
-	
+		
 	public Asi_Gui webGui;
 	
 	public void onModuleLoad() 
@@ -64,6 +65,16 @@ public class Asi_estimator implements EntryPoint {
 	    webGui.tabPanel.ensureDebugId("tabPanel");
 	    
 	    detectLocation();
+	   
+	    //loads maps
+	   Maps.loadMapsApi("", "2", false, new Runnable() 
+	   {
+		      public void run() 
+		      {
+		        webGui.buildMapUi();
+		      }
+   	   });
+		    
 	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
 	    
@@ -230,7 +241,7 @@ public class Asi_estimator implements EntryPoint {
 				@Override
 				public void onSuccess(Position result) {
 					webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
-					webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));
+					webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));				
 					prefillFields();
 				}		
 	    	});

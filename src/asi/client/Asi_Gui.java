@@ -1,9 +1,11 @@
 package asi.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -12,6 +14,15 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+//GoogleMaps 1.1.1
+import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapOptions;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.Maps;
+import com.google.gwt.maps.client.control.LargeMapControl;
+import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 
 public class Asi_Gui {
 	
@@ -77,6 +88,12 @@ public class Asi_Gui {
 	public InlineLabel inverterCostLabel;
 	public InlineLabel inverterEfficiencyLabel;
     
+	//map
+	public MapWidget map;
+	public double lat;
+	public double lng;
+	
+	
 	//location text boxes
 	public InlineLabel longitudeLabel;
 	public InlineLabel latitudeLabel;
@@ -96,8 +113,6 @@ public class Asi_Gui {
 	    tabPanel = new TabPanel();
 	    tabPanel.setWidth("100%");
 
-	    
-	    
 	    // Panels for tabPanel
 	    
 	    costPanel = new VerticalPanel();
@@ -282,7 +297,6 @@ public class Asi_Gui {
 	
 	//Method for adding Textboxes to panel
 	
-	//THIS SEEMS TO BE AT FAULT IN CAUSING ERRORS>
 	public void addToPanel(VerticalPanel vPanel, TextBox textbox, InlineLabel label)
 	{
 		vPanel.add(label);
@@ -301,9 +315,34 @@ public class Asi_Gui {
 	
 	}
 	
-	/**
-	 * Rest of the XML/Server connection stuff is missing here given that a lot of the interface has changed
-	 * and I wasn't sure how compatible it would be with what you have.
-	 * 
-	 **/
+	//Builds a map, lat and lng are pulled from lat & long textboxes
+	//USES GOOGLE MAPS FOR GWT 1.1.1
+	//TODO actionListener for the lat and long textboxes, relaod map each time they alter - will do soon - Liam
+	  public void buildMapUi() 
+	  {
+		  
+		  	lat = Double.parseDouble(this.latitude.getText());
+		  	lng = Double.parseDouble(this.longitude.getText());
+		  	
+		    LatLng latLng = LatLng.newInstance(lat, lng);
+
+		    map = new MapWidget(latLng, 4);
+		    map.setSize("400px", "400px");
+		    // Add some controls for the zoom level
+		    map.addControl(new LargeMapControl());
+		    
+		    map.setZoomLevel(4);
+	   
+		    
+		    // Add an info window to highlight a point of interest
+
+		    map.getInfoWindow().open(map.getCenter(),
+    		new InfoWindowContent("You"));
+	   		        
+		    map.setCenter(latLng);
+		    map.addOverlay(new Marker(latLng));
+	    	
+
+		    this.locationPanel.add(map);
+	  }
 }
