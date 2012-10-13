@@ -1,5 +1,7 @@
 package asi.beans;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,10 +25,13 @@ public class ChatToDatastore {
 	private static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	private static MemcacheService keycache = MemcacheServiceFactory.getMemcacheService();
 	
-	private static final String HISTORY = "History";
-	private static final String HISTORY_CONTENT = "Content";
+	// DATASTORE INDEXES
+	private static final String KIND_HISTORY = "History"; // table
+		private static final String PROP_CONTENT = "Content"; // column or attribute
 	
+	private static final String KIND_PREFILL = "Prefill";
 
+		
 	/**
 	 * gets content from the database, returning to calling method.
 	 * @param content
@@ -34,51 +39,131 @@ public class ChatToDatastore {
 	 * @throws EntityNotFoundException
 	 */
 	public static String dsLoadHistory( String index ) throws EntityNotFoundException {
-		logger.log(Level.INFO, "Search the entity");
-
-		//key must be long in this isntance.
-		long keyIndex = Long.valueOf(index);
-		Key key = KeyFactory.createKey( HISTORY , keyIndex );
-		Entity entity = datastore.get( key );
-		
-		return ((Text)entity.getProperty( HISTORY_CONTENT )).getValue();
+		//key must be long in this instance.
+		Long id = Long.valueOf(index);
+		return getAttribute( id, KIND_HISTORY, PROP_CONTENT );
 	}
-
-
-
+	
+	
 	/**
 	 * save content to database, returning unique id
 	 * @param content
 	 * @return
 	 */
-	public static String dsSaveHistory(String content) {
-		
+	public static String dsSaveHistory( String content ) {
 		Text bigContent = new Text(content);
+		return setAttribute( bigContent, KIND_HISTORY, PROP_CONTENT );
+	}
+	
+	
+	/**
+	 * Query datastore and return property value as string.
+	 * @param index
+	 * @param kind
+	 * @param property
+	 * @return
+	 * @throws EntityNotFoundException 
+	 */
+	private static String getAttribute(Object id, String kind, String property) throws EntityNotFoundException{
+		logger.log(Level.INFO, "Search the entity");
+		Entity entity = datastore.get( makeKey(id, kind) );
+		return ( ( Text )entity.getProperty( property ) ).getValue();
+	}
+	
+	/**
+	 * return all properties of entity
+	 * @param id
+	 * @param kind
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	private static Map<String, Object> getAttributes(Object id, String kind ) throws EntityNotFoundException {
+		logger.log(Level.INFO, "Search the entity");
+		Entity entity = datastore.get( makeKey(id, kind) );
+		return entity.getProperties();
+	}
+	
+	
+	/**
+	 * Makes a key from an Object.class type
+	 * 
+	 * @param id
+	 * @param kind
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	private static Key makeKey(Object id, String kind) throws EntityNotFoundException {
+		Key key;
 		
-		Entity results = new Entity( HISTORY );
-		results.setProperty( HISTORY_CONTENT , bigContent);
+		if ( Long.class == id.getClass() ) {
+			key = KeyFactory.createKey( kind , Long.class.cast(id) );
+		} else if (String.class == id.getClass() ) {
+			key = KeyFactory.createKey( kind , String.class.cast(id) );
+		} else {
+			key = KeyFactory.createKey( kind , "Bad key id type");
+			throw new EntityNotFoundException(key);
+		}
 		
-		datastore.put( results );
+		return key;
+	}
+
+
+	/**
+	 * Write hashmap (columnName,Data) to entity (index of a given table)
+	 * 
+	 * @param key
+	 * @param data
+	 * @return
+	 */
+	private static Entity writeAttributes(Entity entity, Map<String, Object> data ) {
+		Key key = entity.getKey();
+		
+		// add data to the entity
+		for (Map.Entry<String, Object> entry : data.entrySet()) {
+			String property = entry.getKey();
+		    Object content = entry.getValue();
+		    entity.setProperty(property, ( content.getClass().cast(content) ) );
+		}
 		
 		logger.log(Level.INFO, "Saving entity");
-		    
-		Key key = results.getKey();
-		System.out.println(key.toString());
-	    Transaction txn = datastore.beginTransaction();
+	    
+		// the write
+		Transaction txn = datastore.beginTransaction();
 	    try {
-	      datastore.put(results);
-		  txn.commit();
+	    	datastore.put(entity);
+			txn.commit();
+			key = entity.getKey();
+			System.out.println("Writing to datastore: "+key.toString());
+			
 	    } finally {
 		  if (txn.isActive()) {
 		    txn.rollback();
 		  } else {
-			addToCache(key, results);
+			addToCache(key, entity);
 		  }
 	    }
 		
-	    String strKey = results.getKey().toString();
-	    
-	    return strKey.substring((strKey.indexOf("(")+1), strKey.indexOf(")"));
+		return entity;
+	}
+	
+	/**
+	 * Saves a new object into the database, returning its key.
+	 * 
+	 * @param content
+	 * @param table
+	 * @param attribute
+	 * @return
+	 */
+	private static String setAttribute( Object content, String kind, String property ){
+		Entity entity = new Entity( kind );
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put(property, content);
+		
+		writeAttributes( entity, data );
+		
+	    // rip the id out of the key and return
+	    return String.valueOf(entity.getKey().getId());
 	}
 	
 	
@@ -92,30 +177,44 @@ public class ChatToDatastore {
 	 * @param entity
 	 *          : Entity being added
 	 */
-  public static void addToCache(Key key, Entity entity) {
-    logger.log(Level.INFO, "Adding entity to cache");
-    keycache.put(key, entity);
-  }
-
-
-
-	public static String getAvgCons(String location) throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public static void addToCache(Key key, Entity entity) {
+		logger.log(Level.INFO, "Adding entity to cache");
+		keycache.put(key, entity);
 	}
 
-
-
-	public static String getFeedIn(String location) throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	// pulls the prefill data from the datastore
+	public static Map<String, String> getPrefill(String location) throws EntityNotFoundException {
+		Map<String, Object> incData = getAttributes(location, KIND_PREFILL);
+		Map<String, String> outData = new HashMap<String, String>();
+		
+		// I'm sure there is an easier way of converting the types here.
+		for (Map.Entry<String, Object> entry : incData.entrySet()) {
+			String property = entry.getKey();
+		    Object content = entry.getValue();
+		    outData.put(property, (String)content);
+		}
+		
+		return outData;
 	}
-
-
-
-	public static String getElecCost(String location) throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * put prefills in datastore
+	 * @param location
+	 * @param incData
+	 */
+	public static void setPrefill(String location, Map<String,String> data) {
+		Key key = KeyFactory.createKey( KIND_PREFILL , location );
+		Entity entity = new Entity(key);
+		
+		Map<String,Object> outData = new HashMap<String,Object>();
+		
+		for (Map.Entry<String, String> entry : data.entrySet()) {
+			String property = entry.getKey();
+		    Object content = entry.getValue();
+		    outData.put(property, (String)content);
+		}
+		
+		writeAttributes(entity, outData);
 	}
 	
 }

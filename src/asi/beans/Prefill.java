@@ -3,6 +3,7 @@ package asi.beans;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,16 +31,31 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
  */
 public class Prefill {
 
-	private enum Suggest {
-		AVG_CONSUMPTION,
-		FEED_IN_RATE,
-		ELEC_COST
+	private Map<String,String> prefills = new HashMap<String,String>();
+	
+	private String location;
+	
+	private Document results;
+	
+	public Prefill(Document doc){
+		try {
+			parseDocument(doc);
+			queryDatabase();
+			calculateResults();
+		} catch (EstimatorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	List<String> reqPreFills = new ArrayList<String>();
-	HashMap<String,String> prefills = new HashMap<String,String>();
+	public Document getResults() {
+		return results;
+	}
 	
-	String location;
 	
 	/**
 	 * Configures the configuration based on the given XML Document, (adding modifiers and so on)
@@ -47,31 +63,9 @@ public class Prefill {
 	 * @param doc
 	 * @throws EstimatorException 
 	 */
-	public void parseDocument(Document doc) throws EstimatorException {
-		reqPreFills.clear();
-		
-		for(Node child = doc.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
-			if(child.getNodeType() != Node.ELEMENT_NODE) {
-				continue;
-			}
-			addPreFill(child);
-		}
-		
+	private void parseDocument(Document doc) throws EstimatorException {
 		//TODO: get location from long and lat
 		location = "QLD";
-	}
-	
-	private void addPreFill(Node n) {
-		Element el = (Element)n;
-		NodeList prefills = el.getElementsByTagName( "prefills" );
-		
-		for(int i = 0; i < prefills.getLength(); i++) {
-			Element b = (Element)prefills.item(i);
-			
-			String name = b.getAttribute( "name" );
-			
-			reqPreFills.add(name);
-		}
 	}
 	
 	
@@ -80,9 +74,7 @@ public class Prefill {
 	 * @return
 	 * @throws ParserConfigurationException
 	 */
-	public Document getResults() throws ParserConfigurationException{
-		
-		queryDatabase();
+	private Document calculateResults() throws ParserConfigurationException{
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -99,26 +91,12 @@ public class Prefill {
 	 * queries database and fills hashmap
 	 */
 	private void queryDatabase() {
-		// TODO Auto-generated method stub
-		for (String name : reqPreFills) {
-
-			try {
-				
-				if ( name == "Average Consumption" ) {
-					prefills.put(name, ChatToDatastore.getAvgCons(location));
-				} else if ( name == "Feed In Rates" ) {
-					prefills.put(name, ChatToDatastore.getFeedIn(location));
-				} else if ( name == "Electricity Cost" ) {
-					prefills.put(name, ChatToDatastore.getElecCost(location));
-				} else {
-					// unknown type, leave blank
-					prefills.put(name, "");
-				}
+		try {
+			prefills = ChatToDatastore.getPrefill(location);
+		} catch (EntityNotFoundException e) {
+			//Couldn't find location in database.
 			
-			} catch (EntityNotFoundException e) {
-				// Couldn't find location - leave blank
-				prefills.put(name, "");
-			}
 		}
+		
 	}
 }
