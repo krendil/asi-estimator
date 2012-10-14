@@ -12,6 +12,17 @@
 	<servlet-name>dpServlet</servlet-name>
 	<url-pattern>/asi_estimator/estimate</url-pattern>
   </servlet-mapping>
+
+
+  <servlet>
+	<servlet-name>pfServlet</servlet-name>
+	<servlet-class>asi.server.PrefillServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+	<servlet-name>pfServlet</servlet-name>
+	<url-pattern>/asi_estimator/prefill</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>

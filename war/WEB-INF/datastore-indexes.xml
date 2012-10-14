@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datastore-indexes
+  autoGenerate="true">
+    <datastore-index kind="History" ancestor="false">
+        <property name="Content" direction="asc" />
+    </datastore-index>
+
+    <datastore-index kind="Prefill" ancestor="false">
+        <property name="Location" direction="asc" />
+		<property name="Average Consumption" direction="asc" />
+		<property name="Feed In" direction="asc" />
+		<property name="Electricity Cost" direction="asc" />
+    </datastore-index>
+	
+</datastore-indexes>
