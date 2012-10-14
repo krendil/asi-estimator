@@ -6,13 +6,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 //GoogleMaps 1.1.1
@@ -46,23 +49,22 @@ public class Asi_Gui {
 //	public TextBox latitude;
 	
 	// Cost Tab
-	public TextBox panelCost;
-	public TextBox installCost;
-	public TextBox inverterCost;
+	public DoubleBox panelCost;
+	public DoubleBox installCost;
+	public DoubleBox inverterCost;
 	
 	// Panels Tab
-	public TextBox nPanels;
+	public IntegerBox nPanels;
 	public ListBox panelAngle;
 	public ListBox panelDirection;
-	public TextBox panelWattage;
-	public TextBox panelDegradation;
-	public TextBox hoursOfSun;
-	public TextBox inverterEfficiency;
+	public DoubleBox panelWattage;
+	public DoubleBox hoursOfSun;
+	public PercentBox inverterEfficiency;
 	
 	// Power Tab
-	public TextBox powerConsumption;
-	public TextBox feedInTariff;
-	public TextBox elecCost;
+	public DoubleBox powerConsumption;
+	public DoubleBox feedInTariff;
+	public DoubleBox elecCost;
 	
 	//TabPanel
 	public TabPanel tabPanel;
@@ -84,7 +86,6 @@ public class Asi_Gui {
 	public InlineLabel panelAngleLabel;
 	public InlineLabel panelDirectionLabel;
 	public InlineLabel panelWattageLabel;
-	public InlineLabel panelDegradationLabel;
 	public InlineLabel elecCostLabel;
 	public InlineLabel resultsLabel;
 	public InlineLabel inverterCostLabel;
@@ -148,7 +149,6 @@ public class Asi_Gui {
 	    panelAngleLabel = new InlineLabel("Select angle of solar panels");
 	    panelDirectionLabel = new InlineLabel("Select direction of solar panels");
 	    panelWattageLabel = new InlineLabel("Enter your panel wattage (W):");
-	    panelDegradationLabel = new InlineLabel("Enter your panel degradation(%/year)");
 	    elecCostLabel = new InlineLabel("Enter the cost of your electricity ($/kWh)");
 	    resultsLabel = new InlineLabel("Results here");
 	    inverterCostLabel = new InlineLabel("Enter the cost of your inverter");
@@ -160,38 +160,45 @@ public class Asi_Gui {
 	    
 		
 	    //TextBoxes
-	     powerConsumption = new TextBox();
+	     powerConsumption = new DoubleBox();
 	     powerConsumption.ensureDebugId("powerConsumption");
+	     powerConsumption.addValueChangeHandler(new InputValidator());
 	     
-	     feedInTariff = new TextBox();
+	     feedInTariff = new DoubleBox();
 	     feedInTariff.ensureDebugId("feedInTariff");
+	     feedInTariff.addValueChangeHandler(new InputValidator());
 	     
-	     hoursOfSun = new TextBox();
+	     hoursOfSun = new DoubleBox();
 	     hoursOfSun.ensureDebugId("hoursOfSun");
+	     hoursOfSun.addValueChangeHandler(new InputValidator());
 	 	
-		 nPanels= new TextBox();
+		 nPanels= new IntegerBox();
 		 nPanels.ensureDebugId("nPanels");
+		 nPanels.addValueChangeHandler(new InputValidator());
 		 
-		 panelCost= new TextBox();
+		 panelCost= new DoubleBox();
 		 panelCost.ensureDebugId("panelCost");
+		 panelCost.addValueChangeHandler(new InputValidator());
 		 
-		 installCost = new TextBox();
+		 installCost = new DoubleBox();
 		 installCost.ensureDebugId("installCost");
+		 installCost.addValueChangeHandler(new InputValidator());
 		 
-		 panelWattage = new TextBox();
+		 panelWattage = new DoubleBox();
 		 panelWattage.ensureDebugId("panelWattage");
+		 panelWattage.addValueChangeHandler(new InputValidator());
 		 
-		 panelDegradation = new TextBox();
-		 panelDegradation.ensureDebugId("panelDegradation");
-		 
-		 elecCost = new TextBox();
+		 elecCost = new DoubleBox();
 		 elecCost.ensureDebugId("elecCost");
+		 elecCost.addValueChangeHandler(new InputValidator());
 		 
-		 inverterCost = new TextBox();
+		 inverterCost = new DoubleBox();
 		 inverterCost.ensureDebugId("inverterCost");
+		 inverterCost.addValueChangeHandler(new InputValidator());
 		 
-		 inverterEfficiency = new TextBox();
+		 inverterEfficiency = new PercentBox();
 		 inverterEfficiency.ensureDebugId("inverterEfficiency");
+		 inverterEfficiency.addValueChangeHandler(new InputValidator());
 		 
 //		 longitude = new TextBox();
 //		 latitude = new TextBox();
@@ -276,7 +283,6 @@ public class Asi_Gui {
 	    addToPanel(panelPanel, panelAngle, panelAngleLabel);
 	    addToPanel(panelPanel, panelDirection, panelDirectionLabel);
 	    addToPanel(panelPanel, panelWattage, panelWattageLabel);
-	    addToPanel(panelPanel, panelDegradation,  panelDegradationLabel);
 	    addToPanel(panelPanel, hoursOfSun, hoursOfSunLabel);
 	    addToPanel(panelPanel, inverterEfficiency, inverterEfficiencyLabel);
 	    panelPanel.add(panelsNextButton);
@@ -303,7 +309,7 @@ public class Asi_Gui {
 	
 	//Method for adding Textboxes to panel
 	
-	public void addToPanel(VerticalPanel vPanel, TextBox textbox, InlineLabel label)
+	public void addToPanel(VerticalPanel vPanel, ValueBoxBase textbox, InlineLabel label)
 	{
 		vPanel.add(label);
 		vPanel.add(textbox);
@@ -321,14 +327,14 @@ public class Asi_Gui {
 	
 	}
 	
-	//Builds a map, lat and lng are pulled from lat & long textboxes
+	//Builds a map, lat and lng are pulled from instance variables lat and lng
 	//USES GOOGLE MAPS FOR GWT 1.1.1
 	//TODO actionListener for the lat and long textboxes, relaod map each time they alter - will do soon - Liam
 	  public void buildMapUi() 
 	  {
 
-		  	//lat = Double.parseDouble(this.latitude.getText());
-		  	//lng = Double.parseDouble(this.longitude.getText());
+		  	//lat = this.latitude.getValue();
+		  	//lng = this.longitude.getValue();
 		  	
 		    LatLng latLng = LatLng.newInstance(lat, lng);
 

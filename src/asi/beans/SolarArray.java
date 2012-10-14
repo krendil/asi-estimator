@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 public class SolarArray extends Modifier{
 
 	//THe proportion the panel's power production degrades by per year
-	private static final double DEGRADATION_RATE = 0.01;
+	private static final double DEGRADATION_RATE = 0.01; //1% per year
 	
 	private List<BankOfPanels> solarArray;
 	private double latitude;
@@ -47,11 +47,7 @@ public class SolarArray extends Modifier{
 				kW = Integer.parseInt(number) * Double.parseDouble(power) / 1000.0;
 				dTilt = Double.parseDouble(tilt);
 				cost = new BigDecimal(price).multiply(new BigDecimal(number));
-				if(lat.isEmpty()) {
-					this.latitude = -27.0;
-				} else {
-					latitude = Double.parseDouble(lat);
-				}
+				latitude = Double.parseDouble(lat);
 			} catch (NumberFormatException exc) {
 				throw new EstimatorException("Error parsing xml: "+exc.getMessage());
 			}
