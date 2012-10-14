@@ -14,9 +14,11 @@
 <!-- power is expected to contain a positive, nonzero number -->
 <!ATTLIST bank power NMTOKEN #REQUIRED>
 <!-- tilt is expected to be contain a nonzero decimal number between 0 and 90-->
-<!ATTLIST bank tilt NMTOKEN "32">
+<!ATTLIST bank tilt NMTOKEN "27">
 <!-- price is expected to be a decimal value in the local currency -->
 <!ATTLIST bank price NMTOKEN #REQUIRED>
+<!-- latitude is expected to be a decimal value between -90 and 90 -->
+<!ATTLIST bank latitude NMTOKEN "-27">
 
 
 <!ELEMENT feedin EMPTY>

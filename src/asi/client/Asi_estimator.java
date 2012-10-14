@@ -61,11 +61,8 @@ public class Asi_estimator implements EntryPoint {
 		      }
    	   });
 		    
-	    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
-	    
-	    
-	    
+	       
 	    webGui.tabPanel.selectTab(Panel.HOME.ordinal());
 	    
 	    // Create a handler for the sendButton and nameField
@@ -244,7 +241,7 @@ public class Asi_estimator implements EntryPoint {
 			"		<bank facing=\""+getFacing(webGui.panelDirection.getItemText(webGui.panelDirection.getSelectedIndex())) +
 				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelWattage.getText()+
 				"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+"\"" +
-						" price=\""+webGui.panelCost.getText()+"\"/>"+
+						" price=\""+webGui.panelCost.getText()+" latitude=\""+Double.toString(webGui.lat)+"\"/>"+
 			"	</array>"+
 			"	<feedin rate=\""+webGui.feedInTariff.getText()+"\" />"+
 			"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.elecCost.getText()+"\"/>" +
