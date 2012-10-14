@@ -38,10 +38,14 @@ public class ChatToDatastore {
 	 * @return
 	 * @throws EntityNotFoundException
 	 */
-	public static String dsLoadHistory( String index ) throws EntityNotFoundException {
+	public static String dsLoadHistory( Object index ) throws EntityNotFoundException {
 		//key must be long in this instance.
-		Long id = Long.valueOf(index);
-		return getAttribute( id, KIND_HISTORY, PROP_CONTENT );
+		if (index.getClass() == Long.class) {
+			return getAttribute( (Long)index, KIND_HISTORY, PROP_CONTENT );
+		} else if (index.getClass() == String.class ) {
+			return getAttribute( (String)index, KIND_HISTORY, PROP_CONTENT );
+		}
+		return null;
 	}
 	
 	

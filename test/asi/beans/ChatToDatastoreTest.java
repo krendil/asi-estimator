@@ -1,40 +1,37 @@
 package asi.beans;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 public class ChatToDatastoreTest {
-	ChatToDatastore datastore;
-	
-	
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    private final LocalServiceTestHelper helper =
+        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    @Before
+    public void setUp() {
+        helper.setUp();
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		datastore = new ChatToDatastore();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() {
+        helper.tearDown();
+    }
 
 	@Test (expected = EntityNotFoundException.class)  
 	public void test() throws EntityNotFoundException {
-		datastore.dsLoadHistory("asg9u");
+		ChatToDatastore.dsLoadHistory("asg9u");
 	}
-
 }
