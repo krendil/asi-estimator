@@ -42,8 +42,8 @@ public class Asi_Gui {
 	//Elements
 	
 	//location text boxes
-	public TextBox longitude;
-	public TextBox latitude;
+//	public TextBox longitude;
+//	public TextBox latitude;
 	
 	// Cost Tab
 	public TextBox panelCost;
@@ -99,8 +99,8 @@ public class Asi_Gui {
 	
 	
 	//location text boxes
-	public InlineLabel longitudeLabel;
-	public InlineLabel latitudeLabel;
+//	public InlineLabel longitudeLabel;
+//	public InlineLabel latitudeLabel;
 	
     //HTML
 	public InlineHTML space; 
@@ -154,8 +154,8 @@ public class Asi_Gui {
 	    inverterCostLabel = new InlineLabel("Enter the cost of your inverter");
 	    inverterEfficiencyLabel = new InlineLabel("Enter the efficiency of your inverter (%)");
 	    
-		longitudeLabel = new InlineLabel("Estimated longitude");
-		latitudeLabel = new InlineLabel("Estimated latitude");
+//		longitudeLabel = new InlineLabel("Estimated longitude");
+//		latitudeLabel = new InlineLabel("Estimated latitude");
 	    
 	    
 		
@@ -193,8 +193,8 @@ public class Asi_Gui {
 		 inverterEfficiency = new TextBox();
 		 inverterEfficiency.ensureDebugId("inverterEfficiency");
 		 
-		 longitude = new TextBox();
-		 latitude = new TextBox();
+//		 longitude = new TextBox();
+//		 latitude = new TextBox();
 		 
 		 //Listboxes
 		 
@@ -261,8 +261,8 @@ public class Asi_Gui {
 	    
 		// Add to location panel
 		locationPanel.add(mapPanel);
-		addToPanel(locationPanel, longitude, longitudeLabel);
-		addToPanel(locationPanel, latitude, latitudeLabel);
+//		addToPanel(locationPanel, longitude, longitudeLabel);
+//		addToPanel(locationPanel, latitude, latitudeLabel);
 		locationPanel.add(locationNextButton);
 		
 		//Add to cost panel

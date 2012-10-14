@@ -1,9 +1,14 @@
 package asi.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +26,14 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import asi.beans.ChatToDatastore;
 import asi.beans.Configuration;
 import asi.beans.EstimatorException;
+import asi.beans.Prefill;
 import asi.beans.SplitOutputStream;
 
 
@@ -45,6 +52,7 @@ public class PrefillServlet extends HttpServlet {
 	
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
 		try {
 			
 			ByteArrayOutputStream savedData = new ByteArrayOutputStream();
@@ -52,10 +60,6 @@ public class PrefillServlet extends HttpServlet {
 			
 			processStream(req.getInputStream(), output);
 			
-//			String resultId = saveResults(new String(savedData.toByteArray()));
-//			
-//			resp.addHeader("ResultId", resultId);
-//			
 			output.close();
 			
 		} catch (SAXException e) { //Malformed request XML
@@ -87,31 +91,29 @@ public class PrefillServlet extends HttpServlet {
 	 * @throws EstimatorException 
 	 */
 	public void processStream(InputStream input, OutputStream output) throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
-		//Read XML into Doc
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(input);
-//
-		//Create Configuration from Doc
-//		Configuration conf = new Configuration();
-//		conf.parseDocument(doc);
-//
-//		//Get Info from Configuration
-//		Document estimate = conf.generateEstimate();
-//		
-//		//Create XML from estimate Doc
-//		Source source = new DOMSource(estimate);
-//		Result result = new StreamResult(output);
-//		Transformer tf = TransformerFactory.newInstance().newTransformer();
-//		tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://asi-estimator.appspot.com/solarresponse.dtd");
-//		tf.transform(source, result);
 		
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(input, writer);
+		String text = writer.toString();
 		
+		Prefill pf = new Prefill(text);
 		
+		Map<String,String> prefills = pf.getResults();
+		
+		String returnString = "";
+		
+		if (prefills != null ) {
+			returnString = prefills.get("Average Consumption") + "," +
+				prefills.get("Feed In") + "," +
+				prefills.get("Electricity Cost");
+
+		} else {
+			returnString="NOT_FOUND";
+		}
+
+		output.write(returnString.getBytes(Charset.forName("UTF-8")));
+
 	}
-//	
-//	public String saveResults(String results){
-//		return ChatToDatastore.dsSaveHistory(results);
-//	}
+
 	
 }

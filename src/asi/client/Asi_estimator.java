@@ -173,7 +173,7 @@ public class Asi_estimator implements EntryPoint {
 	private void prefillFields() {
 		//TODO: send requests to beans for pre-filling
 		//RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
-		String latlng = webGui.latitude.getText()+","+webGui.longitude.getText();
+		String latlng = webGui.lat+","+webGui.lng;
 		
 		// Geocode
 		String returnType = "xml"; // "xml" or "json"
@@ -182,10 +182,11 @@ public class Asi_estimator implements EntryPoint {
 		System.out.println("Geocode path: \""+geocodePath+"\"");
 		
 		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, geocodePath);
-		request.setRequestData("");
+		
 		request.setCallback( new RequestCallback(){
 			@Override
 			public void onResponseReceived ( Request request, Response response ) {
+//				System.out.println("Request is pending: "+request.isPending());
 				doPrefill(response.getText());
 			}
 			@Override
@@ -209,9 +210,61 @@ public class Asi_estimator implements EntryPoint {
 	private void doPrefill(String response) {
 		//TODO: fix this
 		//i'm unable to grab the response text at this point in time. 
-		
+
 		System.out.println("Geocode response: \""+response+"\"");
+		
+		String location = "qld";
+		
+		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
+		
+		request.setRequestData(location);//Change to xml string
+		
+		request.setCallback( new RequestCallback() {
+			@Override
+			public void onResponseReceived ( Request request, Response response ) {
+				showPrefills(response.getText());
+			}
+			
+			@Override
+			public void onError(Request request, Throwable exception) {
+				
+			}
+		});
+		
+		
+		try {
+			request.send();
+		} catch (RequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
+	
+	
+	private void showPrefills(String text) {
+		char[] chars = text.toCharArray(); 
+		int count = 0;
+		for ( int i = 0; i < chars.length; i++ ) {
+			if ( chars[i] == ',' ) {
+				count++;
+			}
+		}
+
+		if (count == 2) {
+			String splitText[] = text.split(",");
+			
+			String avgCons = splitText[0];
+			String feedIn = splitText[1];
+			String elecCost = splitText[2];
+			
+			webGui.elecCost.setText(elecCost);
+			webGui.powerConsumption.setText(avgCons);
+			webGui.feedInTariff.setText(feedIn);
+		}
+		
+	}
+	
 	
 	/**
 	 * Detect location using in-built client-side browser
@@ -226,9 +279,9 @@ public class Asi_estimator implements EntryPoint {
 				}
 				@Override
 				public void onSuccess(Position result) {
-					//webGui.longitude.setText(Double.toString(result.getCoordinates().getLongitude()));
-					//webGui.latitude.setText(Double.toString(result.getCoordinates().getLatitude()));		
-					webGui.setMapLocation(result.getCoordinates().getLatitude(), result.getCoordinates().getLongitude());
+					webGui.lng = result.getCoordinates().getLongitude();
+					webGui.lat = result.getCoordinates().getLatitude();		
+					webGui.setMapLocation( webGui.lat , webGui.lng );
 					prefillFields();
 				}		
 	    	});
