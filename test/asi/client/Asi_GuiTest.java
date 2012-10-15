@@ -48,7 +48,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	// Change this to the web page you want to test 
 	private static String URL =
-			//*   //<-- Comment toggler, add leading / to enable first section
+			/*   //<-- Comment toggler, add leading / to enable first section
 			"http://asi-estimator.appspot.com/"
 			/*/
 			"http://127.0.0.1:8888/Asi_estimator.html?gwt.codesvr=127.0.0.1:9997"
@@ -64,6 +64,9 @@ public class Asi_GuiTest extends TestCase {
 	private static String panelPanel = "tabPanel-bar-tab3";
 	private static String powerPanel = "tabPanel-bar-tab4";
 	private static String resultsPanel = "tabPanel-bar-tab5";
+	
+	private final String BAD_INPUT = "z";
+	private final String NEGATIVE_INPUT = "-0.4";
   
 
 	@BeforeClass
@@ -152,34 +155,32 @@ public class Asi_GuiTest extends TestCase {
   
 	@Test
 	public void displaysHomePanel() {
-		assertEquals("Not displaying home panel at startup.", findE("homePanel").isDisplayed(), true );
+		assertEquals("Not displaying home panel at startup.", true, findE("homePanel").isDisplayed() );
 	}
 	
 	@Test
 	public void checkPanels() {
 		clickOn(homePanel);
-		assertEquals( findE("homePanel").isDisplayed(), true );
+		assertEquals( true, findE("homePanel").isDisplayed() );
 		clickOn(locationPanel);
-		assertEquals( findE("locationPanel").isDisplayed(), true );
+		assertEquals( true, findE("locationPanel").isDisplayed() );
 		clickOn(costPanel);
-		assertEquals( findE("costPanel").isDisplayed(), true );
+		assertEquals( true, findE("costPanel").isDisplayed() );
 		clickOn(panelPanel);
-		assertEquals( findE("panelPanel").isDisplayed(), true );
+		assertEquals( true, findE("panelPanel").isDisplayed() );
 		clickOn(powerPanel);
-		assertEquals( findE("powerPanel").isDisplayed(), true );
-		clickOn(resultsPanel);
-		assertEquals( findE("resultsPanel").isDisplayed(), true );
+		assertEquals( true, findE("powerPanel").isDisplayed() );
 	}
  
 	@Test
 	public void checkButtons() {
 		clickOn(locationPanel);
 		clickOn("locationNextButton");
-		assertEquals( findE("costPanel").isDisplayed(), true );
+		assertEquals( true, findE("costPanel").isDisplayed() );
 		clickOn("costNextButton");
-		assertEquals( findE("panelPanel").isDisplayed(), true );
+		assertEquals( true, findE("panelPanel").isDisplayed() );
 		clickOn("panelsNextButton");
-		assertEquals( findE("powerPanel").isDisplayed(), true );
+		assertEquals( true, findE("powerPanel").isDisplayed() );
 	
 	}
   
@@ -187,7 +188,7 @@ public class Asi_GuiTest extends TestCase {
 	public void prematureCalculate() {
 		clickOn(powerPanel);
 		assertEquals( "Shouldn't be able to click on \"Calculate\" before valid data has been entered",
-				findE("calculateButton").isEnabled(), false);
+				false, findE("calculateButton").isEnabled() );
 	}
 	
 	@Test
@@ -201,7 +202,193 @@ public class Asi_GuiTest extends TestCase {
 	
 		clickOn("nPanels").sendKeys("5");
 		clickOn("panelWattage").sendKeys("11");
-		clickOn("panelDegradation").sendKeys("0.8");
+		clickOn("hoursOfSun").sendKeys("5");
+		clickOn("inverterEfficiency").sendKeys("98");
+		clickOn("panelsNextButton");
+		
+		
+		clickOn("powerConsumption").sendKeys("30");
+		clickOn("feedInTariff").sendKeys(".11");
+		clickOn("elecCost").sendKeys(".60");
+		
+		assertEquals( "Should be able to click on \"Calculate\" after valid data has been entered",
+				true, findE("calculateButton").isEnabled() );
+	}
+	
+	@Test
+	public void inputPanelCost() {
+		String panel = costPanel;
+		String box = "panelCost";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputInstallCost() {
+		String panel = costPanel;
+		String box = "installCost";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputInverterCost() {
+		String panel = costPanel;
+		String box = "inverterCost";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputnPanels() {
+		String panel = panelPanel;
+		String box = "nPanels";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputPanelWattage() {
+		String panel = panelPanel;
+		String box = "panelWattage";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputHoursOfSun() {
+		String panel = panelPanel;
+		String box = "hoursOfSun";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputInverterEfficiency() {
+		String panel = panelPanel;
+		String box = "inverterEfficiency";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputPowerConsumption() {
+		String panel = panelPanel;
+		String box = "powerConsumption";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputFeedInTariff() {
+		String panel = panelPanel;
+		String box = "feedInTariff";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void inputElecCost() {
+		String panel = panelPanel;
+		String box = "elecCost";
+		String badInput = BAD_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+
+	
+	@Test
+	public void negPanelCost() {
+		String panel = costPanel;
+		String box = "panelCost";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negInstallCost() {
+		String panel = costPanel;
+		String box = "installCost";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negInverterCost() {
+		String panel = costPanel;
+		String box = "inverterCost";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negnPanels() {
+		String panel = panelPanel;
+		String box = "nPanels";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negPanelWattage() {
+		String panel = panelPanel;
+		String box = "panelWattage";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negHoursOfSun() {
+		String panel = panelPanel;
+		String box = "hoursOfSun";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negInverterEfficiency() {
+		String panel = panelPanel;
+		String box = "inverterEfficiency";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negPowerConsumption() {
+		String panel = panelPanel;
+		String box = "powerConsumption";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negFeedInTariff() {
+		String panel = panelPanel;
+		String box = "feedInTariff";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void negElecCost() {
+		String panel = panelPanel;
+		String box = "elecCost";
+		String badInput = NEGATIVE_INPUT;
+		validateTextbox(panel, box, badInput);
+	}
+	
+	
+	
+	private void validateTextbox(String panel, String box, String badInput) {
+		clickOn(costPanel);
+		
+		clickOn("panelCost").sendKeys("1000");
+		clickOn("installCost").sendKeys("3000");
+		clickOn("inverterCost").sendKeys("1000");
+		clickOn("costNextButton");
+	
+		clickOn("nPanels").sendKeys("5");
+		clickOn("panelWattage").sendKeys("11");
 		clickOn("hoursOfSun").sendKeys("5");
 		clickOn("inverterEfficiency").sendKeys("98");
 		clickOn("panelsNextButton");
@@ -210,10 +397,11 @@ public class Asi_GuiTest extends TestCase {
 		clickOn("feedInTariff").sendKeys(".11");
 		clickOn("elecCost").sendKeys(".60");
 		
-//			clickOn("calculate");
-//		clickOn(resultsPanel);
+		clickOn(panel);
+		clickOn(box).clear();
+		clickOn(box).sendKeys(badInput);
 		
-		assertEquals( "Should be able to click on \"Calculate\" after valid data has been entered",
-				findE("calculateButton").isEnabled(), true);
+		assertEquals( box + " should not allow \"" + badInput + "\"",
+				false, findE("calculateButton").isEnabled() );
 	}
 }
