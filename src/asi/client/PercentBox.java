@@ -6,7 +6,12 @@ public class PercentBox extends DoubleBox {
 
 	@Override
 	public Double getValue() {
-		return super.getValue() / 100.0;
+		Double value = super.getValue();
+		if( value == null || value == 0.0 ) {
+			return value;
+		} else {
+			return value / 100.0;
+		}
 	}
 
 }

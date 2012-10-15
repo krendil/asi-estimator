@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import asi.server.*;
 import asi.beans.*;
+import asi.client.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
@@ -14,6 +15,7 @@ import asi.beans.*;
 	
 	//Modifiers and beans
 	BankOfPanelsTest.class,
+	ChatToDatastoreTest.class,
 	ConsumptionTest.class,
 	ElectricalGridTest.class,
 	FeedInRateTest.class,
@@ -21,10 +23,14 @@ import asi.beans.*;
 	InverterTest.class,
 	ModifierFactoryTest.class,
 	SolarArrayTest.class,
+	SplitOutputStreamTest.class,
 	
 	//Servlets
 	DataProcessingServletTest.class,
-	DbHistoryTest.class
+	//DbHistoryTest.class
+	
+	//Client
+	PercentBoxTest.class
 })
 public class AllTests {
 

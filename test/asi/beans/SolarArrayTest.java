@@ -27,7 +27,7 @@ public class SolarArrayTest {
 	final BigDecimal GOOD_PRICE2 = new BigDecimal(8000);
 	
 	private final String XML_TAG = "<array>" +
-								   "	<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\" price=\"1000.0\"/>" +
+								   "	<bank facing=\"0.0\" number=\"5\" power=\"200\" tilt=\"32.0\" price=\"1000.0\" latitude=\"-27.0\"/>" +
 								   "</array>";
 	
 	private BankOfPanels bankOfPanels1;

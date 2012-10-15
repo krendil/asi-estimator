@@ -29,7 +29,6 @@ public class Configuration {
 	public Configuration() {
 		modifiers = new LinkedList<Modifier>();
 		
-		PopulateDatabase.Go();
 	}
 	
 	/**

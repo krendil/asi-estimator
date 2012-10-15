@@ -2,7 +2,7 @@
 <!DOCTYPE solarquery SYSTEM "http://asi-estimator.appspot.com/solarquery.dtd">
 <solarquery>
 	<array>
-		<bank facing="0.0" number="5" power="200" tilt="32.0" price="1000.0"/>
+		<bank facing="0.0" number="5" power="200" tilt="32.0" price="1000.0" latitude="-27.0"/>
 	</array>
 	<feedin rate="0.08" />
 	<consumption power="11500" rate="25.378"/>

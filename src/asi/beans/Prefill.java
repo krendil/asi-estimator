@@ -36,6 +36,7 @@ public class Prefill {
 	private String location;
 	
 	public Prefill(String location){
+		PopulateDatabase.Go();
 		this.location = location;
 	}
 	
