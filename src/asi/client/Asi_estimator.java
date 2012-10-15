@@ -45,7 +45,7 @@ import com.google.gwt.xml.client.XMLParser;
 public class Asi_estimator implements EntryPoint {
 
 	private static final String URL = 
-			//*   //<-- Comment toggler, add leading / to enable first section
+			/*   //<-- Comment toggler, add leading / to enable first section
 			"http://asi-estimator.appspot.com/asi_estimator"
 			/*/
 			"http://127.0.0.1:8888/asi_estimator"
@@ -60,10 +60,10 @@ public class Asi_estimator implements EntryPoint {
 		webGui = new Asi_Gui();
 
 		// Debugging...
-		webGui.tabPanel.ensureDebugId("tabPanel");
+		webGui.getTabPanel().ensureDebugId("tabPanel");
 
 		detectLocation();
-
+		
 		//loads maps
 		Maps.loadMapsApi("", "2", false, new Runnable() 
 		{
@@ -72,7 +72,7 @@ public class Asi_estimator implements EntryPoint {
 				buildMapUi();
 			}
 		});
-
+		
 		VisualizationUtils.loadVisualizationApi(new Runnable() {
 
 			@Override
@@ -100,7 +100,6 @@ public class Asi_estimator implements EntryPoint {
 				// First, we validate the input.
 
 				String textToServer = generateXML(); //Generate XML using this input
-				System.out.println(textToServer);
 
 				//TODO: would be nice to have verification here
 
@@ -246,14 +245,14 @@ public class Asi_estimator implements EntryPoint {
 
 
 		// attach the results panel on first run.
-		if (!webGui.resultsPanel.isAttached()) {
-			webGui.tabPanel.add(webGui.resultsPanel, "Results");
+		if (!webGui.getPanel("resultsPanel").isAttached()) {
+			webGui.tabPanel.add(webGui.getPanel("resultsPanel"), "Results");
 		}
 
-		webGui.resultsPanel.clear();
-		webGui.resultsPanel.add(line);
-		webGui.resultsPanel.add(breakEvenLabel);
-		webGui.resultsPanel.add(table);
+		webGui.getPanel("resultsPanel").clear();
+		webGui.getPanel("resultsPanel").add(line);
+		webGui.getPanel("resultsPanel").add(breakEvenLabel);
+		webGui.getPanel("resultsPanel").add(table);
 		webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 	}
 
@@ -263,7 +262,8 @@ public class Asi_estimator implements EntryPoint {
 	private void prefillFields() {
 		//TODO: send requests to beans for pre-filling
 		//RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
-		String latlng = webGui.lat+","+webGui.lng;
+		
+		String latlng = webGui.getLat()+","+webGui.getLng();
 
 		// Geocode
 		String returnType = "xml"; // "xml" or "json"
@@ -276,7 +276,6 @@ public class Asi_estimator implements EntryPoint {
 		request.setCallback( new RequestCallback(){
 			@Override
 			public void onResponseReceived ( Request request, Response response ) {
-				//				System.out.println("Request is pending: "+request.isPending());
 				doPrefill(response.getText());
 			}
 			@Override
@@ -287,7 +286,6 @@ public class Asi_estimator implements EntryPoint {
 		} );
 
 		try {
-			System.out.println("'Bout to send request to get reverse geocode");
 			request.send();
 
 		} catch (RequestException e) {
@@ -300,8 +298,6 @@ public class Asi_estimator implements EntryPoint {
 	private void doPrefill(String response) {
 		//TODO: fix this
 		//i'm unable to grab the response text at this point in time. 
-
-		System.out.println("Geocode response: \""+response+"\"");
 
 		String location = "sa";
 
@@ -347,10 +343,17 @@ public class Asi_estimator implements EntryPoint {
 			String avgCons = splitText[0];
 			String feedIn = splitText[1];
 			String elecCost = splitText[2];
-
-			webGui.elecCost.setText(elecCost);
-			webGui.powerConsumption.setText(avgCons);
-			webGui.feedInTariff.setText(feedIn);
+			
+			// change ? to empty text
+			for (int i = 0; i < splitText.length; i++ ) {
+				if (splitText[i] == "?") {
+					splitText[i] = "";
+				}
+			}
+			
+			webGui.getBox("elecCost").setText(elecCost);
+			webGui.getBox("powerConsumption").setText(avgCons);
+			webGui.getBox("feedInTariff").setText(feedIn);
 		}
 
 	}
@@ -361,6 +364,7 @@ public class Asi_estimator implements EntryPoint {
 	 */
 	private void detectLocation() {
 		Geolocation location = Geolocation.getIfSupported();
+		
 		if(location != null) {
 			location.getCurrentPosition(new Callback<Position, PositionError>() {
 				@Override
@@ -369,31 +373,29 @@ public class Asi_estimator implements EntryPoint {
 				}
 				@Override
 				public void onSuccess(Position result) {
-					webGui.lng = result.getCoordinates().getLongitude();
-					webGui.lat = result.getCoordinates().getLatitude();		
-					setMapLocation( webGui.lat , webGui.lng );
-					prefillFields();
+					webGui.setLng(result.getCoordinates().getLongitude());
+					webGui.setLat(result.getCoordinates().getLatitude());
+//					setMapLocation( webGui.getLat() , webGui.getLat() );
 				}		
 			});
 		}
 	}
 
 	private String generateXML() {
-
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 				"<!DOCTYPE solarquery SYSTEM \"http://asi-estimator.appspot.com/solarquery.dtd\">"+
 				"<solarquery>"+
 				"	<array>"+
 				"		<bank facing=\""+getFacing(webGui.panelDirection.getItemText(webGui.panelDirection.getSelectedIndex())) +
-				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelWattage.getText()+
+				"\" number=\""+webGui.getBox("nPanels").getText()+"\" power=\""+webGui.getBox("panelWattage").getText()+
 				"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+
-				"\" price=\""+webGui.panelCost.getText()+
-				"\" latitude=\""+Double.toString(webGui.lat)+"\" />"+
+				"\" price=\""+webGui.getBox("panelCost").getText()+
+				"\" latitude=\""+Double.toString(webGui.getLat())+"\" />"+
 				"	</array>"+
-				"	<feedin rate=\""+webGui.feedInTariff.getText()+"\" />"+
-				"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.elecCost.getText()+"\"/>" +
-				"	<sunlight hours=\""+webGui.hoursOfSun.getText()+"\" />" +
-				"	<inverter efficiency=\""+webGui.inverterEfficiency.getValue().toString()+"\" price=\""+webGui.inverterCost.getText()+"\" />"+
+				"	<feedin rate=\""+webGui.getBox("feedInTariff").getText()+"\" />"+
+				"	<consumption power=\""+webGui.getBox("powerConsumption").getText()+"\" rate=\""+webGui.getBox("elecCost").getText()+"\"/>" +
+				"	<sunlight hours=\""+webGui.getBox("hoursOfSun").getText()+"\" />" +
+				"	<inverter efficiency=\""+webGui.getBox("inverterEfficiency").getValue().toString()+"\" price=\""+webGui.getBox("inverterCost").getText()+"\" />"+
 				"</solarquery>";
 	}
 
@@ -431,21 +433,21 @@ public class Asi_estimator implements EntryPoint {
 	public void buildMapUi() 
 	{
 
-		//lat = this.latitude.getValue();
-		//lng = this.longitude.getValue();
+		MapWidget map;
+		Marker mapMarker;
 
-		LatLng latLng = LatLng.newInstance(webGui.lat, webGui.lng);
+		LatLng latLng = LatLng.newInstance(webGui.getLat(), webGui.getLng());
 
-		webGui.map = new MapWidget(latLng, 4);
-		webGui.map.setSize("400px", "400px");
+		map = new MapWidget(latLng, 4);
+		map.setSize("400px", "400px");
 
 		// Add some controls for the zoom level
-		webGui.map.addControl(new SmallMapControl());    		        
+		map.addControl(new SmallMapControl());    		        
 
-		webGui.mapMarker = new Marker(latLng);
-		webGui.map.addOverlay(webGui.mapMarker);
+		mapMarker = new Marker(latLng);
+		map.addOverlay(mapMarker);
 
-		webGui.map.addMapClickHandler(new MapClickHandler(){
+		map.addMapClickHandler(new MapClickHandler(){
 			@Override
 			public void onClick(MapClickEvent event) {
 				LatLng latLng = event.getLatLng();
@@ -453,9 +455,7 @@ public class Asi_estimator implements EntryPoint {
 			}
 		});
 
-
-		webGui.mapPanel.add(webGui.map);
-		webGui.map.checkResizeAndCenter();
+		webGui.addMap(map, mapMarker);
 		setMapLocation(latLng.getLatitude(), latLng.getLongitude());
 	}
 
@@ -465,20 +465,16 @@ public class Asi_estimator implements EntryPoint {
 	 * @param longitude
 	 */
 	public void setMapLocation(double latitude, double longitude) {
-		webGui.lat = latitude;
-		webGui.lng = longitude;
-		if(webGui.map != null) {
+		webGui.setLat(latitude);
+		webGui.setLng(longitude);
+		
+		if(webGui.mapExists()) {
 			LatLng latLng = LatLng.newInstance(latitude, longitude);
-			webGui.mapMarker.setLatLng(latLng);
-			webGui.map.setCenter(latLng);
-			webGui.map.checkResizeAndCenter();
+			webGui.mapUpdate(latLng);
 		}
+		
 		prefillFields();
-		//TODO: Set contents of textboxes
-		//Possibly disable them or change them to labels? --David
 	}
-	
-
 }
 
 
