@@ -137,7 +137,6 @@ public class ChatToDatastore {
 	    	datastore.put(entity);
 			txn.commit();
 			key = entity.getKey();
-			System.out.println("Writing to datastore: "+key.toString());
 			
 	    } finally {
 		  if (txn.isActive()) {

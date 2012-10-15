@@ -102,13 +102,13 @@ public class PrefillServlet extends HttpServlet {
 		
 		String returnString = "";
 		
-		if (prefills != null ) {
+		if ( prefills != null ) {
 			returnString = prefills.get("Average Consumption") + "," +
 				prefills.get("Feed In") + "," +
 				prefills.get("Electricity Cost");
 
 		} else {
-			returnString="?";
+			returnString="?,?,?";
 		}
 
 		output.write(returnString.getBytes(Charset.forName("UTF-8")));

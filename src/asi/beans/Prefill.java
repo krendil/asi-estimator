@@ -36,7 +36,7 @@ public class Prefill {
 	private String location;
 	
 	public Prefill(String location){
-		PopulateDatabase.Go();
+		PopulateDatabase.getInstance();
 		this.location = location;
 	}
 	
@@ -51,9 +51,7 @@ public class Prefill {
 	private void queryDatabase() {
 		try {
 			prefills = ChatToDatastore.getPrefill(location);
-			System.out.println("Entity found.");
 		} catch (EntityNotFoundException e) {
-			System.out.println("Entity not found.");
 			//Couldn't find location in database.
 			prefills = null;
 		}

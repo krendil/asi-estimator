@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class PopulateDatabase {
 	
-
-	public static void Go() {
-		
+	private static volatile PopulateDatabase instance = null;
+	 
+    private PopulateDatabase() {
 		String[] fields = {"Average Consumption", "Feed In", "Electricity Cost"};
 		String[][] loc = {
 			{"qld", "5620", ".14",".50"},
@@ -23,7 +23,6 @@ public class PopulateDatabase {
 		
 		Map<String,Map<String,String>> prefill = new HashMap<String,Map<String,String>>();
 		
-
 		for (int i = 0; i < loc.length; i++) {
 			
 			Map<String,String> data = new HashMap<String,String>();
@@ -34,9 +33,19 @@ public class PopulateDatabase {
 			
 			prefill.put(loc[i][0], data);
 			
-			System.out.print(loc.toString());
-			
 			ChatToDatastore.setPrefill(loc[i][0], prefill.get(loc[i][0]));
 		}
 	}
+ 
+	public static PopulateDatabase getInstance() {
+        if (instance == null) {
+                synchronized (PopulateDatabase .class){
+                        if (instance == null) {
+                                instance = new PopulateDatabase ();
+                        }
+              }
+        }
+        return instance;
+	}
+
 }
