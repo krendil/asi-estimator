@@ -8,16 +8,35 @@ public class PopulateDatabase {
 
 	public static void Go() {
 		
-		Map<String,String> data = new HashMap<String,String>();
+		String[] fields = {"Average Consumption", "Feed In", "Electricity Cost"};
+		String[][] loc = {
+			{"qld", "5620", ".14",".50"},
+			{"nsw", "5620", ".145", ".50"},
+			{"sa", "5620", ".258", ".50"},
+			{"vic", "5620", ".15", ".50"},
+			{"tas", "5620", ".50", ".50"},
+			{"wa", "5620", ".27", ".50"},
+			{"nt", "5620", ".1923", ".1923"},
+			{"act", "5620", ".50", ".50"}
+		};
 		
-		data.put("Average Consumption", "5620");
-		data.put("Feed In", ".15");
-		data.put("Electricity Cost", ".50");
 		
-		ChatToDatastore.setPrefill("qld", data);
+		Map<String,Map<String,String>> prefill = new HashMap<String,Map<String,String>>();
 		
-		
+
+		for (int i = 0; i < loc.length; i++) {
+			
+			Map<String,String> data = new HashMap<String,String>();
+			
+			for (int j = 0; j < fields.length; j++) {
+				data.put(fields[j], loc[i][j+1]);
+			}
+			
+			prefill.put(loc[i][0], data);
+			
+			System.out.print(loc.toString());
+			
+			ChatToDatastore.setPrefill(loc[i][0], prefill.get(loc[i][0]));
+		}
 	}
-	
-	
 }

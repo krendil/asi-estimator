@@ -18,13 +18,24 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
+import com.google.gwt.maps.client.control.SmallMapControl;
+import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
+import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
+import com.google.gwt.visualization.client.visualizations.corechart.Options;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+ 
 
 
 /**
@@ -33,7 +44,7 @@ import com.google.gwt.xml.client.XMLParser;
 public class Asi_estimator implements EntryPoint {
 
 	private static final String URL = 
-			/*   //<-- Comment toggler, add leading / to enable first section
+			//*   //<-- Comment toggler, add leading / to enable first section
 			"http://asi-estimator.appspot.com/asi_estimator"
 			/*/
 			"http://127.0.0.1:8888/asi_estimator"
@@ -57,9 +68,16 @@ public class Asi_estimator implements EntryPoint {
 	   {
 		      public void run() 
 		      {
-		        webGui.buildMapUi();
+		        buildMapUi();
 		      }
    	   });
+	   
+	   VisualizationUtils.loadVisualizationApi(new Runnable() {
+		
+		@Override
+		public void run() {			
+		}
+	}, LineChart.PACKAGE);
 		    
 	    RootPanel.get("interface").add(webGui.tabPanel);  
 	       
@@ -81,6 +99,7 @@ public class Asi_estimator implements EntryPoint {
 				// First, we validate the input.
 				
 				String textToServer = generateXML(); //Generate XML using this input
+				System.out.println(textToServer);
 				
 				//TODO: would be nice to have verification here
 				
@@ -135,9 +154,21 @@ public class Asi_estimator implements EntryPoint {
 		String[] powers = powerTag.item(0).getFirstChild().getNodeValue().split("\\s");
 		String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
 		String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
+		
+		int nYears = powers.length;
+		
+		double[] dPowers = new double[nYears];
+		double[] dRevenues = new double[nYears];
+		double[] dCosts = new double[nYears];
+		for(int i = 0; i<nYears; i++){
+			dPowers[i] = Double.parseDouble(powers[i]);
+			dRevenues[i] = Double.parseDouble(revenues[i]);
+			dCosts[i] = Double.parseDouble(costs[i]);
+		}
+		
 		//The follow code creates the HTML table
 		FlexTable table = new FlexTable();
-		int nYears = powers.length;
+		
 		//Years row
 		table.setText(0, 0, "Years");
 		table.setText(1, 0, "Power produced");
@@ -149,17 +180,57 @@ public class Asi_estimator implements EntryPoint {
 		
 		for(int i = 0; i<nYears; i++){
 			table.setText(0, i+1, Integer.toString(i));
-			table.setText(1, i+1, pfmt.format(Double.parseDouble(powers[i])));
-			table.setText(2, i+1, cfmt.format(Double.parseDouble(revenues[i])));
-			table.setText(3, i+1, cfmt.format(Double.parseDouble(costs[i])));	
+			table.setText(1, i+1, pfmt.format(dPowers[i]));
+			table.setText(2, i+1, cfmt.format(dRevenues[i]));
+			table.setText(3, i+1, cfmt.format(dCosts[i]));	
 		}
 		
+		//The following code creates the line chart
+		//Sets options
+		Options options = Options.create();
+		options.setHeight(400);
+		options.setTitle("Power Generated and Total Profit over Time");
+		options.setWidth(800);
+		// options.setInterpolateNulls(true);
+		AxisOptions vAxisOptions = AxisOptions.create();
+		vAxisOptions.setMinValue(-2000);
+		vAxisOptions.setMaxValue(2000);
+		
+		
+		AxisOptions hAxisOptions = AxisOptions.create();
+		hAxisOptions.setMinValue(0);
+		hAxisOptions.setMaxValue(nYears);
+		hAxisOptions.setTitle("Years");
+		options.setVAxisOptions(vAxisOptions);
+		options.setHAxisOptions(hAxisOptions);
+		//Creates data
+		DataTable data = DataTable.create();
+		data.addColumn(ColumnType.NUMBER, "Year");
+		data.addColumn(ColumnType.NUMBER, "Power Generated (kWh)");
+		data.addColumn(ColumnType.NUMBER, "Cumulative Profit ($)");
+		data.addRows(nYears);
+		
+		double totalProfit = 0.0;
+		for(int i=0; i < nYears; i++){
+			data.setValue(i, 0, i);
+			data.setValue(i, 1, dPowers[i]);
+			
+			totalProfit += dRevenues[i] - dCosts[i];
+			data.setValue(i, 2, totalProfit);
+		}
+
+   
+        LineChart line = new LineChart(data, options);
+   
+        
+        
 		// attach the results panel on first run.
 		if (!webGui.resultsPanel.isAttached()) {
 			webGui.tabPanel.add(webGui.resultsPanel, "Results");
 		}
 		
 		webGui.resultsPanel.clear();
+		webGui.resultsPanel.add(line);
 		webGui.resultsPanel.add(table);
 		webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 	}
@@ -210,7 +281,7 @@ public class Asi_estimator implements EntryPoint {
 
 		System.out.println("Geocode response: \""+response+"\"");
 		
-		String location = "qld";
+		String location = "sa";
 		
 		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
 		
@@ -278,7 +349,7 @@ public class Asi_estimator implements EntryPoint {
 				public void onSuccess(Position result) {
 					webGui.lng = result.getCoordinates().getLongitude();
 					webGui.lat = result.getCoordinates().getLatitude();		
-					webGui.setMapLocation( webGui.lat , webGui.lng );
+					setMapLocation( webGui.lat , webGui.lng );
 					prefillFields();
 				}		
 	    	});
@@ -292,14 +363,15 @@ public class Asi_estimator implements EntryPoint {
 			"<solarquery>"+
 			"	<array>"+
 			"		<bank facing=\""+getFacing(webGui.panelDirection.getItemText(webGui.panelDirection.getSelectedIndex())) +
-				"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelWattage.getText()+
-				"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+"\"" +
-						" price=\""+webGui.panelCost.getText()+" latitude=\""+Double.toString(webGui.lat)+"\"/>"+
+						"\" number=\""+webGui.nPanels.getText()+"\" power=\""+webGui.panelWattage.getText()+
+						"\" tilt=\""+(String)webGui.panelAngle.getValue(webGui.panelAngle.getSelectedIndex())+
+						"\" price=\""+webGui.panelCost.getText()+
+						"\" latitude=\""+Double.toString(webGui.lat)+"\" />"+
 			"	</array>"+
 			"	<feedin rate=\""+webGui.feedInTariff.getText()+"\" />"+
 			"	<consumption power=\""+webGui.powerConsumption.getText()+"\" rate=\""+webGui.elecCost.getText()+"\"/>" +
 			"	<sunlight hours=\""+webGui.hoursOfSun.getText()+"\" />" +
-			"	<inverter efficiency=\""+webGui.inverterEfficiency.getText()+"\" price=\""+webGui.inverterCost.getText()+"\" />"+
+			"	<inverter efficiency=\""+webGui.inverterEfficiency.getValue().toString()+"\" price=\""+webGui.inverterCost.getText()+"\" />"+
 			"</solarquery>";
 	}
 	
@@ -331,6 +403,58 @@ public class Asi_estimator implements EntryPoint {
 		else{return "0";}
 	}
 	
+	//Builds a map, lat and lng are pulled from instance variables lat and lng
+		//USES GOOGLE MAPS FOR GWT 1.1.1
+		//TODO actionListener for the lat and long textboxes, relaod map each time they alter - will do soon - Liam
+		  public void buildMapUi() 
+		  {
+
+			  	//lat = this.latitude.getValue();
+			  	//lng = this.longitude.getValue();
+			  	
+			    LatLng latLng = LatLng.newInstance(webGui.lat, webGui.lng);
+
+			    webGui.map = new MapWidget(latLng, 4);
+			    webGui.map.setSize("400px", "400px");
+			    
+			    // Add some controls for the zoom level
+			    webGui.map.addControl(new SmallMapControl());    		        
+			    
+			    webGui.mapMarker = new Marker(latLng);
+			    webGui.map.addOverlay(webGui.mapMarker);
+			    
+			    webGui.map.addMapClickHandler(new MapClickHandler(){
+					@Override
+					public void onClick(MapClickEvent event) {
+						LatLng latLng = event.getLatLng();
+						setMapLocation(latLng.getLatitude(), latLng.getLongitude());
+					}
+			    });
+		    	
+
+			    webGui.mapPanel.add(webGui.map);
+			    webGui.map.checkResizeAndCenter();
+			    setMapLocation(latLng.getLatitude(), latLng.getLongitude());
+		  }
+		  
+		  /**
+		   * Moves the map marker and recenters the map on the given place.
+		   * @param latitude
+		   * @param longitude
+		   */
+		  public void setMapLocation(double latitude, double longitude) {
+			  webGui.lat = latitude;
+			  webGui.lng = longitude;
+			  if(webGui.map != null) {
+				  LatLng latLng = LatLng.newInstance(latitude, longitude);
+				  webGui.mapMarker.setLatLng(latLng);
+				  webGui.map.setCenter(latLng);
+				  webGui.map.checkResizeAndCenter();
+			  }
+			  prefillFields();
+			  //TODO: Set contents of textboxes
+			  //Possibly disable them or change them to labels? --David
+		  }
 	
 }
 	

@@ -1,33 +1,20 @@
 package asi.client;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
 //GoogleMaps 1.1.1
-import com.google.gwt.maps.client.InfoWindowContent;
-import com.google.gwt.maps.client.MapOptions;
-import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.maps.client.Maps;
-import com.google.gwt.maps.client.control.LargeMapControl;
-import com.google.gwt.maps.client.control.SmallMapControl;
-import com.google.gwt.maps.client.event.MapClickHandler;
-import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.maps.client.overlay.Marker;
 
 public class Asi_Gui {
 	
@@ -327,55 +314,5 @@ public class Asi_Gui {
 	
 	}
 	
-	//Builds a map, lat and lng are pulled from instance variables lat and lng
-	//USES GOOGLE MAPS FOR GWT 1.1.1
-	//TODO actionListener for the lat and long textboxes, relaod map each time they alter - will do soon - Liam
-	  public void buildMapUi() 
-	  {
-
-		  	//lat = this.latitude.getValue();
-		  	//lng = this.longitude.getValue();
-		  	
-		    LatLng latLng = LatLng.newInstance(lat, lng);
-
-		    map = new MapWidget(latLng, 4);
-		    map.setSize("400px", "400px");
-		    
-		    // Add some controls for the zoom level
-		    map.addControl(new SmallMapControl());    		        
-		    
-		    mapMarker = new Marker(latLng);
-		    map.addOverlay(mapMarker);
-		    
-		    map.addMapClickHandler(new MapClickHandler(){
-				@Override
-				public void onClick(MapClickEvent event) {
-					LatLng latLng = event.getLatLng();
-					setMapLocation(latLng.getLatitude(), latLng.getLongitude());
-				}
-		    });
-	    	
-
-		    this.mapPanel.add(map);
-		    map.checkResizeAndCenter();
-		    map.setCenter(latLng);
-	  }
-	  
-	  /**
-	   * Moves the map marker and recenters the map on the given place.
-	   * @param latitude
-	   * @param longitude
-	   */
-	  public void setMapLocation(double latitude, double longitude) {
-		  this.lat = latitude;
-		  this.lng = longitude;
-		  if(map != null) {
-			  LatLng latLng = LatLng.newInstance(latitude, longitude);
-			  mapMarker.setLatLng(latLng);
-			  map.setCenter(latLng);
-			  map.checkResizeAndCenter();
-		  }
-		  //TODO: Set contents of textboxes
-		  //Possibly disable them or change them to labels? --David
-	  }
+	
 }

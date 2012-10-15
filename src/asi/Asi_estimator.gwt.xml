@@ -16,6 +16,7 @@
   <!--  debugging via selenium needs this -->
   <inherits name='com.google.gwt.user.Debug' />
 
+  <inherits name='com.google.gwt.visualization.Visualization'/>
   <!-- Specify the app entry point class.                         -->
   <entry-point class='asi.client.Asi_estimator'/>
 

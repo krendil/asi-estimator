@@ -108,7 +108,7 @@ public class PrefillServlet extends HttpServlet {
 				prefills.get("Electricity Cost");
 
 		} else {
-			returnString="NOT_FOUND";
+			returnString="?";
 		}
 
 		output.write(returnString.getBytes(Charset.forName("UTF-8")));

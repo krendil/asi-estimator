@@ -21,3 +21,6 @@ h1 {
 	border-color: #FF0000;
 }
 
+.gwt-TabPanelBottom {
+	min-height: 400px;
+}

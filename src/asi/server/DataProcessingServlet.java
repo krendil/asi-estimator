@@ -86,10 +86,11 @@ public class DataProcessingServlet extends HttpServlet {
 	 * @throws EstimatorException 
 	 */
 	public void processStream(InputStream input, OutputStream output) throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException, EstimatorException {
+		
 		//Read XML into Doc
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(input);
+		Document doc = db.parse(input); //sdfasfd
 
 		//Create Configuration from Doc
 		Configuration conf = new Configuration();
