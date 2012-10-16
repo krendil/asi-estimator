@@ -38,24 +38,14 @@ public class Asi_Gui {
 	/*Elements*/
 	// Cost Tab
 	private Map<String, ValueBoxBase> boxes;
-	
-//	private DoubleBox panelCost;
-//	private DoubleBox installCost;
-//	private DoubleBox inverterCost;
+
 	
 //
 //	// Panels Tab
-//	private IntegerBox nPanels;
+
 	protected ListBox panelAngle;
 	protected ListBox panelDirection;
-//	private DoubleBox panelWattage;
-//	private DoubleBox hoursOfSun;
-//	private PercentBox inverterEfficiency;
-//
-//	// Power Tab
-//	private DoubleBox powerConsumption;
-//	private DoubleBox feedInTariff;
-//	private DoubleBox elecCost;
+
 
 	//TabPanel
 	protected TabPanel tabPanel;
@@ -86,11 +76,6 @@ public class Asi_Gui {
 	private double lat;
 	private double lng;
 
-
-	//location text boxes
-	//	public InlineLabel longitudeLabel;
-	//	public InlineLabel latitudeLabel;
-
 	//HTML
 	public InlineHTML space; 
 	public HTML homeText;
@@ -114,25 +99,6 @@ public class Asi_Gui {
 			panels.get(panelNames[i]).ensureDebugId(panelNames[i]);
 		}
 		
-		// Panels for tabPanel
-//		costPanel = new VerticalPanel();
-//		costPanel.ensureDebugId("costPanel");
-//
-//		panelPanel = new VerticalPanel();
-//		panelPanel.ensureDebugId("panelPanel");
-//
-//		powerPanel = new VerticalPanel();
-//		powerPanel.ensureDebugId("powerPanel");
-//
-//		resultsPanel = new VerticalPanel();
-//		resultsPanel.ensureDebugId("resultsPanel");
-//
-//		locationPanel = new VerticalPanel();
-//		locationPanel.ensureDebugId("locationPanel");
-//
-//		mapPanel = new VerticalPanel();
-//		mapPanel.ensureDebugId("mapPanel");
-
 		//Labels
 
 		powerConsumptionLabel = new InlineLabel("Enter Annual Power Consumption (kWh):");
@@ -223,8 +189,9 @@ public class Asi_Gui {
 
 		//HTML ELEMENTS
 
-		homeText = new HTML("Hi and welcome to the Solar Calulcator" +
-				"developer by Agilis Sol Industria to help you choose the right solar panel for you!");
+		homeText = new HTML("<p>Hi and welcome to the Solar Calculator</p>" +
+				"<p>Click on the Location tab to start!</p>"+
+				"<p>Developed by Agilis Sol Industria to help you choose the right solar panel for you!</p>");
 		homeText.ensureDebugId("homePanel");
 
 		space = new InlineHTML("<br/>");

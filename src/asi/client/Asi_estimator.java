@@ -440,6 +440,7 @@ public class Asi_estimator implements EntryPoint {
 
 		map = new MapWidget(latLng, 4);
 		map.setSize("400px", "400px");
+//		map.setGoogleBarEnabled(true);
 
 		// Add some controls for the zoom level
 		map.addControl(new SmallMapControl());    		        
