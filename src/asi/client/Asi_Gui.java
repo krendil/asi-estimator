@@ -132,7 +132,6 @@ public class Asi_Gui {
 		
 		for (String key : boxes.keySet()) {
 		    boxes.get(key).ensureDebugId(key);
-		    boxes.get(key).addValueChangeHandler(new InputValidator());
 		}
 		
 		//Listboxes
@@ -158,6 +157,7 @@ public class Asi_Gui {
 
 		calculateButton = new Button("Calculate");
 		calculateButton.ensureDebugId("calculateButton");
+		calculateButton.setEnabled(false);
 
 		locationNextButton = new Button("Next", new ClickHandler() 
 		{
@@ -293,11 +293,24 @@ public class Asi_Gui {
 	}
 
 	public Button getButton(String string) {
+		assert(false);
 		return null;
 	}
 
 	public ValueBoxBase getBox(String boxName) {
 		return boxes.get(boxName);
+	}
+
+	public Map<String, ValueBoxBase> getBoxes() {
+		return boxes;
+	}
+	
+	/**
+	 * Enable or disable the calculate button.
+	 * @param enabled Enables the button if true, disables if false
+	 */
+	public void setCalculateEnabled(boolean enabled) {
+		calculateButton.setEnabled(enabled);
 	}
 	
 }

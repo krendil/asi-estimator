@@ -27,6 +27,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
@@ -58,6 +59,11 @@ public class Asi_estimator implements EntryPoint {
 	{
 
 		webGui = new Asi_Gui();
+
+		InputValidator iv = new InputValidator(this);
+		for (ValueBoxBase<Object> box : webGui.getBoxes().values()) {
+			box.addValueChangeHandler(iv);
+		}
 
 		// Debugging...
 		webGui.getTabPanel().ensureDebugId("tabPanel");
@@ -373,9 +379,9 @@ public class Asi_estimator implements EntryPoint {
 				}
 				@Override
 				public void onSuccess(Position result) {
-					webGui.setLng(result.getCoordinates().getLongitude());
-					webGui.setLat(result.getCoordinates().getLatitude());
-//					setMapLocation( webGui.getLat() , webGui.getLat() );
+					//webGui.setLng(result.getCoordinates().getLongitude());
+					//webGui.setLat(result.getCoordinates().getLatitude());
+					setMapLocation( result.getCoordinates().getLatitude() , result.getCoordinates().getLongitude() );
 				}		
 			});
 		}
@@ -475,6 +481,17 @@ public class Asi_estimator implements EntryPoint {
 		}
 		
 		prefillFields();
+	}
+	
+	public void validateFields() {
+		boolean allValid = true;
+		for(ValueBoxBase<Object> box : webGui.getBoxes().values()) {
+			if(box.getValue() == null) {
+				allValid = false;
+				break;
+			}
+		}
+		webGui.setCalculateEnabled(allValid);
 	}
 }
 
