@@ -24,3 +24,11 @@ h1 {
 .gwt-TabPanelBottom {
 	min-height: 400px;
 }
+
+/*
+ * People who change the background colour but not the foreground
+ * should be taught the true meaning of pain.
+ */
+.gwt-Button,.gwt-ListBox {
+	color: #000000;
+}

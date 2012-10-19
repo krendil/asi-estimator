@@ -7,6 +7,8 @@ Dependencies
  - Java 1.6
  - Google Web Toolkit SDK 2.4.0
  - Google App Engine SDK 1.7.0
+ - GWT Visualization API 1.1.2
+ - GWT Maps API 1.1.1
  
 Build Instructions
 ------------------
@@ -32,7 +34,12 @@ If you are using ant to build the project, make sure that there is a folder call
 				gwt-user.jar
 				...
 
-You can find a zip file of appengine-sdk-java-1.7.0 [here](https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Java) and gwt-2.4.0 [here](http://code.google.com/p/google-web-toolkit/downloads/detail?name=gwt-2.4.0.zip).
+Links to Dependencies
+---------------------
+[appengine-sdk-java-1.7.0](https://developers.google.com/appengine/downloads#Google_App_Engine_SDK_for_Java)
+[gwt-2.4.0](http://code.google.com/p/google-web-toolkit/downloads/detail?name=gwt-2.4.0.zip).
+[gwt-visualization-1.1.2](http://code.google.com/p/gwt-google-apis/downloads/detail?name=gwt-visualization-1.1.2.zip&can=2&q=)
+[gwt-maps-1.1.1](http://gwt-google-apis.googlecode.com/files/gwt-maps-1.1.1-rc1.zip)
 
 Inside the asi-estimator folder, run `ant build` to build the project, and `ant test` to run the unit tests.
 
