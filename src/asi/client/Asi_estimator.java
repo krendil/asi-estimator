@@ -7,11 +7,18 @@ import asi.client.Asi_Gui.Panel;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+
+import com.google.gwt.maps.client.geocode.Geocoder;
+import com.google.gwt.maps.client.geocode.LocationCallback;
+import com.google.gwt.maps.client.geocode.Placemark;
+
 import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.Position;
 import com.google.gwt.geolocation.client.PositionError;
+
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -44,6 +51,8 @@ import com.google.gwt.xml.client.XMLParser;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Asi_estimator implements EntryPoint {
+	
+	
 
 	private static final String URL = 
 			/*   //<-- Comment toggler, add leading / to enable first section
@@ -269,44 +278,29 @@ public class Asi_estimator implements EntryPoint {
 		//TODO: send requests to beans for pre-filling
 		//RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
 		
-		String latlng = webGui.getLat()+","+webGui.getLng();
+//		String latlng = webGui.getLat()+","+webGui.getLng();
+		LatLng point = LatLng.newInstance(webGui.getLat(), webGui.getLng());
 
-		// Geocode
-		String returnType = "xml"; // "xml" or "json"
-		String geocodePath = "http://maps.googleapis.com/maps/api/geocode/"+returnType+"?latlng="+latlng+"&sensor=false";
+		Geocoder geo = new Geocoder();
+		geo.getLocations(point, new LocationCallback() {
 
-		System.out.println("Geocode path: \""+geocodePath+"\"");
-
-		RequestBuilder request = new RequestBuilder(RequestBuilder.GET, geocodePath);
-
-		request.setCallback( new RequestCallback(){
 			@Override
-			public void onResponseReceived ( Request request, Response response ) {
-				doPrefill(response.getText());
+			public void onFailure(int statusCode) {
+				// We won't do any prefilling.
 			}
 			@Override
-			public void onError(Request request, Throwable exception) {
-				//TODO: it broke
-				System.out.println("Asi_estimator: Excepion while trying to do prefill.");
+			public void onSuccess(JsArray<Placemark> locations) {
+				String location = locations.get(0).getCountry()+"."+locations.get(0).getState();				
+				doPrefill(location);
 			}
-		} );
-
-		try {
-			request.send();
-
-		} catch (RequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		});
+		
 	}
 
 
-	private void doPrefill(String response) {
-		//TODO: fix this
-		//i'm unable to grab the response text at this point in time. 
-
-		String location = "sa";
-
+	private void doPrefill(String location) {
+		location = location.toLowerCase();
+		
 		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/prefill");
 
 		request.setRequestData(location);//Change to xml string
@@ -323,7 +317,6 @@ public class Asi_estimator implements EntryPoint {
 			}
 		});
 
-
 		try {
 			request.send();
 		} catch (RequestException e) {
@@ -333,34 +326,39 @@ public class Asi_estimator implements EntryPoint {
 
 	}
 
-
+	// split up the string and display the information
 	private void showPrefills(String text) {
+
 		char[] chars = text.toCharArray(); 
 		int count = 0;
+		
 		for ( int i = 0; i < chars.length; i++ ) {
 			if ( chars[i] == ',' ) {
 				count++;
 			}
 		}
 
-		if (count == 2) {
-			String splitText[] = text.split(",");
-
-			String avgCons = splitText[0];
-			String feedIn = splitText[1];
-			String elecCost = splitText[2];
-			
-			// change ? to empty text
-			for (int i = 0; i < splitText.length; i++ ) {
-				if (splitText[i] == "?") {
-					splitText[i] = "";
-				}
-			}
-			
-			webGui.getBox("elecCost").setText(elecCost);
-			webGui.getBox("powerConsumption").setText(avgCons);
-			webGui.getBox("feedInTariff").setText(feedIn);
+		// if it's faulty, we'll change it to a complete unknown
+		if (count != 2) {
+			text = "?,?,?";
 		}
+
+		String splitText[] = text.split(",");
+		
+		// change ? to empty text (we didnt find anything in the database)
+		for (int i = 0; i < splitText.length; i++ ) {
+			if (splitText[i].equals("?")) {
+				splitText[i] = "";
+			}
+		}
+		
+		String avgCons = splitText[0];
+		String feedIn = splitText[1];
+		String elecCost = splitText[2];
+
+		webGui.getBox("elecCost").setText(elecCost);
+		webGui.getBox("powerConsumption").setText(avgCons);
+		webGui.getBox("feedInTariff").setText(feedIn);
 
 	}
 

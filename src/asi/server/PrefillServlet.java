@@ -94,13 +94,19 @@ public class PrefillServlet extends HttpServlet {
 		
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(input, writer);
-		String text = writer.toString();
 		
-		Prefill pf = new Prefill(text);
+		input.close();
+		
+		String location = writer.toString();
+		
+		writer.flush();
+		writer.close();
+		
+		Prefill pf = new Prefill(location);
 		
 		Map<String,String> prefills = pf.getResults();
 		
-		String returnString = "";
+		String returnString;
 		
 		if ( prefills != null ) {
 			returnString = prefills.get("Average Consumption") + "," +
@@ -112,6 +118,11 @@ public class PrefillServlet extends HttpServlet {
 		}
 
 		output.write(returnString.getBytes(Charset.forName("UTF-8")));
+		output.flush();
+		output.close();
+		
+		
+		
 
 	}
 

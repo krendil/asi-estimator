@@ -10,14 +10,14 @@ public class PopulateDatabase {
     private PopulateDatabase() {
 		String[] fields = {"Average Consumption", "Feed In", "Electricity Cost"};
 		String[][] loc = {
-			{"qld", "5620", ".14",".50"},
-			{"nsw", "5620", ".145", ".50"},
-			{"sa", "5620", ".258", ".50"},
-			{"vic", "5620", ".15", ".50"},
-			{"tas", "5620", ".50", ".50"},
-			{"wa", "5620", ".27", ".50"},
-			{"nt", "5620", ".1923", ".1923"},
-			{"act", "5620", ".50", ".50"}
+			{"au.qld", "9000", ".14",".195"}, //http://www.deedi.qld.gov.au/documents/energy/43-_Extra-Gazette-Electricity-Prices-2012-13.pdf
+			{"au.nsw", "9000", ".1", ".193"},
+			{"au.sa", "9000", ".258", ".202"},
+			{"au.vic", "9000", ".8", ".203"},
+			{"au.tas", "9000", ".209", ".209"},
+			{"au.wa", "9000", ".27", ".217"},
+			{"au.nt", "9000", ".1923", ".208"},
+			{"au.act", "9000", ".163", ".163"}
 		};
 		
 		
