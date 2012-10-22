@@ -31,7 +31,9 @@ import com.google.gwt.maps.client.control.SmallMapControl;
 import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ValueBoxBase;
@@ -89,7 +91,6 @@ public class Asi_estimator implements EntryPoint {
 		});
 		
 		VisualizationUtils.loadVisualizationApi(new Runnable() {
-
 			@Override
 			public void run() {			
 			}
@@ -100,7 +101,7 @@ public class Asi_estimator implements EntryPoint {
 		webGui.tabPanel.selectTab(Panel.HOME.ordinal());
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler {
+		class CalculateHandler implements ClickHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
@@ -128,7 +129,7 @@ public class Asi_estimator implements EntryPoint {
 				request.setCallback( new RequestCallback() {
 					@Override
 					public void onResponseReceived ( Request request, Response response) {
-						showResults(response.getText());
+						showResults(response.getText(), response.getHeader("ResultId"));
 					}
 					@Override
 					public void onError(Request request, Throwable exception) {
@@ -148,7 +149,12 @@ public class Asi_estimator implements EntryPoint {
 		//create handlers for widgets
 		//Submit
 		//add handlers to widgets
-		webGui.calculateButton.addClickHandler(new MyHandler());
+		webGui.calculateButton.addClickHandler(new CalculateHandler());
+		
+		String queryCode = Window.Location.getParameter("q");
+		if(queryCode != null) {
+			loadOldQuery(queryCode);
+		}
 
 	}
 
@@ -157,7 +163,7 @@ public class Asi_estimator implements EntryPoint {
 	 * 
 	 * @param responseText
 	 */
-	private void showResults(String responseText) {
+	private void showResults(String responseText, String queryCode) {
 		webGui.calculateButton.setEnabled(true);
 
 		Document doc = XMLParser.parse(responseText);
@@ -253,11 +259,10 @@ public class Asi_estimator implements EntryPoint {
 		}
 		Label breakEvenLabel = new Label(breakEvenMessage);
 
-
-
 		LineChart line = new LineChart(data, options);
-
-
+		
+		String uniqUrl = this.URL + "?q=" + queryCode; 
+		HTML queryCodeLabel = new HTML("The unique URL for these results is <a href="+uniqUrl+">"+uniqUrl+"</a>");
 
 		// attach the results panel on first run.
 		if (!webGui.getPanel("resultsPanel").isAttached()) {
@@ -268,6 +273,7 @@ public class Asi_estimator implements EntryPoint {
 		webGui.getPanel("resultsPanel").add(line);
 		webGui.getPanel("resultsPanel").add(breakEvenLabel);
 		webGui.getPanel("resultsPanel").add(table);
+		webGui.getPanel("resultsPanel").add(queryCodeLabel);
 		webGui.tabPanel.selectTab(Asi_Gui.Panel.RESULTS.ordinal());
 	}
 
@@ -399,7 +405,9 @@ public class Asi_estimator implements EntryPoint {
 				"	<feedin rate=\""+webGui.getBox("feedInTariff").getText()+"\" />"+
 				"	<consumption power=\""+webGui.getBox("powerConsumption").getText()+"\" rate=\""+webGui.getBox("elecCost").getText()+"\"/>" +
 				"	<sunlight hours=\""+webGui.getBox("hoursOfSun").getText()+"\" />" +
-				"	<inverter efficiency=\""+webGui.getBox("inverterEfficiency").getValue().toString()+"\" price=\""+webGui.getBox("inverterCost").getText()+"\" />"+
+				"	<inverter efficiency=\""+webGui.getBox("inverterEfficiency").getValue().toString()+"\"" +
+						" price=\""+((Double)webGui.getBox("inverterCost").getValue()
+								   + (Double)webGui.getBox("installCost").getValue())+"\" />"+
 				"</solarquery>";
 	}
 
@@ -490,6 +498,31 @@ public class Asi_estimator implements EntryPoint {
 			}
 		}
 		webGui.setCalculateEnabled(allValid);
+	}
+	
+	public void loadOldQuery(final String queryCode) {
+		RequestBuilder request = new RequestBuilder(RequestBuilder.POST, URL+"/history");
+
+		request.setRequestData(queryCode);//Change to xml string
+
+		request.setCallback( new RequestCallback() {
+			@Override
+			public void onResponseReceived ( Request request, Response response) {
+				showResults(response.getText(), queryCode);
+			}
+			@Override
+			public void onError(Request request, Throwable exception) {
+				webGui.calculateButton.setEnabled(true);
+			}
+		});
+
+
+		try {
+			request.send();
+		} catch (RequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 

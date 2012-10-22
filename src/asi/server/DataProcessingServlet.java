@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,13 +50,19 @@ public class DataProcessingServlet extends HttpServlet {
 		try {
 			
 			ByteArrayOutputStream savedData = new ByteArrayOutputStream();
-			OutputStream output = new SplitOutputStream(resp.getOutputStream(), savedData);	
-			processStream(req.getInputStream(), output);
-			
-			String resultId = saveResults(new String(savedData.toByteArray()));
+			//OutputStream output = new SplitOutputStream(resp.getOutputStream(), savedData);	
+			processStream(req.getInputStream(), savedData);
+			String output = new String(savedData.toByteArray());
+			String resultId = saveResults(output);
 			resp.addHeader("ResultId", resultId);
+			OutputStreamWriter osw = new OutputStreamWriter(resp.getOutputStream());
 			
-			output.close();
+			osw.write(output);
+			osw.flush();
+			osw.close();
+			resp.getOutputStream().close();
+			
+			//output.close();
 			
 		} catch (SAXException e) { //Malformed request XML
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

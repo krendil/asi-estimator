@@ -50,7 +50,7 @@ public class GetHistoryServlet extends HttpServlet  {
 	public void processStream(InputStream inputStream,
 			OutputStream outputStream) throws IOException, EntityNotFoundException {
 		
-		String key = getKey( inputStream ); // may throw EntityNotFoundException
+		long key = getKey( inputStream ); // may throw EntityNotFoundException
 		
 		String xml = getXML(key);
 		
@@ -64,7 +64,7 @@ public class GetHistoryServlet extends HttpServlet  {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getXML(String key) throws EntityNotFoundException {
+	private String getXML(long key) throws EntityNotFoundException {
 		String xml = null;
 		
 		xml = ChatToDatastore.dsLoadHistory( key );
@@ -93,7 +93,7 @@ public class GetHistoryServlet extends HttpServlet  {
 	 * @return
 	 * @throws IOException
 	 */
-	private String getKey(InputStream req) throws IOException {
+	private long getKey(InputStream req) throws IOException {
 		
 		String key = "";
 		
@@ -105,7 +105,7 @@ public class GetHistoryServlet extends HttpServlet  {
             key += inputLine;
         in.close();
         
-        return key;
+        return Long.parseLong(key);
 		
 	}
 
