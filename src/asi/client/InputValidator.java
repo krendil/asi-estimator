@@ -19,7 +19,12 @@ public class InputValidator implements ValueChangeHandler<Object> {
 			((UIObject) event.getSource()).addStyleName("asiInvalidField");
 			controller.validateFields();
 		} else {
-			((UIObject) event.getSource()).removeStyleName("asiInvalidField");
+			// disable negatives
+			if ((Double.parseDouble(event.getValue().toString())) < 0) {
+				((UIObject) event.getSource()).addStyleName("asiInvalidField");
+			} else {
+				((UIObject) event.getSource()).removeStyleName("asiInvalidField");
+			}
 			controller.validateFields();
 		}
 	}
