@@ -23,7 +23,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
 /**
  * Got a lot of help and examples from this website.
  * {@link http://c.gwt-examples.com} 
@@ -48,7 +47,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	// Change this to the web page you want to test 
 	private static String URL =
-			/*   //<-- Comment toggler, add leading / to enable first section
+			//*   //<-- Comment toggler, add leading / to enable first section
 			"http://asi-estimator.appspot.com/"
 			/*/
 			"http://127.0.0.1:8888/Asi_estimator.html?gwt.codesvr=127.0.0.1:9997"
@@ -117,10 +116,24 @@ public class Asi_GuiTest extends TestCase {
 		WebElement element =  checkElement( 2, id );
 		element.click();
 		System.out.print(" --> Clicked.");
-		
 		return element;
 	}
-  
+ 
+	/**
+	 * Simulates a click action.
+	 * default 2 second wait timer.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private WebElement clickOn( String id, String keys ) {
+		WebElement element =  checkElement( 2, id );
+		element.click();
+		element.clear();
+		element.sendKeys(keys);
+		System.out.print(" --> Clicked.");
+		return element;
+	}
 	
 	/**
 	 * waits for id to be enabled then clicks on it
@@ -195,21 +208,24 @@ public class Asi_GuiTest extends TestCase {
 	public void timelyCalculate() {
 		clickOn(costPanel);
 		
-		clickOn("panelCost").sendKeys("1000");
-		clickOn("installCost").sendKeys("3000");
-		clickOn("inverterCost").sendKeys("1000");
+		clickOn("panelCost", "1000");
+		clickOn("installCost", "3000");
+		clickOn("inverterCost", "1000");
 		clickOn("costNextButton");
 	
-		clickOn("nPanels").sendKeys("5");
-		clickOn("panelWattage").sendKeys("11");
-		clickOn("hoursOfSun").sendKeys("5");
-		clickOn("inverterEfficiency").sendKeys("98");
+		clickOn("nPanels", "5");
+		clickOn("panelWattage", "11");
+		clickOn("hoursOfSun", "5");
+		clickOn("inverterEfficiency", "98");
 		clickOn("panelsNextButton");
 		
 		
-		clickOn("powerConsumption").sendKeys("30");
-		clickOn("feedInTariff").sendKeys(".11");
-		clickOn("elecCost").sendKeys(".60");
+		clickOn("powerConsumption", "9000");
+		clickOn("feedInTariff", ".11");
+		clickOn("elecCost", ".60");
+		
+		// allow page to adjust to changes.
+		clickOn("feedInTariff");
 		
 		assertEquals( "Should be able to click on \"Calculate\" after valid data has been entered",
 				true, findE("calculateButton").isEnabled() );
@@ -273,7 +289,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void inputPowerConsumption() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "powerConsumption";
 		String badInput = BAD_INPUT;
 		validateTextbox(panel, box, badInput);
@@ -281,7 +297,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void inputFeedInTariff() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "feedInTariff";
 		String badInput = BAD_INPUT;
 		validateTextbox(panel, box, badInput);
@@ -289,7 +305,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void inputElecCost() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "elecCost";
 		String badInput = BAD_INPUT;
 		validateTextbox(panel, box, badInput);
@@ -355,7 +371,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void negPowerConsumption() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "powerConsumption";
 		String badInput = NEGATIVE_INPUT;
 		validateTextbox(panel, box, badInput);
@@ -363,7 +379,7 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void negFeedInTariff() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "feedInTariff";
 		String badInput = NEGATIVE_INPUT;
 		validateTextbox(panel, box, badInput);
@@ -371,10 +387,37 @@ public class Asi_GuiTest extends TestCase {
 	
 	@Test
 	public void negElecCost() {
-		String panel = panelPanel;
+		String panel = powerPanel;
 		String box = "elecCost";
 		String badInput = NEGATIVE_INPUT;
 		validateTextbox(panel, box, badInput);
+	}
+	
+	@Test
+	public void prefill1() {
+		String textbox = "elecCost";
+		clickOn(powerPanel);
+		String contents = clickOn(textbox).getText();
+		assertEquals( textbox +" should be prefilled.",
+				true, contents != "" );
+	}
+	
+	@Test
+	public void prefill2() {
+		String textbox = "feedInTariff";
+		clickOn(powerPanel);
+		String contents = clickOn(textbox).getText();
+		assertEquals( textbox +" should be prefilled.",
+				true, contents != "" );
+	}
+	
+	@Test
+	public void prefill3() {
+		String textbox = "powerConsumption";
+		clickOn(powerPanel);
+		String contents = clickOn(textbox).getText();
+		assertEquals( textbox +" should be prefilled.",
+				true, contents != "" );
 	}
 	
 	
@@ -382,24 +425,25 @@ public class Asi_GuiTest extends TestCase {
 	private void validateTextbox(String panel, String box, String badInput) {
 		clickOn(costPanel);
 		
-		clickOn("panelCost").sendKeys("1000");
-		clickOn("installCost").sendKeys("3000");
-		clickOn("inverterCost").sendKeys("1000");
+		clickOn("panelCost", "1000");
+		clickOn("installCost", "3000");
+		clickOn("inverterCost", "1000");
 		clickOn("costNextButton");
 	
-		clickOn("nPanels").sendKeys("5");
-		clickOn("panelWattage").sendKeys("11");
-		clickOn("hoursOfSun").sendKeys("5");
-		clickOn("inverterEfficiency").sendKeys("98");
+		clickOn("nPanels", "5");
+		clickOn("panelWattage", "5");
+		clickOn("hoursOfSun", "7");
+		clickOn("inverterEfficiency", "99");
 		clickOn("panelsNextButton");
 		
-		clickOn("powerConsumption").sendKeys("30");
-		clickOn("feedInTariff").sendKeys(".11");
-		clickOn("elecCost").sendKeys(".60");
+		clickOn("powerConsumption", "9000");
+		clickOn("feedInTariff", ".11");
+		clickOn("elecCost", ".50");
 		
 		clickOn(panel);
-		clickOn(box).clear();
-		clickOn(box).sendKeys(badInput);
+		clickOn(box, badInput);
+		
+		clickOn(powerPanel);
 		
 		assertEquals( box + " should not allow \"" + badInput + "\"",
 				false, findE("calculateButton").isEnabled() );
