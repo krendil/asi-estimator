@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ValueBoxBase;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
@@ -54,10 +55,16 @@ import com.google.gwt.xml.client.XMLParser;
  */
 public class Asi_estimator implements EntryPoint {
 	
+	private boolean chartReady = false;
+	
+	private int nYears;
+	private double[] dPowers;
+	private double[] dRevenues;
+	private double[] dCosts;
 	
 
 	private static final String URL = 
-			/*   //<-- Comment toggler, add leading / to enable first section
+			//*   //<-- Comment toggler, add leading / to enable first section
 			"http://asi-estimator.appspot.com/asi_estimator"
 			/*/
 			"http://127.0.0.1:8888/asi_estimator"
@@ -82,7 +89,7 @@ public class Asi_estimator implements EntryPoint {
 		detectLocation();
 		
 		//loads maps
-		Maps.loadMapsApi("", "2", false, new Runnable() 
+		Maps.loadMapsApi("AIzaSyBBqVqXtIiOLPkbBYmaqRxrOSFD9YrZ2ig", "2", false, new Runnable() 
 		{
 			public void run() 
 			{
@@ -92,7 +99,12 @@ public class Asi_estimator implements EntryPoint {
 		
 		VisualizationUtils.loadVisualizationApi(new Runnable() {
 			@Override
-			public void run() {			
+			public void run() {
+				if(chartReady) {
+					makeChart();
+				} else {
+					chartReady = true;
+				}
 			}
 		}, LineChart.PACKAGE);
 
@@ -129,6 +141,8 @@ public class Asi_estimator implements EntryPoint {
 				request.setCallback( new RequestCallback() {
 					@Override
 					public void onResponseReceived ( Request request, Response response) {
+						webGui.calculateButton.setEnabled(true);
+						webGui.getPanel("resultsPanel").clear();
 						showResults(response.getText(), response.getHeader("ResultId"));
 					}
 					@Override
@@ -159,12 +173,50 @@ public class Asi_estimator implements EntryPoint {
 	}
 
 
+	protected void makeChart() {
+		Options options = Options.create();
+		options.setHeight(400);
+		options.setTitle("Power Generated and Total Profit over Time");
+		options.setWidth(800);
+		// options.setInterpolateNulls(true);
+		AxisOptions vAxisOptions = AxisOptions.create();
+		vAxisOptions.setMinValue(-2000);
+		vAxisOptions.setMaxValue(2000);
+
+
+		AxisOptions hAxisOptions = AxisOptions.create();
+		hAxisOptions.setMinValue(0);
+		hAxisOptions.setMaxValue(nYears);
+		hAxisOptions.setTitle("Years");
+		options.setVAxisOptions(vAxisOptions);
+		options.setHAxisOptions(hAxisOptions);
+		//Creates data
+		DataTable data = DataTable.create();
+		data.addColumn(ColumnType.NUMBER, "Year");
+		data.addColumn(ColumnType.NUMBER, "Power Generated (kWh)");
+		data.addColumn(ColumnType.NUMBER, "Cumulative Profit ($)");
+		data.addRows(nYears);
+		
+		double totalProfit = 0.0;
+		for(int i=0; i < nYears; i++){
+			data.setValue(i, 0, i);
+			data.setValue(i, 1, dPowers[i]);
+
+			totalProfit += dRevenues[i] - dCosts[i];
+			data.setValue(i, 2, totalProfit);
+		}
+
+		LineChart line = new LineChart(data, options);
+		webGui.getPanel("resultsPanel").insert(line, 0);
+	}
+
+
 	/**
 	 * 
 	 * @param responseText
 	 */
 	private void showResults(String responseText, String queryCode) {
-		webGui.calculateButton.setEnabled(true);
+		//
 
 		Document doc = XMLParser.parse(responseText);
 
@@ -176,11 +228,11 @@ public class Asi_estimator implements EntryPoint {
 		String[] revenues = revenueTag.item(0).getFirstChild().getNodeValue().split("\\s");
 		String[] costs = costTag.item(0).getFirstChild().getNodeValue().split("\\s");
 
-		int nYears = powers.length;
+		nYears = powers.length;
 
-		double[] dPowers = new double[nYears];
-		double[] dRevenues = new double[nYears];
-		double[] dCosts = new double[nYears];
+		dPowers = new double[nYears];
+		dRevenues = new double[nYears];
+		dCosts = new double[nYears];
 		for(int i = 0; i<nYears; i++){
 			dPowers[i] = Double.parseDouble(powers[i]);
 			dRevenues[i] = Double.parseDouble(revenues[i]);
@@ -208,39 +260,19 @@ public class Asi_estimator implements EntryPoint {
 
 		//The following code creates the line chart
 		//Sets options
-		Options options = Options.create();
-		options.setHeight(400);
-		options.setTitle("Power Generated and Total Profit over Time");
-		options.setWidth(800);
-		// options.setInterpolateNulls(true);
-		AxisOptions vAxisOptions = AxisOptions.create();
-		vAxisOptions.setMinValue(-2000);
-		vAxisOptions.setMaxValue(2000);
-
-
-		AxisOptions hAxisOptions = AxisOptions.create();
-		hAxisOptions.setMinValue(0);
-		hAxisOptions.setMaxValue(nYears);
-		hAxisOptions.setTitle("Years");
-		options.setVAxisOptions(vAxisOptions);
-		options.setHAxisOptions(hAxisOptions);
-		//Creates data
-		DataTable data = DataTable.create();
-		data.addColumn(ColumnType.NUMBER, "Year");
-		data.addColumn(ColumnType.NUMBER, "Power Generated (kWh)");
-		data.addColumn(ColumnType.NUMBER, "Cumulative Profit ($)");
-		data.addRows(nYears);
+		if( chartReady ) {
+			makeChart();
+		} else {
+			chartReady = true;
+		}
+		
 
 		double totalProfit = 0.0;
 		boolean brokeEven = false;
 		int yearToBreakEven = -1;
 
 		for(int i=0; i < nYears; i++){
-			data.setValue(i, 0, i);
-			data.setValue(i, 1, dPowers[i]);
-
 			totalProfit += dRevenues[i] - dCosts[i];
-			data.setValue(i, 2, totalProfit);
 
 			if(!brokeEven) {
 				brokeEven = totalProfit >= 0;
@@ -259,9 +291,14 @@ public class Asi_estimator implements EntryPoint {
 		}
 		Label breakEvenLabel = new Label(breakEvenMessage);
 
-		LineChart line = new LineChart(data, options);
 		
-		String uniqUrl = this.URL + "?q=" + queryCode; 
+		
+		String uniqUrl;
+		//gwt.codesvr=127.0.0.1:9997
+
+		uniqUrl = Window.Location.createUrlBuilder().setParameter("q",  queryCode).buildString();
+
+		  
 		HTML queryCodeLabel = new HTML("The unique URL for these results is <a href="+uniqUrl+">"+uniqUrl+"</a>");
 
 		// attach the results panel on first run.
@@ -269,8 +306,7 @@ public class Asi_estimator implements EntryPoint {
 			webGui.tabPanel.add(webGui.getPanel("resultsPanel"), "Results");
 		}
 
-		webGui.getPanel("resultsPanel").clear();
-		webGui.getPanel("resultsPanel").add(line);
+		
 		webGui.getPanel("resultsPanel").add(breakEvenLabel);
 		webGui.getPanel("resultsPanel").add(table);
 		webGui.getPanel("resultsPanel").add(queryCodeLabel);
@@ -508,6 +544,7 @@ public class Asi_estimator implements EntryPoint {
 		request.setCallback( new RequestCallback() {
 			@Override
 			public void onResponseReceived ( Request request, Response response) {
+				webGui.getPanel("resultsPanel").clear();
 				showResults(response.getText(), queryCode);
 			}
 			@Override

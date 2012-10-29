@@ -24,6 +24,16 @@
 	<url-pattern>/asi_estimator/prefill</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>historyServlet</servlet-name>
+  	<servlet-class>asi.server.GetHistoryServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+	<servlet-name>historyServlet</servlet-name>
+	<url-pattern>/asi_estimator/history</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Asi_estimator.html</welcome-file>
